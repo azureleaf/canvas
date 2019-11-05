@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+	<meta charset="UTF-8">
+	<title>ハノイの塔</title>
+	<script>
+	var canvas,contex,canvasRect;
+	var num,cnt;
+	var diskNo,diskX,diskY,barNo;
+	var mouseDown=false;
+	var answer,index,timer;
+	var status="manual";
+	function init(){
+		//キャンバスの取得
+		canvas=document.getElementById("base");
+		context=canvas.getContext("2d");
+		canvasRect=canvas.getBoundingClientRect();
+		context.font="20px Arial";
+		context.textAlign="center";
+		context.textBaseline="middle";
+		initDisk()
+	}
+
+	function initDisk(){
+		cnt=0;
+		barNo=-1;
+		diskNo=-1;
+		document.getElementById("cnt").innerText=cnt;
+		document.getElementById("message").innerText="";
+		status="manual";
+		clearInterval(timer);
+		num=Number(document.getElementById("num").value);
+		bar=[[],[],[]];
+		for (var i=num; i>0; i--){
+			bar[0].push(i);
+		}
+		update();
+	}
+
+	function drawDisk(n,x,y){
+		var w=n*20+20;
+		context.strokeStyle="#000000";
+		context.fillStyle="hsl("+(n-1)*40+",100%,50%)";
+		context.strokeRect(x-w/2,y,w,30);
+		context.fillStyle="#000000"
+		context.fillText(n,x,y+15);
+	}
+
+	function update(){
+		context.clearRect(0,0,canvas.width,canvas.height);
+		var barName=["START","","GOAL"];
+		for (var i=0; i<3; i++){
+			context.fillStyle="#996633";
+			context.fillRect(i*250+140,100,20,400);
+			context.fillRect(i*250+70,500,160,50);
+			context.fillRect(i*250+140,100,20,400);fillStyle="#FFFFFF";
+			context.fillText(barName[i],i*250+150,525);
+
+			for (var j=0; j<bar[i].length; j++){
+				var x=i*250+150;
+				var y=500-(j+1)*30;
+				if (diskNo !=bar[i][j]) drawDisk(bar[i][j],x,y);
+
+			}
+		}
+		if (diskNo>-1) drawDisk(diskNo,diskX,diskY);
+		if (bar[2].length==num){
+			document.getElementById("message").innerText="CLEAR";
+		}
+	}
+
+	function startMove(event){
+		var x=event.clientX-canvasRect.left;
+		var y=event.clientY-canvasRect.top;
+		 barNo=-1;
+		 if((x>70)&&(x<230)&&(y>100)&&(y<550)) barNo=0;
+		 if((x>320)&&(x<480)&&(y>100)&&(y<550)) barNo=1;
+		 if((x>570)&&(x<730)&&(y>100)&&(y<550)) barNo=2;
+		 if((barNo>-1)&&(bar[barNo].length>0)&&(status=="manual")){
+			 mouseDown=true;
+			 diskNo=bar[barNo][bar[barNo].length-1];
+			 diskX=x;
+			 diskY=y;
+			 update();
+	}
+}
+
+function move(event){
+	if (mouseDown){
+		diskX=event.clientX-canvasRect.left;
+		diskY=event.clientY-canvasRect.top;
+		update();
+	}
+}
+
+function endMove(event){
+	mouseDown=false;
+	var x=event.clientX-canvasRect.left;
+	var y=event.clientY-canvasRect.top;
+	var newBarNo=-1;
+		 if((x>70)&&(x<230)&&(y>100)&&(y<550)) newBarNo=0;
+		 if((x>320)&&(x<480)&&(y>100)&&(y<550)) newBarNo=1;
+		 if((x>570)&&(x<730)&&(y>100)&&(y<550)) newBarNo=2;
+		 if((newBarNo>-1)&&(diskNo>-1)){
+			 if ((bar[newBarNo].length==0||((bar[newBarNo].length>0)&&((diskNo<bar[newBarNo][bar[newBarNo].length-1]))))){
+				 	bar[barNo].pop();
+				 	bar[newBarNo].push(diskNo);
+				 	cnt++;
+				 	document.getElementById("cnt").innerText=cnt;
+			 	}
+		 }
+		diskNo=-1;
+		update();
+}
+
+function hanoi(n,from,work,dest){
+	if(n>0){
+		hanoi(n-1,from,dest,work);
+		answer.push({"n":n,"from":from,"dest":dest});
+		hanoi(n-1,work,from,dest);
+
+
+	}
+}
+
+function showAnswer(){
+	initDisk();
+	answer=[];
+	hanoi(num,0,1,2);
+	index=0;
+	status="auto";
+	timer=setInterval(moveDisk,500);
+}
+
+function moveDisk(){
+	if (index<answer.length){
+		bar[answer[index].from].pop();
+		bar[answer[index].dest].push(answer[index].n);
+		update();
+		index++;
+		document.getElementById("cnt").innerText=index;
+	}else{
+		clearInterval(timer);
+		status="manual";
+	}
+}
+	</script>
+
+<style>
+	input[type="number"]{width:40px;}
+	#message{color:#cc0000;}
+</style>
+
+	</head>
+
+<body onload="init()">
+	<p>ハノイの塔</p>
+	<input type="button" value="解答" onclick="showAnswer()">
+	<input type="button" value="リセット" onclick="initDisk()">
+円盤の数：
+	<input type="number" id="num" value="4" min="3" max="9" onchange="initDisk()">
+手数：
+	<span id="cnt">0</span><span id="message"></span>
+	<hr>
+	<canvas id="base" width="800" height="600"
+	onmousedown="startMove(event)" onmousemove="move(event)"
+	onmouseup="endMove(event)" onmouseleave="endMove(event)">
+	</canvas>
+</body>
+</html>
