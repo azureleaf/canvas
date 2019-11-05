@@ -5,18 +5,18 @@
     <title>ハノイの塔</title>
     <script>
       var canvas;
-      var contex; // context
+      var context; 
       var canvasRect;
       var num;
       var cnt; // manipulation steps
-      var diskNo;
+      var diskNo; // identifier for each disk
       var diskX;
       var diskY;
-      var barNo; // index for 3 poles
+      var barNo; // index for 3 bars
       var mouseDown = false; // to detect drag & drop
       var answer;
       var index;
-      var timer; // return value for setInterval()
+      var timer; // returned value for setInterval()
       var status = "manual"; // "manual" or "auto"
       
       // Initial settings for canvas itself & its content
@@ -84,7 +84,7 @@
         }
       }
 
-      // Pick the disk up
+      // Pick a disk up
       function startMove(event) {
         var x = event.clientX - canvasRect.left;
         var y = event.clientY - canvasRect.top;
@@ -137,7 +137,7 @@
             document.getElementById("cnt").innerText = cnt;
           }
         }
-        diskNo = -1;
+        diskNo = -1; // Unselect the bar
         update();
       }
 
@@ -161,6 +161,7 @@
         timer = setInterval(moveDisk, 500);
       }
 
+      // Record all the new status after disk manipulation
       function moveDisk() {
         if (index < answer.length) {
           bar[answer[index].from].pop();
