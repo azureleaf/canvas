@@ -68,8 +68,8 @@
         var barName = ["START", "", "GOAL"];
         for (var i = 0; i < 3; i++) { // i: index for each bar
           context.fillStyle = "#996633";//棒の色は茶色
-          context.fillRect(i * 250 + 140, 100, 20, 400);棒と台を描く
-          context.fillRect(i * 250 + 70, 500, 160, 50);棒と台を描く
+          context.fillRect(i * 250 + 140, 100, 20, 400);//棒と台を描く
+          context.fillRect(i * 250 + 70, 500, 160, 50);//棒と台を描く
           //context.fillRect(i * 250 + 140, 100, 20, 400);
           fillStyle = "#FFFFFF";//文字の色は白
           context.fillText(barName[i], i * 250 + 150, 525);//棒の名前(START、なし、GOAL)を描く
@@ -123,7 +123,7 @@
         var newBarNo = -1;
 
         // Decide to which bar the disk was put down
-        if (x > 70 && x < 230 && y > 100 && y < 550) newBarNo = 0;移動先の棒の番号をリセット
+        if (x > 70 && x < 230 && y > 100 && y < 550) newBarNo = 0;//移動先の棒の番号をリセット
         if (x > 320 && x < 480 && y > 100 && y < 550) newBarNo = 1;
         if (x > 570 && x < 730 && y > 100 && y < 550) newBarNo = 2;
 
