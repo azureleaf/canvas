@@ -56,13 +56,17 @@ function onClick(e) {
 
 //三角形描画
 
-ctx.moveTo(zahyou[0], zahyou[1]);
+	ctx.moveTo(zahyou[0], zahyou[1]);
     ctx.lineTo(zahyou[2], zahyou[3]);
     ctx.lineTo(zahyou[4], zahyou[5]);
     //ctx.lineTo(zahyou[0], zahyou[1]);
+
     ctx.closePath();
     ctx.fillStyle='skyblue';
     ctx.stroke();
+    ctx.strokeStyle="black";
+
+
 
 
 /*
@@ -146,6 +150,12 @@ ctx.moveTo(zahyou[0], zahyou[1]);
 	var x0O=(a*a*(b*b+c*c-a*a)*zahyou[0]+b*b*(c*c+a*a-b*b)*zahyou[2]+c*c*(a*a+b*b-c*c)*zahyou[4])/(16*S*S)
 	var y0O=(a*a*(b*b+c*c-a*a)*zahyou[1]+b*b*(c*c+a*a-b*b)*zahyou[3]+c*c*(a*a+b*b-c*c)*zahyou[5])/(16*S*S)
 //垂心
+	var thetaA=Math.acos(((zahyou[2]-zahyou[0])*(zahyou[4]-zahyou[0])+(zahyou[3]-zahyou[1])*(zahyou[5]-zahyou[1]))/(b*c));
+	var thetaB=Math.acos(((zahyou[4]-zahyou[2])*(zahyou[0]-zahyou[2])+(zahyou[5]-zahyou[3])*(zahyou[1]-zahyou[3]))/(c*a));
+	var thetaC=Math.acos(((zahyou[0]-zahyou[4])*(zahyou[2]-zahyou[4])+(zahyou[1]-zahyou[5])*(zahyou[3]-zahyou[5]))/(a*b));
+
+	var x0h=(Math.tan(thetaA)*zahyou[0]+Math.tan(thetaB)*zahyou[2]+Math.tan(thetaC)*zahyou[4])/(Math.tan(thetaA)+Math.tan(thetaB)+Math.tan(thetaC));
+	var y0h=(Math.tan(thetaA)*zahyou[1]+Math.tan(thetaB)*zahyou[3]+Math.tan(thetaC)*zahyou[5])/(Math.tan(thetaA)+Math.tan(thetaB)+Math.tan(thetaC));
 
 //重心
 	var x0g=(zahyou[0]+zahyou[2]+zahyou[4])/3;
@@ -153,16 +163,19 @@ ctx.moveTo(zahyou[0], zahyou[1]);
 
 	ctx.moveTo(zahyou[0], zahyou[1]);
     ctx.lineTo(x0g, y0g);
+    ctx.closePath();
     ctx.strokeStyle="blue";
     ctx.stroke();
 
 	ctx.moveTo(zahyou[2], zahyou[3]);
     ctx.lineTo(x0g, y0g);
+    ctx.closePath();
     ctx.strokeStyle="blue";
     ctx.stroke();
 
     ctx.moveTo(zahyou[4], zahyou[5]);
     ctx.lineTo(x0g, y0g);
+    ctx.closePath();
     ctx.strokeStyle="blue";
     ctx.stroke();
 
@@ -171,36 +184,69 @@ ctx.moveTo(zahyou[0], zahyou[1]);
 	ctx.beginPath();
 	//ctx.arc(50,50,c ,0,2*Math.PI);//中心,中心,半径,start-中心角,end-中心角
 	ctx.arc(x00,y00,r ,0,2*Math.PI);
+	//ctx.closePath();
+    ctx.strokeStyle="skyblue";
 	ctx.stroke();
 //外接円
 	ctx.beginPath();
 	ctx.arc(x0O,y0O,R ,0,2*Math.PI);
+	ctx.strokeStyle="whitesmoke";
 	ctx.stroke();
 
+ctx.beginPath();
 	ctx.moveTo(x00, y00);
     ctx.lineTo(x0O, y0O);
     ctx.strokeStyle="red";
     ctx.stroke();
 
+ctx.beginPath();
     ctx.moveTo(x0O, y0O);
     ctx.lineTo(x0g, y0g);
     ctx.strokeStyle="yellow";
     ctx.stroke();
 
+ctx.beginPath();
     ctx.moveTo(x00, y00);
     ctx.lineTo(x0g, y0g);
-    ctx.strokeStyle="yellow";
+    ctx.strokeStyle="green";
     ctx.stroke();
 
+ctx.beginPath();
+    ctx.moveTo(x0g, y0g);
+    ctx.lineTo(x0h, y0h);
+    ctx.strokeStyle="orange";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0h, y0h);
+    ctx.lineTo(zahyou[0], zahyou[1]);
+    ctx.strokeStyle="orange";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0h, y0h);
+    ctx.lineTo(zahyou[2], zahyou[3]);
+    ctx.strokeStyle="orange";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0h, y0h);
+    ctx.lineTo(zahyou[4], zahyou[5]);
+    ctx.strokeStyle="orange";
+    ctx.stroke();
+
+//alert(zahyou);
 }
 
 
-canvas.addEventListener('click', onClick, true);
+canvas.addEventListener('click', onClick, false);
 
 
   }
 
   draw();
+
+
 }
   </script>
 </body>
