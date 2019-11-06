@@ -109,7 +109,7 @@
       // Move the disk while you hold it
       function move(event) {
         if (mouseDown) {//マウスボタンを押しているなら
-          diskX = event.clientX - canvasRect.left;円盤の座標をマウスカーソルの座標にする
+          diskX = event.clientX - canvasRect.left;//円盤の座標をマウスカーソルの座標にする
           diskY = event.clientY - canvasRect.top;
           update();
         }
@@ -181,10 +181,12 @@
 
     <style>
       input[type="number"] {
-        width: 40px;//「円盤の数」入力エリアの情報40px
+        width: 40px;
+        /*//「円盤の数」入力エリアの情報40px*/
       }
       #message {
-        color: #cc0000;//「メッセージ」の色　濃い赤
+        color: #cc0000;
+        /*//「メッセージ」の色　濃い赤*/
       }
     </style>
   </head>
