@@ -23,221 +23,6 @@
     }
     const ctx = canvas.getContext('2d');
 
-    // ctx.createLinearGradient(x0, y0, x1, y1);
-    //const g = ctx.createLinearGradient(0, 0, canvas.width, 0);
-
-    /*const g=ctx.createRadialGradient(
-	    x0,y0,r0,
-	    x1,y1,r1
-    );*/
-
-/*円グラデ
-     const g=ctx.createRadialGradient(
-	    canvas.width/2,canvas.height/2,50,
-	    canvas.width/2+100,canvas.height/2+200,500    );
-
-
-    g.addColorStop(0, '#f00');
-    //g.addColorStop(0.3, '#0f0');
-    g.addColorStop(0.1,'#0f0');
-    g.addColorStop(1, '#00f');
-
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-*/
-
-/*影
-ctx.shadowOffsetX=4;
-ctx.shadowOffsetY=4;
-ctx.shadowBlur=4;
-ctx.shadowColor='rgba(0,0,0,0.3)';
-
-ctx.fillRect(50,50,50,50);
-*/
-
-/*線
-ctx.beginPath();
-ctx.moveTo(50,50);
-ctx.lineTo(100,50);
-
-ctx.lineTo(100,100);
-ctx.closePath();/*
-
-//ctx.stroke();
-
-
-ctx.fill();
-*/
-/*線の処理
-
-ctx.beginPath();
-ctx.moveTo(100,50);
-ctx.lineTo(200,50);
-ctx.setLineDash([5,10]);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(100,100);
-ctx.lineTo(200,100);
-ctx.setLineDash([]);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(100,150);
-ctx.lineTo(200,150);
-ctx.lineWidth=16;
-ctx.lineCap='round';
-ctx.stroke();
-*/
-/*
-
-ctx.beginPath();
-//ctx.arc(x,y,r,start,end);
-// ctx.arc(100,100,50,0,2*Math.PI);
-// ctx.arc(100,100,50,0,300/360*2*Math.PI);
-ctx.moveTo(100,100);
-ctx.arc(100,100,50,0,300/180*Math.PI,true);
-
-
-//ctx.stroke();
-ctx.fill();
-*/
-
-//ctx.ellipse(x,y,rx,ry,rotation,start,end);
-/*
-ctx.ellipse(100,100,50,30,0,0,2*Math.PI);
-ctx.stroke();
-*/
-
-/*
-ctx.rect(50,50,50,50);
-ctx.stroke();
-*/
-
-/*text
-
-ctx.beginPath();
-ctx.moveTo(0,100);
-ctx.lineTo(canvas.width,100);
-ctx.moveTo(100,0);
-ctx.lineTo(100,canvas.height);
-ctx.stroke();
-ctx.font='bold 64px Verdana';
-ctx.textAlign='right';
-ctx.textBaseline='top';
-
-//ctx.fillText('Tokyo',100,100);
-//ctx.fillText('Tokyo',100,100,100);//最大幅最後
-ctx.strokeText('Tokyo',100,100,100);
-*/
-
-/*
-const img=document.createElement('img');
-img.src='img/logo.png';
-
-img.addEventListener('load',()=>{
-//	ctx.drawImage(img,0,0);
-//ctx.drawImage(img,0,0,40,40);
-//const pattern=ctx.createPattern(img,'repeat');
-//repeat-x,repeat-y,norepeat
-
-const pattern=ctx.createPattern(img,'repeat-x');
-ctx.fillStyle=pattern;
-ctx.fillRect(0,0,canvas.width,canvas.height)
-});
-*/
-
-/*css sprite
-const img=document.createElement('img');
-img.src='img/sprite.png';
-img.addEventListener('load',() =>{
-	// ctx.drawImage(img,0,0);
-	ctx.drawImage(
-		img,
-		// sx,sy,sw,wh, souce
-		//dx,dy,dw,dh destination
-		//70*70 1mass　スプライト
-
-		70*2,70,70,70,
-		0,0,35,35
-	);
-});
-*/
-
-/*
-ctx.fillStyle='pink';
-ctx.fillRect(0,0,200,200);
-
-ctx.beginPath();
-ctx.ellipse(100,100,40,30,0,0,2*Math.PI);
-ctx.fillStyle='black'
-ctx.fill();
-
-ctx.beginPath();
-ctx.ellipse(80,100,8,8,0,0,2*Math.PI);
-ctx.ellipse(120,100,8,8,0,0,2*Math.PI);
-ctx.fillStyle='skyblue'
-ctx.fill();
-
-ctx.save();
-
-
-
-
-
-ctx.scale(0.5,0.5);//座標空間ごと縮小
-ctx.translate(400,0);
-ctx.rotate(45/180*Math.PI);
-ctx.fillStyle='olive';
-ctx.fillRect(0,0,200,200);
-
-
-
-
-ctx.beginPath();
-ctx.ellipse(100,100,40,30,0,0,2*Math.PI);
-ctx.fillStyle='black'
-ctx.fill();
-
-ctx.beginPath();
-ctx.ellipse(80,100,8,8,0,0,2*Math.PI);
-ctx.ellipse(120,100,8,8,0,0,2*Math.PI);
-ctx.fillStyle='skyblue'
-ctx.fill();
-
-ctx.restore();
-
-ctx.fillStyle='black';
-ctx.fillRect(80,120,40,40);
-*/
-
-/*
-ctx.beginPath();
-ctx.ellipse(100,100,40,30,0,0,2*Math.PI);
-ctx.fillStyle='black';
-ctx.fill();
-*/
-/*
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    ctx.beginPath();
-    ctx.ellipse(100, 100, 40, 30, 0, 0, 2 * Math.PI);
-    ctx.fillStyle = 'black';
-    ctx.fill();
-
-
-
-ctx.beginPath();
-ctx.ellipse(80+Math.sin(t/30),100,8,8,0,0,2*Math.PI);
-ctx.ellipse(120+Math.sin(t/30),100,8,8,0,0,2*Math.PI);
-ctx.fillStyle='skyblue';
-ctx.fill();
-
-t++;
-setTimeout(draw,10);
-*/
-
 
 //解像度
 const CANVAS_WIDTH=1024;
@@ -250,50 +35,81 @@ ctx.scale(dpr,dpr);
 canvas.style.width=CANVAS_WIDTH+'px';
 canvas.style.height=CANVAS_HEIGHT+'px';
 
-/*
-//text
-ctx.font='bold 48px Verdana';
-ctx.strokeText('Japan',100,100);
-*/
-/*
 
-//rect
-    ctx.fillRect(25, 25, 100, 100);
-    ctx.clearRect(45, 45, 60, 60);
-    ctx.strokeRect(50, 50, 50, 50);
+/*
+var items = [1,2,3,4];
+
+//配列「items」に数値データを追加する
+items.push(5);
+
+alert( items[2] );
 */
 
+var zahyou=[];
+
+function onClick(e) {
+  var x01 = e.clientX - canvas.offsetLeft;
+  var y01 = e.clientY - canvas.offsetTop;
+  zahyou.push(x01,y01);
+  ctx.beginPath();
+  ctx.moveTo(x01, y01);
+}
+
+function onClick(e) {
+  var x02 = e.clientX - canvas.offsetLeft;
+  var y02 = e.clientY - canvas.offsetTop;
+  zahyou.push(x02,y02);
+  ctx.lineTo(x02, y02);
+}
+
+function onClick(e) {
+  var x03 = e.clientX - canvas.offsetLeft;
+  var y03 = e.clientY - canvas.offsetTop;
+  zahyou.push(x03,y03);
+  //ctx.beginPath();
+  //ctx.moveTo(x02, y02);
+  ctx.lineTo(x03, y03);
+  ctx.closePath();
+  ctx.fillStyle='skyblue';
+  ctx.stroke();
+  }
+
+canvas.addEventListener('click', onClick, true);
 
 
+/*
 
-//triangle
+//triangle RANDOM
     ctx.beginPath();
 
-var www=1024-768;
+	var www=1024-768;
     var x01=Math.random()*www;
     var y01=Math.random()*www;
     var x02=Math.random()*www;
     var y02=Math.random()*www;
     var x03=Math.random()*www;
     var y03=Math.random()*www;
-
-    ctx.moveTo(x01, y01);
-    ctx.lineTo(x02, y02);
-    ctx.lineTo(x03, y03);
-    ctx.lineTo(x01, y01);
-    ctx.fillStyle='skyblue';
-    ctx.stroke();
-
-
-
-
-/*
-    ctx.moveTo(100,100);
-    ctx.lineTo(40,30);
-    ctx.lineTo(0,0);
-    ctx.fill();
 */
 
+// //三角形描画
+// alert(zahyou[0]);
+//     ctx.moveTo(x01,y01);
+//     ctx.lineTo(x02,y02);
+//     ctx.lineTo(x03,y03);
+//     //ctx.lineTo(x01, y01);
+//     ctx.closePath();
+//     ctx.fillStyle='skyblue';
+//     ctx.stroke();
+
+// //三角形描画
+// //alert(zahyou);
+// ctx.moveTo(zahyou[0], zahyou[1]);
+//     ctx.lineTo(zahyou[2], zahyou[3]);
+//     ctx.lineTo(zahyou[4], zahyou[5]);
+//     //ctx.lineTo(x01, y01);
+//     ctx.closePath();
+//     ctx.fillStyle='skyblue';
+//     ctx.stroke();
 
 /*
 
@@ -304,11 +120,6 @@ var www=1024-768;
     var y02=0;
     var x03=0+0;
     var y03=0+40;
-
-
-
-
-
 
 //正三角形
     var x01=200;
@@ -321,21 +132,24 @@ var www=1024-768;
 
 
 
-    ctx.moveTo(x01, y01);
-    ctx.lineTo(x02, y02);
-    ctx.lineTo(x03, y03);
-    ctx.fillStyle='skyblue';
-    ctx.fill();
+    // ctx.moveTo(x01, y01);
+    // ctx.lineTo(x02, y02);
+    // ctx.lineTo(x03, y03);
+    // ctx.fillStyle='skyblue';
+    // ctx.fill();
 
-
+//３辺の長さ
     var c=Math.pow(Math.pow(x01-x02,2)+Math.pow(y01-y02,2),1/2);
     var a=Math.pow(Math.pow(x02-x03,2)+Math.pow(y02-y03,2),1/2);
     var b=Math.pow(Math.pow(x03-x01,2)+Math.pow(y03-y01,2),1/2);
+//三角形の面積
     var s=(a+b+c)/2;
     var S=Math.pow((s*(s-a)*(s-b)*(s-c)),1/2);
     //Math.pow(s*s,1/2);
+//接円半径
 	var r=(2*S)/(a+b+c);
 	var R=(a*b*c)/(4*r*s)
+
 //内心
 	var x00=(a*x01+b*x02+c*x03)/(a+b+c);
 	var y00=(a*y01+b*y02+c*y03)/(a+b+c);
@@ -388,22 +202,7 @@ var www=1024-768;
     ctx.lineTo(x0g, y0g);
     ctx.strokeStyle="yellow";
     ctx.stroke();
-/*
-	ctx.moveTo(100, 100);
-    ctx.lineTo(140, 100);
-    ctx.stroke();
-*/
 
-/*
-alert("S="+S);
-alert("s="+s);
-alert(a);
-alert(b);
-alert(c);
-
-alert(x00+","+y00);
-alert(x0O+","+y0O);
-*/
 
 
   }
