@@ -22,12 +22,13 @@
       // Initial settings for canvas itself & its content
       function init() {
         //キャンバスの取得
-        canvas = document.getElementById("base");
+        canvas = document.getElementById("base");//base キャンバスのID(180行)
         context = canvas.getContext("2d");
-        canvasRect = canvas.getBoundingClientRect();
+        canvasRect = canvas.getBoundingClientRect();//キャンバスの矩形情報を取得
         context.font = "20px Arial";
         context.textAlign = "center";
         context.textBaseline = "middle";
+        //初期化
         initDisk();
       }
 
@@ -37,14 +38,15 @@
         cnt = 0;
         barNo = -1; // no bar selected
         diskNo = -1; // no disk selected
-        document.getElementById("cnt").innerText = cnt;
-        document.getElementById("message").innerText = ""; // "CLEAR" or ""
+        document.getElementById("cnt").innerText = cnt;//cnt 「手数」表示エリアのID(178行)
+        document.getElementById("message").innerText = ""; // "CLEAR" or ""//「メッセージ」表示エリアのID(178行)
         status = "manual";
-        clearInterval(timer); // clear timer set by setInterval() in showAnswer(), if existed
-        num = Number(document.getElementById("num").value);
-        bar = [[], [], []]; // bar0, bar1, bar2
+        clearInterval(timer); // clear timer set by setInterval() in showAnswer(), if existed //タイマーをクリア
+        //STARTの棒に全ての円盤をセット
+        num = Number(document.getElementById("num").value);//「円盤の数」入力エリアのID(177行)
+        bar = [[], [], []]; // bar0, bar1, bar2//空の要素を３つ持つ二次元配列を作成
         for (var i = num; i > 0; i--) {
-          bar[0].push(i); // initially, all the disks are in the bar0
+          bar[0].push(i); // initially, all the disks are in the bar0 //左端(START)の棒に、指定した枚数の円盤をセット
         }
         update();
       }
@@ -52,53 +54,53 @@
       // Render disks
       // Note that disks rendering always run after bars rendering
       function drawDisk(n, x, y) {
-        var w = n * 20 + 20;
+        var w = n * 20 + 20; //番号nの円盤の横幅
         context.strokeStyle = "#000000";
-        context.fillStyle = "hsl(" + (n - 1) * 40 + ",100%,50%)";
-        context.strokeRect(x - w / 2, y, w, 30);
-        context.fillStyle = "#000000";
-        context.fillText(n, x, y + 15);
+        context.fillStyle = "hsl(" + (n - 1) * 40 + ",100%,50%)"; //円盤の塗りつぶし色
+        context.strokeRect(x - w / 2, y, w, 30);//横幅w,高さ30の矩形を描く
+        context.fillStyle = "#000000";//文字色は黒
+        context.fillText(n, x, y + 15);//円盤の番号を描く
       }
 
       // Re-draw on every manipulation
       function update() {
-        context.clearRect(0, 0, canvas.width, canvas.height); // remove old one
+        context.clearRect(0, 0, canvas.width, canvas.height); // remove old one//キャンバスをクリア
         var barName = ["START", "", "GOAL"];
         for (var i = 0; i < 3; i++) { // i: index for each bar
-          context.fillStyle = "#996633";
-          context.fillRect(i * 250 + 140, 100, 20, 400);
-          context.fillRect(i * 250 + 70, 500, 160, 50);
-          context.fillRect(i * 250 + 140, 100, 20, 400);
-          fillStyle = "#FFFFFF";
-          context.fillText(barName[i], i * 250 + 150, 525);
+          context.fillStyle = "#996633";//棒の色は茶色
+          context.fillRect(i * 250 + 140, 100, 20, 400);棒と台を描く
+          context.fillRect(i * 250 + 70, 500, 160, 50);棒と台を描く
+          //context.fillRect(i * 250 + 140, 100, 20, 400);
+          fillStyle = "#FFFFFF";//文字の色は白
+          context.fillText(barName[i], i * 250 + 150, 525);//棒の名前(START、なし、GOAL)を描く
 
-          for (var j = 0; j < bar[i].length; j++) {
+          for (var j = 0; j < bar[i].length; j++) {//bar[i]棒にある円盤の数
             var x = i * 250 + 150;
             var y = 500 - (j + 1) * 30;
-            if (diskNo != bar[i][j]) drawDisk(bar[i][j], x, y);
+            if (diskNo != bar[i][j]) drawDisk(bar[i][j], x, y);//円盤が移動中でないなら描く
           }
         }
         if (diskNo > -1) drawDisk(diskNo, diskX, diskY);
-        if (bar[2].length == num) {
+        if (bar[2].length == num) {//右端(GOAL)の棒に全ての円盤をおけたなら
           document.getElementById("message").innerText = "CLEAR";
         }
       }
 
       // Pick a disk up
       function startMove(event) {
-        var x = event.clientX - canvasRect.left;
+        var x = event.clientX - canvasRect.left;//キャンバス内のマウスカーソル座標
         var y = event.clientY - canvasRect.top;
         barNo = -1;
 
         // Decide from which bar the disk was picked
-        if (x > 70 && x < 230 && y > 100 && y < 550) barNo = 0;
+        if (x > 70 && x < 230 && y > 100 && y < 550) barNo = 0;//マウスカーソルの座標によって棒の番号をリセット
         if (x > 320 && x < 480 && y > 100 && y < 550) barNo = 1;
         if (x > 570 && x < 730 && y > 100 && y < 550) barNo = 2;
 
-        if (barNo > -1 && bar[barNo].length > 0 && status == "manual") {
+        if (barNo > -1 && bar[barNo].length > 0 && status == "manual") {//棒に円盤が有り、STATUSが「MANUAL」なら
           mouseDown = true;
-          diskNo = bar[barNo][bar[barNo].length - 1];
-          diskX = x;
+          diskNo = bar[barNo][bar[barNo].length - 1];//棒のいちばん上にある円盤の番号
+          diskX = x;//円盤の座標をマウスカーソルの座標にする
           diskY = y;
           update();
         }
@@ -106,8 +108,8 @@
 
       // Move the disk while you hold it
       function move(event) {
-        if (mouseDown) {
-          diskX = event.clientX - canvasRect.left;
+        if (mouseDown) {//マウスボタンを押しているなら
+          diskX = event.clientX - canvasRect.left;円盤の座標をマウスカーソルの座標にする
           diskY = event.clientY - canvasRect.top;
           update();
         }
@@ -121,17 +123,17 @@
         var newBarNo = -1;
 
         // Decide to which bar the disk was put down
-        if (x > 70 && x < 230 && y > 100 && y < 550) newBarNo = 0;
+        if (x > 70 && x < 230 && y > 100 && y < 550) newBarNo = 0;移動先の棒の番号をリセット
         if (x > 320 && x < 480 && y > 100 && y < 550) newBarNo = 1;
         if (x > 570 && x < 730 && y > 100 && y < 550) newBarNo = 2;
 
-        if (newBarNo > -1 && diskNo > -1) {
+        if (newBarNo > -1 && diskNo > -1) {//移動中の円盤を棒に合わせていたなら
           if (
-            bar[newBarNo].length == 0 ||
+            bar[newBarNo].length == 0 ||//棒に円盤がないか、一番上の円盤が移動中の円盤より大きいなら
             (bar[newBarNo].length > 0 &&
               diskNo < bar[newBarNo][bar[newBarNo].length - 1])
           ) {
-            bar[barNo].pop();
+            bar[barNo].pop();//円盤を新しい棒に移動
             bar[newBarNo].push(diskNo);
             cnt++;
             document.getElementById("cnt").innerText = cnt;
@@ -144,28 +146,29 @@
       // This simple recursive func is the key solution algorithm
       function hanoi(n, from, work, dest) {
         // Condition for termination of recursion
-        if (n > 0) {
-          hanoi(n - 1, from, dest, work);
-          answer.push({ n: n, from: from, dest: dest });
-          hanoi(n - 1, work, from, dest);
+        //解答の作成
+        if (n > 0) {//nが0より大きいなら
+          hanoi(n - 1, from, dest, work);//nを一つ減らし、移動先と作業用(work)を入れ替えて再起呼び出し
+          answer.push({ n: n, from: from, dest: dest });//番号nの円盤の移動元、移動先の棒を保存
+          hanoi(n - 1, work, from, dest);//nを一つ減らし、移動元と作業用(work)を入れ替えて再起呼び出し
         }
       }
 
       // Show automatic problem solving
       function showAnswer() {
         initDisk();
-        answer = [];
-        hanoi(num, 0, 1, 2);
+        answer = [];//空の配列を作成
+        hanoi(num, 0, 1, 2);//円盤がnum枚のときの解答を作成
         index = 0;
         status = "auto";
-        timer = setInterval(moveDisk, 500);
+        timer = setInterval(moveDisk, 500);//500ミリ秒ごとにmoveDisk()関数を実行
       }
 
       // Record all the new status after disk manipulation
       function moveDisk() {
-        if (index < answer.length) {
+        if (index < answer.length) {//解答の手数
           bar[answer[index].from].pop();
-          bar[answer[index].dest].push(answer[index].n);
+          bar[answer[index].dest].push(answer[index].n);//円盤を新しい棒に移動
           update();
           index++;
           document.getElementById("cnt").innerText = index;
@@ -178,17 +181,17 @@
 
     <style>
       input[type="number"] {
-        width: 40px;
+        width: 40px;//「円盤の数」入力エリアの情報40px
       }
       #message {
-        color: #cc0000;
+        color: #cc0000;//「メッセージ」の色　濃い赤
       }
     </style>
   </head>
 
-  <body onload="init()">
+  <body onload="init()"><!-- //このhtmlファイルが読み込まれたときにinit()関数を実行する -->
     <p>ハノイの塔</p>
-    <input type="button" value="解答" onclick="showAnswer()" />
+    <input type="button" value="解答" onclick="showAnswer()" /> <!-- //「解答」、「リセット」ボタン -->
     <input type="button" value="リセット" onclick="initDisk()" />
     円盤の数：
     <input
@@ -198,9 +201,9 @@
       min="3"
       max="9"
       onchange="initDisk()"
-    />
+    /> <!-- 「円盤の数」入力エリア -->
     手数：
-    <span id="cnt">0</span><span id="message"></span>
+    <span id="cnt">0</span><span id="message"></span> <!--手数、メッセージ表示エリア-->
     <hr />
     <canvas
       id="base"
@@ -211,6 +214,6 @@
       onmouseup="endMove(event)"
       onmouseleave="endMove(event)"
     >
-    </canvas>
+    </canvas><!--canvas-->
   </body>
 </html>
