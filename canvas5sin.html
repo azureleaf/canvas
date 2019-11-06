@@ -48,33 +48,21 @@ alert( items[2] );
 var zahyou=[];
 
 function onClick(e) {
-  var x01 = e.clientX - canvas.offsetLeft;
-  var y01 = e.clientY - canvas.offsetTop;
-  zahyou.push(x01,y01);
-  ctx.beginPath();
-  ctx.moveTo(x01, y01);
-}
 
-function onClick(e) {
-  var x02 = e.clientX - canvas.offsetLeft;
-  var y02 = e.clientY - canvas.offsetTop;
-  zahyou.push(x02,y02);
-  ctx.lineTo(x02, y02);
-}
+  var x = e.clientX - canvas.offsetLeft;
+  var y = e.clientY - canvas.offsetTop;
+  zahyou.push(x);
+  zahyou.push(y);
 
-function onClick(e) {
-  var x03 = e.clientX - canvas.offsetLeft;
-  var y03 = e.clientY - canvas.offsetTop;
-  zahyou.push(x03,y03);
-  //ctx.beginPath();
-  //ctx.moveTo(x02, y02);
-  ctx.lineTo(x03, y03);
-  ctx.closePath();
-  ctx.fillStyle='skyblue';
-  ctx.stroke();
-  }
+//三角形描画
 
-canvas.addEventListener('click', onClick, true);
+ctx.moveTo(zahyou[0], zahyou[1]);
+    ctx.lineTo(zahyou[2], zahyou[3]);
+    ctx.lineTo(zahyou[4], zahyou[5]);
+    //ctx.lineTo(zahyou[0], zahyou[1]);
+    ctx.closePath();
+    ctx.fillStyle='skyblue';
+    ctx.stroke();
 
 
 /*
@@ -83,20 +71,20 @@ canvas.addEventListener('click', onClick, true);
     ctx.beginPath();
 
 	var www=1024-768;
-    var x01=Math.random()*www;
-    var y01=Math.random()*www;
-    var x02=Math.random()*www;
-    var y02=Math.random()*www;
-    var x03=Math.random()*www;
-    var y03=Math.random()*www;
+    var zahyou[0]=Math.random()*www;
+    var zahyou[1]=Math.random()*www;
+    var zahyou[2]=Math.random()*www;
+    var zahyou[3]=Math.random()*www;
+    var zahyou[4]=Math.random()*www;
+    var zahyou[5]=Math.random()*www;
 */
 
 // //三角形描画
 // alert(zahyou[0]);
-//     ctx.moveTo(x01,y01);
-//     ctx.lineTo(x02,y02);
-//     ctx.lineTo(x03,y03);
-//     //ctx.lineTo(x01, y01);
+//     ctx.moveTo(zahyou[0],zahyou[1]);
+//     ctx.lineTo(zahyou[2],zahyou[3]);
+//     ctx.lineTo(zahyou[4],zahyou[5]);
+//     //ctx.lineTo(zahyou[0], zahyou[1]);
 //     ctx.closePath();
 //     ctx.fillStyle='skyblue';
 //     ctx.stroke();
@@ -106,7 +94,7 @@ canvas.addEventListener('click', onClick, true);
 // ctx.moveTo(zahyou[0], zahyou[1]);
 //     ctx.lineTo(zahyou[2], zahyou[3]);
 //     ctx.lineTo(zahyou[4], zahyou[5]);
-//     //ctx.lineTo(x01, y01);
+//     //ctx.lineTo(zahyou[0], zahyou[1]);
 //     ctx.closePath();
 //     ctx.fillStyle='skyblue';
 //     ctx.stroke();
@@ -114,34 +102,35 @@ canvas.addEventListener('click', onClick, true);
 /*
 
 //直角三角形
-    var x01=0;
-    var y01=0;
-    var x02=0+30;
-    var y02=0;
-    var x03=0+0;
-    var y03=0+40;
+    var zahyou[0]=0;
+    var zahyou[1]=0;
+    var zahyou[2]=0+30;
+    var zahyou[3]=0;
+    var zahyou[4]=0+0;
+    var zahyou[5]=0+40;
 
 //正三角形
-    var x01=200;
-    var y01=200;
-    var x02=200+100;
-    var y02=200;
-    var x03=200+50;
-    var y03=200-50*Math.pow(3,1/2);
+    var zahyou[0]=200;
+    var zahyou[1]=200;
+    var zahyou[2]=200+100;
+    var zahyou[3]=200;
+    var zahyou[4]=200+50;
+    var zahyou[5]=200-50*Math.pow(3,1/2);
 */
 
 
 
-    // ctx.moveTo(x01, y01);
-    // ctx.lineTo(x02, y02);
-    // ctx.lineTo(x03, y03);
+    // ctx.moveTo(zahyou[0], zahyou[1]);
+    // ctx.lineTo(zahyou[2], zahyou[3]);
+    // ctx.lineTo(zahyou[4], zahyou[5]);
     // ctx.fillStyle='skyblue';
     // ctx.fill();
 
 //３辺の長さ
-    var c=Math.pow(Math.pow(x01-x02,2)+Math.pow(y01-y02,2),1/2);
-    var a=Math.pow(Math.pow(x02-x03,2)+Math.pow(y02-y03,2),1/2);
-    var b=Math.pow(Math.pow(x03-x01,2)+Math.pow(y03-y01,2),1/2);
+    var c=Math.pow(Math.pow(zahyou[0]-zahyou[2],2)+Math.pow(zahyou[1]-zahyou[3],2),1/2);
+    var a=Math.pow(Math.pow(zahyou[2]-zahyou[4],2)+Math.pow(zahyou[3]-zahyou[5],2),1/2);
+    var b=Math.pow(Math.pow(zahyou[4]-zahyou[0],2)+Math.pow(zahyou[5]-zahyou[1],2),1/2);
+    //alert(a+","+b+","+c);
 //三角形の面積
     var s=(a+b+c)/2;
     var S=Math.pow((s*(s-a)*(s-b)*(s-c)),1/2);
@@ -151,28 +140,28 @@ canvas.addEventListener('click', onClick, true);
 	var R=(a*b*c)/(4*r*s)
 
 //内心
-	var x00=(a*x01+b*x02+c*x03)/(a+b+c);
-	var y00=(a*y01+b*y02+c*y03)/(a+b+c);
+	var x00=(a*zahyou[0]+b*zahyou[2]+c*zahyou[4])/(a+b+c);
+	var y00=(a*zahyou[1]+b*zahyou[3]+c*zahyou[5])/(a+b+c);
 //外心
-	var x0O=(a*a*(b*b+c*c-a*a)*x01+b*b*(c*c+a*a-b*b)*x02+c*c*(a*a+b*b-c*c)*x03)/(16*S*S)
-	var y0O=(a*a*(b*b+c*c-a*a)*y01+b*b*(c*c+a*a-b*b)*y02+c*c*(a*a+b*b-c*c)*y03)/(16*S*S)
+	var x0O=(a*a*(b*b+c*c-a*a)*zahyou[0]+b*b*(c*c+a*a-b*b)*zahyou[2]+c*c*(a*a+b*b-c*c)*zahyou[4])/(16*S*S)
+	var y0O=(a*a*(b*b+c*c-a*a)*zahyou[1]+b*b*(c*c+a*a-b*b)*zahyou[3]+c*c*(a*a+b*b-c*c)*zahyou[5])/(16*S*S)
 //垂心
 
 //重心
-	var x0g=(x01+x02+x03)/3;
-	var y0g=(y01+y02+y03)/3;
+	var x0g=(zahyou[0]+zahyou[2]+zahyou[4])/3;
+	var y0g=(zahyou[1]+zahyou[3]+zahyou[5])/3;
 
-	ctx.moveTo(x01, y01);
+	ctx.moveTo(zahyou[0], zahyou[1]);
     ctx.lineTo(x0g, y0g);
     ctx.strokeStyle="blue";
     ctx.stroke();
 
-	ctx.moveTo(x02, y02);
+	ctx.moveTo(zahyou[2], zahyou[3]);
     ctx.lineTo(x0g, y0g);
     ctx.strokeStyle="blue";
     ctx.stroke();
 
-    ctx.moveTo(x03, y03);
+    ctx.moveTo(zahyou[4], zahyou[5]);
     ctx.lineTo(x0g, y0g);
     ctx.strokeStyle="blue";
     ctx.stroke();
@@ -203,6 +192,10 @@ canvas.addEventListener('click', onClick, true);
     ctx.strokeStyle="yellow";
     ctx.stroke();
 
+}
+
+
+canvas.addEventListener('click', onClick, true);
 
 
   }
