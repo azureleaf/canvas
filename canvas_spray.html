@@ -4,18 +4,18 @@
 <meta charset="UTF-8">
 <title>スプレーアート</title>
 <script>
-var canvas, contex, canvasRect;
-var canvasMask, contexMask;
-var mouseDown = false;
-var maskType = "none";
-var mx1, my1, mx2, my2, mr;
+var canvas, contex, canvasRect;//描画用キャンバス
+var canvasMask, contexMask;//マスク用キャンバス
+var mouseDown = false;//マウスボタンが押されたか?
+var maskType = "none";//マスクの種類(circle/rect/triangle/none)
+var mx1, my1, mx2, my2, mr;//マスクの座標、半径
 
 function init(){
-canvas = document.getElementById("image");
+canvas = document.getElementById("image");//描画用キャンバスのID(176秒)
 context = canvas.getContext("2d"),
-canvasMask = document.getElementById("mask");
+canvasMask = document.getElementById("mask");//マスク用キャンバスのID(177行)
 contextMask = canvasMask.getContext("2d");
-canvasRect = canvas.getBoundingClientRect();
+canvasRect = canvas.getBoundingClientRect();//描画用キャンバスの矩形情報を取得
 
 initCanvas();
 }
@@ -23,12 +23,12 @@ initCanvas();
 
 function initCanvas () {
 
-context.fillStyle = "#FFFFFF";
-context.fillRect(0, 0, canvas.width, canvas.height);
+context.fillStyle = "#FFFFFF";//塗りつぶしの色は白
+context.fillRect(0, 0, canvas.width, canvas.height);//描画用キャンバスの横幅、高さ
 clearMask();
 
 function clearMask(){
-
+//マスク用キャンバスのクリア
 contextMask.clearRect(0, 0, canvasMask.width, canvasMask.height);
 maskType = "none";
 }
@@ -36,10 +36,10 @@ maskType = "none";
 function startDraw(event) {
 
 mouseDown = true;
-var x = event.clientX - canvasRect.left;
+var x = event.clientX - canvasRect.left;//描画用キャンバス内のマウスカーソルの座標を取得
 var y = event.clientY - canvasRect.top;
 
-if (document.getElementById("spray").checked){
+if (document.getElementById("spray").checked){//「スプレー」が選択されている時
 drawSpray (x, y);
 } else {
 
