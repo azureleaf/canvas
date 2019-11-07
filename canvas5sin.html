@@ -192,6 +192,34 @@ function onClick(e) {
 	ctx.arc(x0O,y0O,R ,0,2*Math.PI);
 	ctx.strokeStyle="whitesmoke";
 	ctx.stroke();
+//傍心
+var x0ia=((b*zahyou[2]+c*zahyou[4]-a*zahyou[0])/(b+c-a));
+var y0ia=((b*zahyou[3]+c*zahyou[5]-a*zahyou[1])/(b+c-a));
+var ra=S/(s-a);
+
+var x0ib=((-b*zahyou[2]+c*zahyou[4]+a*zahyou[0])/(-b+c+a));
+var y0ib=((-b*zahyou[3]+c*zahyou[5]+a*zahyou[1])/(-b+c+a));
+var rb=S/(s-b);
+
+var x0ic=((b*zahyou[2]-c*zahyou[4]+a*zahyou[0])/(b-c+a));
+var y0ic=((b*zahyou[3]-c*zahyou[5]+a*zahyou[1])/(b-c+a));
+var rc=S/(s-c);
+//傍接円
+	ctx.beginPath();
+	ctx.arc(x0ia,y0ia,ra ,0,2*Math.PI);
+	ctx.strokeStyle="purple";
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.arc(x0ib, y0ib, rb,0,2*Math.PI);
+	ctx.strokeStyle="purple";
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.arc(x0ic,y0ic,rc ,0,2*Math.PI);
+	ctx.strokeStyle="purple";
+	ctx.stroke();
+
 
 ctx.beginPath();
 	ctx.moveTo(x00, y00);
@@ -235,6 +263,23 @@ ctx.beginPath();
     ctx.strokeStyle="orange";
     ctx.stroke();
 
+ctx.beginPath();
+    ctx.moveTo(x0ia, y0ia);
+    ctx.lineTo(zahyou[0], zahyou[1]);
+    ctx.strokeStyle="purple";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0ib, y0ib);
+    ctx.lineTo(zahyou[2], zahyou[3]);
+    ctx.strokeStyle="purple";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0ic, y0ic);
+    ctx.lineTo(zahyou[4], zahyou[5]);
+    ctx.strokeStyle="purple";
+    ctx.stroke();
 //alert(zahyou);
 }
 
