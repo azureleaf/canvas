@@ -3,17 +3,31 @@
 <head>
   <meta charset="utf-8">
   <title>Canvas triangle 5center</title>
-  <link rel="stylesheet" href="css/styles.css">
+<style>
+#axisCanvasRapper {
+  margin: 30px auto;
+  text-align: center;
+}
+
+#axisCanvas {
+  border: 1px solid #ff0000;
+}
+
+#container {
+	display: inline;
+text-align: left;
+}
+</style>
+
 </head>
 <body>
-  <canvas width="1024" height="768">
+  <canvas width="1024" height="256" >
     Canvas not supported.
   </canvas>
 
-  <script>
-	  'use strict';
 
-{
+  <script>
+	'use strict';{
 	let t=0;
 
   function draw() {
@@ -26,7 +40,7 @@
 
 //解像度
 const CANVAS_WIDTH=1024;
-const CANVAS_HEIGHT=768;
+const CANVAS_HEIGHT=256;
 const dpr =window.devicePixelRatio || 1;
 canvas.width=CANVAS_WIDTH*dpr;
 canvas.height=CANVAS_HEIGHT*dpr;
@@ -45,184 +59,250 @@ items.push(5);
 alert( items[2] );
 */
 
-var zahyou=[];
+
+var za=[];
 
 function onClick(e) {
 
-  var x = e.clientX - canvas.offsetLeft;
-  var y = e.clientY - canvas.offsetTop;
-  zahyou.push(x);
-  zahyou.push(y);
-
-//三角形描画
-
-	ctx.moveTo(zahyou[0], zahyou[1]);
-    ctx.lineTo(zahyou[2], zahyou[3]);
-    ctx.lineTo(zahyou[4], zahyou[5]);
-    //ctx.lineTo(zahyou[0], zahyou[1]);
-
-    ctx.closePath();
-    ctx.fillStyle='skyblue';
-    ctx.stroke();
-    ctx.strokeStyle="black";
-
-
-
 
 /*
-
-//triangle RANDOM
-    ctx.beginPath();
-
+	//triangle RANDOM
 	var www=1024-768;
-    var zahyou[0]=Math.random()*www;
-    var zahyou[1]=Math.random()*www;
-    var zahyou[2]=Math.random()*www;
-    var zahyou[3]=Math.random()*www;
-    var zahyou[4]=Math.random()*www;
-    var zahyou[5]=Math.random()*www;
+    var x01=Math.random()*www;
+    var y01=Math.random()*www;
+    var x02=Math.random()*www;
+    var y02=Math.random()*www;
+    var x03=Math.random()*www;
+    var y03=Math.random()*www;
 */
 
-// //三角形描画
-// alert(zahyou[0]);
-//     ctx.moveTo(zahyou[0],zahyou[1]);
-//     ctx.lineTo(zahyou[2],zahyou[3]);
-//     ctx.lineTo(zahyou[4],zahyou[5]);
-//     //ctx.lineTo(zahyou[0], zahyou[1]);
-//     ctx.closePath();
-//     ctx.fillStyle='skyblue';
-//     ctx.stroke();
-
-// //三角形描画
-// //alert(zahyou);
-// ctx.moveTo(zahyou[0], zahyou[1]);
-//     ctx.lineTo(zahyou[2], zahyou[3]);
-//     ctx.lineTo(zahyou[4], zahyou[5]);
-//     //ctx.lineTo(zahyou[0], zahyou[1]);
-//     ctx.closePath();
-//     ctx.fillStyle='skyblue';
-//     ctx.stroke();
-
-/*
 
 //直角三角形
-    var zahyou[0]=0;
-    var zahyou[1]=0;
-    var zahyou[2]=0+30;
-    var zahyou[3]=0;
-    var zahyou[4]=0+0;
-    var zahyou[5]=0+40;
+    var cl=za[0];
 
+    var x01=cl;
+    var y01=cl;
+    var x02=cl+300;
+    var y02=cl;
+    var x03=cl+0;
+    var y03=cl+400;
+
+document.getElementById("x1").value = x01;
+document.getElementById("y1").value = y01;
+document.getElementById("x2").value = x02;
+document.getElementById("y2").value = y02;
+document.getElementById("x3").value = x03;
+document.getElementById("y3").value = y03;
+/*
 //正三角形
-    var zahyou[0]=200;
-    var zahyou[1]=200;
-    var zahyou[2]=200+100;
-    var zahyou[3]=200;
-    var zahyou[4]=200+50;
-    var zahyou[5]=200-50*Math.pow(3,1/2);
+    var x1=200;
+    var y1=200;
+    var x2=200+100;
+    var y2=200;
+    var x3=200+50;
+    var y3=200-50*Math.pow(3,1/2);
 */
 
+  var x = e.clientX - canvas.offsetLeft;
+  var y = e.clientY - canvas.offsetTop;
+  za.push(x);
+  za.push(y);
 
+    var x1=za[0];
+    var y1=za[1];
+    var x2=za[2];
+    var y2=za[3];
+    var x3=za[4];
+    var y3=za[5];
 
-    // ctx.moveTo(zahyou[0], zahyou[1]);
-    // ctx.lineTo(zahyou[2], zahyou[3]);
-    // ctx.lineTo(zahyou[4], zahyou[5]);
-    // ctx.fillStyle='skyblue';
-    // ctx.fill();
+document.getElementById("x1").value = x1;
+document.getElementById("y1").value = y1;
+document.getElementById("x2").value = x2;
+document.getElementById("y2").value = y2;
+document.getElementById("x3").value = x3;
+document.getElementById("y3").value = y3;
+
+//三角形描画
+ctx.beginPath();
+	ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.lineTo(x3, y3);
+    ctx.strokeStyle="black";
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillStyle='lightgray';
+	ctx.fill();
 
 //３辺の長さ
-    var c=Math.pow(Math.pow(zahyou[0]-zahyou[2],2)+Math.pow(zahyou[1]-zahyou[3],2),1/2);
-    var a=Math.pow(Math.pow(zahyou[2]-zahyou[4],2)+Math.pow(zahyou[3]-zahyou[5],2),1/2);
-    var b=Math.pow(Math.pow(zahyou[4]-zahyou[0],2)+Math.pow(zahyou[5]-zahyou[1],2),1/2);
+    var c=Math.pow(Math.pow(x1-x2,2)+Math.pow(y1-y2,2),1/2);
+    var a=Math.pow(Math.pow(x2-x3,2)+Math.pow(y2-y3,2),1/2);
+    var b=Math.pow(Math.pow(x3-x1,2)+Math.pow(y3-y1,2),1/2);
     //alert(a+","+b+","+c);
+
+document.getElementById("a").value = a;
+document.getElementById("b").value = b;
+document.getElementById("c").value = c;
+
 //三角形の面積
     var s=(a+b+c)/2;
     var S=Math.pow((s*(s-a)*(s-b)*(s-c)),1/2);
     //Math.pow(s*s,1/2);
+document.getElementById("s").value = s;
+document.getElementById("S").value = S;
+
 //接円半径
 	var r=(2*S)/(a+b+c);
 	var R=(a*b*c)/(4*r*s)
 
-//内心
-	var x00=(a*zahyou[0]+b*zahyou[2]+c*zahyou[4])/(a+b+c);
-	var y00=(a*zahyou[1]+b*zahyou[3]+c*zahyou[5])/(a+b+c);
-//外心
-	var x0O=(a*a*(b*b+c*c-a*a)*zahyou[0]+b*b*(c*c+a*a-b*b)*zahyou[2]+c*c*(a*a+b*b-c*c)*zahyou[4])/(16*S*S)
-	var y0O=(a*a*(b*b+c*c-a*a)*zahyou[1]+b*b*(c*c+a*a-b*b)*zahyou[3]+c*c*(a*a+b*b-c*c)*zahyou[5])/(16*S*S)
-//垂心
-	var thetaA=Math.acos(((zahyou[2]-zahyou[0])*(zahyou[4]-zahyou[0])+(zahyou[3]-zahyou[1])*(zahyou[5]-zahyou[1]))/(b*c));
-	var thetaB=Math.acos(((zahyou[4]-zahyou[2])*(zahyou[0]-zahyou[2])+(zahyou[5]-zahyou[3])*(zahyou[1]-zahyou[3]))/(c*a));
-	var thetaC=Math.acos(((zahyou[0]-zahyou[4])*(zahyou[2]-zahyou[4])+(zahyou[1]-zahyou[5])*(zahyou[3]-zahyou[5]))/(a*b));
+document.getElementById("r").value = r;
+document.getElementById("R").value = R;
 
-	var x0h=(Math.tan(thetaA)*zahyou[0]+Math.tan(thetaB)*zahyou[2]+Math.tan(thetaC)*zahyou[4])/(Math.tan(thetaA)+Math.tan(thetaB)+Math.tan(thetaC));
-	var y0h=(Math.tan(thetaA)*zahyou[1]+Math.tan(thetaB)*zahyou[3]+Math.tan(thetaC)*zahyou[5])/(Math.tan(thetaA)+Math.tan(thetaB)+Math.tan(thetaC));
+//垂心
+	var thetaA=Math.acos(((x2-x1)*(x3-x1)+(y2-y1)*(y3-y1))/(b*c));
+	var thetaB=Math.acos(((x3-x2)*(x1-x2)+(y3-y2)*(y1-y2))/(c*a));
+	var thetaC=Math.acos(((x1-x3)*(x2-x3)+(y1-y3)*(y2-y3))/(a*b));
+
+	var x0h=(Math.tan(thetaA)*x1+Math.tan(thetaB)*x2+Math.tan(thetaC)*x3)/(Math.tan(thetaA)+Math.tan(thetaB)+Math.tan(thetaC));
+	var y0h=(Math.tan(thetaA)*y1+Math.tan(thetaB)*y2+Math.tan(thetaC)*y3)/(Math.tan(thetaA)+Math.tan(thetaB)+Math.tan(thetaC));
+
+document.getElementById("x0h").value = x0h;
+document.getElementById("y0h").value = y0h;
+
+	ctx.beginPath();
+    ctx.moveTo(x0h, y0h);
+    ctx.lineTo(x1, y1);
+    ctx.strokeStyle="orange";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0h, y0h);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle="orange";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0h, y0h);
+    ctx.lineTo(x3, y3);
+    ctx.strokeStyle="orange";
+    ctx.stroke();
 
 //重心
-	var x0g=(zahyou[0]+zahyou[2]+zahyou[4])/3;
-	var y0g=(zahyou[1]+zahyou[3]+zahyou[5])/3;
+	var x0g=(x1+x2+x3)/3;
+	var y0g=(y1+y2+y3)/3;
 
-	ctx.moveTo(zahyou[0], zahyou[1]);
+document.getElementById("x0g").value = x0g;
+document.getElementById("y0g").value = y0g;
+
+ctx.beginPath();
+	ctx.moveTo(x1, y1);
     ctx.lineTo(x0g, y0g);
-    ctx.closePath();
     ctx.strokeStyle="blue";
     ctx.stroke();
 
-	ctx.moveTo(zahyou[2], zahyou[3]);
+ctx.beginPath();
+	ctx.moveTo(x2, y2);
     ctx.lineTo(x0g, y0g);
-    ctx.closePath();
     ctx.strokeStyle="blue";
     ctx.stroke();
 
-    ctx.moveTo(zahyou[4], zahyou[5]);
+ctx.beginPath();
+    ctx.moveTo(x3, y3);
     ctx.lineTo(x0g, y0g);
-    ctx.closePath();
     ctx.strokeStyle="blue";
     ctx.stroke();
 
-//正円
+//内心
+	var x0i=(a*x1+b*x2+c*x3)/(a+b+c);
+	var y0i=(a*y1+b*y2+c*y3)/(a+b+c);
+
+document.getElementById("x0i").value = x0i;
+document.getElementById("y0i").value = y0i;
 //内接円
 	ctx.beginPath();
 	//ctx.arc(50,50,c ,0,2*Math.PI);//中心,中心,半径,start-中心角,end-中心角
-	ctx.arc(x00,y00,r ,0,2*Math.PI);
+	ctx.arc(x0i,y0i,r ,0,2*Math.PI);
 	//ctx.closePath();
     ctx.strokeStyle="skyblue";
 	ctx.stroke();
+
+//外心
+	var x0O=(a*a*(b*b+c*c-a*a)*x1+b*b*(c*c+a*a-b*b)*x2+c*c*(a*a+b*b-c*c)*x3)/(16*S*S)
+	var y0O=(a*a*(b*b+c*c-a*a)*y1+b*b*(c*c+a*a-b*b)*y2+c*c*(a*a+b*b-c*c)*y3)/(16*S*S)
+
+document.getElementById("x0O").value = x0O;
+document.getElementById("y0O").value = y0O;
+
 //外接円
 	ctx.beginPath();
 	ctx.arc(x0O,y0O,R ,0,2*Math.PI);
-	ctx.strokeStyle="whitesmoke";
+	ctx.strokeStyle="skyblue";
 	ctx.stroke();
+
 //傍心
-var x0ia=((b*zahyou[2]+c*zahyou[4]-a*zahyou[0])/(b+c-a));
-var y0ia=((b*zahyou[3]+c*zahyou[5]-a*zahyou[1])/(b+c-a));
+var x0ia=((b*x2+c*x3-a*x1)/(b+c-a));
+var y0ia=((b*y2+c*y3-a*y1)/(b+c-a));
 var ra=S/(s-a);
 
-var x0ib=((-b*zahyou[2]+c*zahyou[4]+a*zahyou[0])/(-b+c+a));
-var y0ib=((-b*zahyou[3]+c*zahyou[5]+a*zahyou[1])/(-b+c+a));
+document.getElementById("x0ia").value = x0ia;
+document.getElementById("y0ia").value = y0ia;
+document.getElementById("ra").value = ra;
+
+
+var x0ib=((-b*x2+c*x3+a*x1)/(-b+c+a));
+var y0ib=((-b*y2+c*y3+a*y1)/(-b+c+a));
 var rb=S/(s-b);
 
-var x0ic=((b*zahyou[2]-c*zahyou[4]+a*zahyou[0])/(b-c+a));
-var y0ic=((b*zahyou[3]-c*zahyou[5]+a*zahyou[1])/(b-c+a));
+document.getElementById("x0ib").value = x0ib;
+document.getElementById("y0ib").value = y0ib;
+document.getElementById("rb").value = rb;
+
+
+var x0ic=((b*x2-c*x3+a*x1)/(b-c+a));
+var y0ic=((b*y2-c*y3+a*y1)/(b-c+a));
 var rc=S/(s-c);
+
+document.getElementById("x0ic").value = x0ic;
+document.getElementById("y0ic").value = y0ic;
+document.getElementById("rc").value = rc;
+
+
 //傍接円
-	ctx.beginPath();
+ctx.beginPath();
 	ctx.arc(x0ia,y0ia,ra ,0,2*Math.PI);
 	ctx.strokeStyle="purple";
 	ctx.stroke();
 
-	ctx.beginPath();
+ctx.beginPath();
 	ctx.arc(x0ib, y0ib, rb,0,2*Math.PI);
 	ctx.strokeStyle="purple";
 	ctx.stroke();
 
-	ctx.beginPath();
+ctx.beginPath();
 	ctx.arc(x0ic,y0ic,rc ,0,2*Math.PI);
 	ctx.strokeStyle="purple";
 	ctx.stroke();
 
+ctx.beginPath();
+    ctx.moveTo(x0ia, y0ia);
+    ctx.lineTo(x1, y1);
+    ctx.strokeStyle="plum";
+    ctx.stroke();
 
 ctx.beginPath();
-	ctx.moveTo(x00, y00);
+    ctx.moveTo(x0ib, y0ib);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle="plum";
+    ctx.stroke();
+
+ctx.beginPath();
+    ctx.moveTo(x0ic, y0ic);
+    ctx.lineTo(x3, y3);
+    ctx.strokeStyle="plum";
+    ctx.stroke();
+
+//各点を結ぶ(オイラー線含む)
+ctx.beginPath();
+	ctx.moveTo(x0i, y0i);
     ctx.lineTo(x0O, y0O);
     ctx.strokeStyle="red";
     ctx.stroke();
@@ -234,7 +314,7 @@ ctx.beginPath();
     ctx.stroke();
 
 ctx.beginPath();
-    ctx.moveTo(x00, y00);
+    ctx.moveTo(x0i, y0i);
     ctx.lineTo(x0g, y0g);
     ctx.strokeStyle="green";
     ctx.stroke();
@@ -245,54 +325,37 @@ ctx.beginPath();
     ctx.strokeStyle="orange";
     ctx.stroke();
 
-ctx.beginPath();
-    ctx.moveTo(x0h, y0h);
-    ctx.lineTo(zahyou[0], zahyou[1]);
-    ctx.strokeStyle="orange";
-    ctx.stroke();
 
-ctx.beginPath();
-    ctx.moveTo(x0h, y0h);
-    ctx.lineTo(zahyou[2], zahyou[3]);
-    ctx.strokeStyle="orange";
-    ctx.stroke();
-
-ctx.beginPath();
-    ctx.moveTo(x0h, y0h);
-    ctx.lineTo(zahyou[4], zahyou[5]);
-    ctx.strokeStyle="orange";
-    ctx.stroke();
-
-ctx.beginPath();
-    ctx.moveTo(x0ia, y0ia);
-    ctx.lineTo(zahyou[0], zahyou[1]);
-    ctx.strokeStyle="purple";
-    ctx.stroke();
-
-ctx.beginPath();
-    ctx.moveTo(x0ib, y0ib);
-    ctx.lineTo(zahyou[2], zahyou[3]);
-    ctx.strokeStyle="purple";
-    ctx.stroke();
-
-ctx.beginPath();
-    ctx.moveTo(x0ic, y0ic);
-    ctx.lineTo(zahyou[4], zahyou[5]);
-    ctx.strokeStyle="purple";
-    ctx.stroke();
-//alert(zahyou);
 }
-
 
 canvas.addEventListener('click', onClick, false);
-
-
   }
-
   draw();
-
-
 }
   </script>
+<div id="container">
+  <form>
+  P1(<input type="text" id="x1" value="" placeholder="" size="4">,<input type="text" id="y1" value="" placeholder="y1" size="4">)
+  P2(<input type="text" id="x2" value="" placeholder="x2" size="4">,<input type="text" id="y2" value="" placeholder="y2" size="4">)
+  P3(<input type="text" id="x3" value="" placeholder="x3" size="4">,<input type="text" id="y3" value="" placeholder="y3" size="4">)<br/>
+
+  a,b,c(<input type="text" id="a" value="" placeholder="a" size="4">,<input type="text" id="b" value="" placeholder="b" size="4">,<input type="text" id="c" value="" placeholder="c" size="4">)<br/>
+  s,S(<input type="text" id="s" value="" placeholder="s" size="4">,<input type="text" id="S" value="" placeholder="S" size="4">)
+  r,R(<input type="text" id="r" value="" placeholder="r" size="4">,<input type="text" id="R" value="" placeholder="R" size="4">)<br/>
+
+  H(<input type="text" id="x0h" value="" placeholder="x0h" size="4">,<input type="text" id="y0h" value="" placeholder="y0h" size="4">)
+  G(<input type="text" id="x0g" value="" placeholder="x0g" size="4">,<input type="text" id="y0g" value="" placeholder="y0g" size="4">)
+  I(<input type="text" id="x0i" value="" placeholder="x0i" size="4">,<input type="text" id="y0i" value="" placeholder="y0i" size="4">)
+  O(<input type="text" id="x0O" value="" placeholder="x0O" size="4">,<input type="text" id="y0O" value="" placeholder="y0O" size="4">)<br/>
+
+ia(<input type="text" id="x0ia" value="" placeholder="x0ia" size="4">,<input type="text" id="y0ia" value="" placeholder="y0ia" size="4">)
+ib(<input type="text" id="x0ib" value="" placeholder="x0ib" size="4">,<input type="text" id="y0ib" value="" placeholder="y0ib" size="4">)
+ic(<input type="text" id="x0ic" value="" placeholder="x0ic" size="4">,<input type="text" id="y0ic" value="" placeholder="y0ic" size="4">)<br/>
+(ra<input type="text" id="ra" value="" placeholder="ra" size="4">,rb<input type="text" id="rb" value="" placeholder="rb" size="4">,rc<input type="text" id="rc" value="" placeholder="rc" size="4">)<br/>
+
+  </form>
+  </div>
+
+
 </body>
 </html>
