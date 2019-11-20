@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>Canvas triangle 5center</title>
+    <!--   //<link rel="stylesheet" href="css/styles.css"> -->
+    <style>
+        #axisCanvasRapper {
+            margin: 30px auto;
+            text-align: center;
+        }
+        
+        #axisCanvas {
+            border: 1px solid #ff0000;
+        }
+        
+        #container {
+            display: inline;
+            text-align: left;
+        }
+    </style>
+
+</head>
+
+<body>
+    <canvas width="1024" height="256">
+    Canvas not supported.
+  </canvas>
+
+
+    <script>
+        //'use strict'; {
+
+
+
+
+
+        let t = 0;
+        var canvas = document.querySelector('canvas');
+
+        function draw(x1, y1, x2, y2, x3, y3, ctx, r, R, s, S, x0O, y0O, x0h, x0g, y0g, y0h, x0ia, y0ia, x0ib, y0ib, x0ic, y0ic, ) {
+
+            if (typeof canvas.getContext === 'undefined') {
+                return;
+            }
+            var ctx = canvas.getContext('2d');
+
+
+            //解像度
+            const CANVAS_WIDTH = 1024;
+            const CANVAS_HEIGHT = 256;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = CANVAS_WIDTH * dpr;
+            canvas.height = CANVAS_HEIGHT * dpr;
+
+            ctx.scale(dpr, dpr);
+            canvas.style.width = CANVAS_WIDTH + 'px';
+            canvas.style.height = CANVAS_HEIGHT + 'px';
+
+            //三角形描画
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x3, y3);
+            ctx.strokeStyle = "black";
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fillStyle = 'lightgray';
+            ctx.fill();
+
+            //３辺の長さ
+            var c = Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 1 / 2);
+            var a = Math.pow(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2), 1 / 2);
+            var b = Math.pow(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2), 1 / 2);
+            //alert(a + "," + b + "," + c);
+
+            document.getElementById("a").value = a;
+            document.getElementById("b").value = b;
+            document.getElementById("c").value = c;
+
+            //三角形の面積
+            var s = (a + b + c) / 2;
+            var S = Math.pow((s * (s - a) * (s - b) * (s - c)), 1 / 2);
+
+            document.getElementById("s").value = s;
+            document.getElementById("S").value = S;
+
+            //接円半径
+            var r = (2 * S) / (a + b + c);
+            document.getElementById("r").value = r;
+
+            var R = (a * b * c) / (4 * r * s)
+            document.getElementById("R").value = R;
+
+            //内接円
+            var x0i = (a * x1 + b * x2 + c * x3) / (a + b + c);
+            var y0i = (a * y1 + b * y2 + c * y3) / (a + b + c);
+
+            document.getElementById("x0i").value = x0i;
+            document.getElementById("y0i").value = y0i;
+
+            ctx.beginPath();
+            ctx.arc(x0i, y0i, r, 0, 2 * Math.PI);
+            ctx.strokeStyle = "skyblue";
+            ctx.stroke();
+
+            //外接円
+            var x0O = (a * a * (b * b + c * c - a * a) * x1 + b * b * (c * c + a * a - b * b) * x2 + c * c * (a * a + b * b - c * c) * x3) / (16 * S * S)
+            var y0O = (a * a * (b * b + c * c - a * a) * y1 + b * b * (c * c + a * a - b * b) * y2 + c * c * (a * a + b * b - c * c) * y3) / (16 * S * S)
+
+            document.getElementById("x0O").value = x0O;
+            document.getElementById("y0O").value = y0O;
+
+            ctx.beginPath();
+            ctx.arc(x0O, y0O, R, 0, 2 * Math.PI);
+            ctx.strokeStyle = "skyblue";
+            ctx.stroke();
+
+            //重心
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x0g, y0g);
+            ctx.strokeStyle = "blue";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x0g, y0g);
+            ctx.strokeStyle = "blue";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x3, y3);
+            ctx.lineTo(x0g, y0g);
+            ctx.strokeStyle = "blue";
+            ctx.stroke();
+
+            //垂心
+            ctx.beginPath();
+            ctx.moveTo(x0h, y0h);
+            ctx.lineTo(x1, y1);
+            ctx.strokeStyle = "orange";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0h, y0h);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = "orange";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0h, y0h);
+            ctx.lineTo(x3, y3);
+            ctx.strokeStyle = "orange";
+            ctx.stroke();
+
+            //傍接円
+            ctx.beginPath();
+            ctx.arc(x0ia, y0ia, ra, 0, 2 * Math.PI);
+            ctx.strokeStyle = "purple";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(x0ib, y0ib, rb, 0, 2 * Math.PI);
+            ctx.strokeStyle = "purple";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(x0ic, y0ic, rc, 0, 2 * Math.PI);
+            ctx.strokeStyle = "purple";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0ia, y0ia);
+            ctx.lineTo(x1, y1);
+            ctx.strokeStyle = "plum";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0ib, y0ib);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = "plum";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0ic, y0ic);
+            ctx.lineTo(x3, y3);
+            ctx.strokeStyle = "plum";
+            ctx.stroke();
+
+            //各点を結ぶ(オイラー線含む)
+            ctx.beginPath();
+            ctx.moveTo(x0i, y0i);
+            ctx.lineTo(x0O, y0O);
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0O, y0O);
+            ctx.lineTo(x0g, y0g);
+            ctx.strokeStyle = "yellow";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0i, y0i);
+            ctx.lineTo(x0g, y0g);
+            ctx.strokeStyle = "green";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x0g, y0g);
+            ctx.lineTo(x0h, y0h);
+            ctx.strokeStyle = "orange";
+            ctx.stroke();
+        }
+        /*
+        var items = [1,2,3,4];
+
+        //配列「items」に数値データを追加する
+        items.push(5);
+
+        alert( items[2] );
+        */
+
+
+        var za = [];
+
+        function onClick(e) {
+            var x = e.clientX - canvas.offsetLeft;
+            var y = e.clientY - canvas.offsetTop;
+            za.push(x);
+            za.push(y);
+
+            var x1 = za[0];
+            var y1 = za[1];
+            var x2 = za[2];
+            var y2 = za[3];
+            var x3 = za[4];
+            var y3 = za[5];
+
+            document.getElementById("x1").value = x1;
+            document.getElementById("y1").value = y1;
+            document.getElementById("x2").value = x2;
+            document.getElementById("y2").value = y2;
+            document.getElementById("x3").value = x3;
+            document.getElementById("y3").value = y3;
+
+            draw(x1, y1, x2, y2, x3, y3);
+        }
+        //直角三角形
+        function tyo() {
+            var ran = Math.random() * (1024 - 256);
+
+            x1 = ran;
+            y1 = ran;
+            x2 = ran + 300;
+            y2 = ran;
+            x3 = ran;
+            y3 = ran + 400;
+
+            document.getElementById("x1").value = x1;
+            document.getElementById("y1").value = y1;
+            document.getElementById("x2").value = x2;
+            document.getElementById("y2").value = y2;
+            document.getElementById("x3").value = x3;
+            document.getElementById("y3").value = y3;
+
+            draw(x1, y1, x2, y2, x3, y3);
+        }
+        //正三角形
+        function sei() {
+            x1 = 200;
+            y1 = 200;
+            x2 = 200 + 100;
+            y2 = 200;
+            x3 = 200 + 50;
+            y3 = 200 - 50 * Math.pow(3, 1 / 2);
+
+            document.getElementById("x1").value = x1;
+            document.getElementById("y1").value = y1;
+            document.getElementById("x2").value = x2;
+            document.getElementById("y2").value = y2;
+            document.getElementById("x3").value = x3;
+            document.getElementById("y3").value = y3;
+
+            draw(x1, y1, x2, y2, x3, y3);
+        }
+        //triangle RANDOM
+        function random() {
+            var www = 256;
+            x1 = Math.random() * www;
+            y1 = Math.random() * www;
+            x2 = Math.random() * www;
+            y2 = Math.random() * www;
+            x3 = Math.random() * www;
+            y3 = Math.random() * www;
+
+            document.getElementById("x1").value = x1;
+            document.getElementById("y1").value = y1;
+            document.getElementById("x2").value = x2;
+            document.getElementById("y2").value = y2;
+            document.getElementById("x3").value = x3;
+            document.getElementById("y3").value = y3;
+
+            draw(x1, y1, x2, y2, x3, y3);
+        }
+        //内心
+        function naisin() {
+            // alert(a);
+
+
+
+            //draw(x0i, y0i, s, S, r, R, a, b, c, x1, y1, x2, y2, x3, y3);
+        }
+        //外心
+        function gaisin() {
+
+
+            draw(x0O, y0O, s, S, r, R, a, b, c, x1, y1, x2, y2, x3, y3);
+        }
+        //重心
+        function jyuusin() {
+            var x0g = (x1 + x2 + x3) / 3;
+            var y0g = (y1 + y2 + y3) / 3;
+
+            document.getElementById("x0g").value = x0g;
+            document.getElementById("y0g").value = y0g;
+
+            draw(x1, y1, x2, y2, x3, y3, x0g, y0g, r, R, s, S, a, b, c, );
+        }
+
+        //垂心
+        function suisin() {
+            alert(a);
+            var thetaA = Math.acos(((x2 - x1) * (x3 - x1) + (y2 - y1) * (y3 - y1)) / (b * c));
+            var thetaB = Math.acos(((x3 - x2) * (x1 - x2) + (y3 - y2) * (y1 - y2)) / (c * a));
+            var thetaC = Math.acos(((x1 - x3) * (x2 - x3) + (y1 - y3) * (y2 - y3)) / (a * b));
+
+            var x0h = (Math.tan(thetaA) * x1 + Math.tan(thetaB) * x2 + Math.tan(thetaC) * x3) / (Math.tan(thetaA) + Math.tan(thetaB) + Math.tan(thetaC));
+            var y0h = (Math.tan(thetaA) * y1 + Math.tan(thetaB) * y2 + Math.tan(thetaC) * y3) / (Math.tan(thetaA) + Math.tan(thetaB) + Math.tan(thetaC));
+
+            document.getElementById("x0h").value = x0h;
+            document.getElementById("y0h").value = y0h;
+
+            draw(x1, y1, x2, y2, x3, y3, x0h, y0h, thetaA, thetaB, thetaC, r, R, s, S, a, b, c);
+        }
+
+        //傍心
+        function bousin() {
+            var x0ia = ((b * x2 + c * x3 - a * x1) / (b + c - a));
+            var y0ia = ((b * y2 + c * y3 - a * y1) / (b + c - a));
+            var ra = S / (s - a);
+
+            document.getElementById("x0ia").value = x0ia;
+            document.getElementById("y0ia").value = y0ia;
+            document.getElementById("ra").value = ra;
+
+
+            var x0ib = ((-b * x2 + c * x3 + a * x1) / (-b + c + a));
+            var y0ib = ((-b * y2 + c * y3 + a * y1) / (-b + c + a));
+            var rb = S / (s - b);
+
+            document.getElementById("x0ib").value = x0ib;
+            document.getElementById("y0ib").value = y0ib;
+            document.getElementById("rb").value = rb;
+
+
+            var x0ic = ((b * x2 - c * x3 + a * x1) / (b - c + a));
+            var y0ic = ((b * y2 - c * y3 + a * y1) / (b - c + a));
+            var rc = S / (s - c);
+
+            document.getElementById("x0ic").value = x0ic;
+            document.getElementById("y0ic").value = y0ic;
+            document.getElementById("rc").value = rc;
+
+            draw(x1, y1, x2, y2, x3, y3, x0ia, y0ia, x0ib, y0ib, x0ic, y0ic, ra, rb, rc, a, b, c, r, R, s, S);
+        }
+        //オイラー線
+        function Euler() {
+            draw(x0i, y0i, x0O, y0O, x0g, y0g, x0i, y0i, x0h, y0h, s, S);
+        }
+        canvas.addEventListener('click', onClick, false);
+        //}
+    </script>
+
+    <div id="container">
+        <p>canvas内の任意の三点をクリックしてください。三角形の五心が表示されます。</p>
+        <input type="button" value="このページを再読込します" onclick="window.location.reload();" />
+        <form>
+            <input type="button" value="直角三角形" onclick="tyo();" />
+            <input type="button" value="正三角形" onclick="sei();" />
+            <input type="button" value="ランダム三角形" onclick="random();" /><br/> P1(
+            <input type="text" id="x1" placeholder="x1" size="4">,
+            <input type="text" id="y1" placeholder="y1" size="4">) P2(
+            <input type="text" id="x2" placeholder="x2" size="4">,
+            <input type="text" id="y2" placeholder="y2" size="4">) P3(
+            <input type="text" id="x3" placeholder="x3" size="4">,
+            <input type="text" id="y3" placeholder="y3" size="4">)<br/> a,b,c(
+            <input type="text" id="a" placeholder="a" size="4">,
+            <input type="text" id="b" placeholder="b" size="4">,
+            <input type="text" id="c" placeholder="c" size="4">)<br/> s,S(
+            <input type="text" id="s" placeholder="s" size="4">,
+            <input type="text" id="S" placeholder="S" size="4">) 内心・外心半径r,R(
+            <input type="text" id="r" placeholder="r" size="4">,
+            <input type="text" id="R" placeholder="R" size="4">)<br/>
+
+            <input type="button" value="内心" onclick="naisin();" /> 内心:I(
+            <input type="text" id="x0i" placeholder="x0i" size="4">,<input type="text" id="y0i" placeholder="y0i" size="4">)
+            <input type="button" value="外心" onclick="gaisin();" /> 外心:O(
+            <input type="text" id="x0O" placeholder="x0O" size="4">,<input type="text" id="y0O" placeholder="y0O" size="4">)<br/>
+            <input type="button" value="重心" onclick="jyuusin();" /> 重心:G(
+            <input type="text" id="x0g" placeholder="x0g" size="4">,<input type="text" id="y0g" placeholder="y0g" size="4">)
+            <input type="button" value="垂心" onclick="suisin();" /> 垂心:H(
+            <input type="text" id="x0h" placeholder="x0h" size="4">,<input type="text" id="y0h" placeholder="y0h" size="4">)<br/>
+            <input type="button" value="傍心" onclick="bousin();" /> 傍心: ia(
+            <input type="text" id="x0ia" placeholder="x0ia" size="4">,<input type="text" id="y0ia" placeholder="y0ia" size="4">) ib(
+            <input type="text" id="x0ib" placeholder="x0ib" size="4">,<input type="text" id="y0ib" placeholder="y0ib" size="4">) ic(
+            <input type="text" id="x0ic" placeholder="x0ic" size="4">,<input type="text" id="y0ic" placeholder="y0ic" size="4">)<br/> 傍心半径 (ra
+            <input type="text" id="ra" placeholder="ra" size="4">,rb<input type="text" id="rb" placeholder="rb" size="4">,rc<input type="text" id="rc" placeholder="rc" size="4">)<br/>
+            <input type="button" value="オイラー線" onclick="Euler();" />
+        </form>
+    </div>
+</body>
+
+</html>
