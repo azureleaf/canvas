@@ -14,7 +14,7 @@
 
         ctx.save();
         ctx.translate(WIDTH/2 , HEIGHT/2);
-        ctx.rotate(Math.PI * 2/360 * angle);
+        // ctx.rotate(Math.PI * 2/360 * angle);
 
 
         // //Axis
@@ -32,10 +32,20 @@
         ctx.strokeStyle='orange';
         ctx.lineWidth=6;
         ctx.beginPath();
-        ctx.moveTo(0, -r0);
-        ctx.lineTo(0, -r1);
-        ctx.stroke();
+        // ctx.moveTo(0, -r0);
+        // ctx.lineTo(0, -r1);
 
+        //x:r*Math.cos(Math.PI/180*angle)
+        //y:r*Math.sin(Math.PI/180*angle)
+        ctx.moveTo(
+            r0*Math.cos(Math.PI/180*angle),
+            r0*Math.sin(Math.PI/180*angle)
+            );
+        ctx.lineTo(
+            r1*Math.cos(Math.PI/180*angle),
+            r1*Math.sin(Math.PI/180*angle)
+            );
+        ctx.stroke();
         ctx.restore();
     }
 
