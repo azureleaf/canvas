@@ -523,14 +523,15 @@ function generateEquilateralTriangle() {
 
 // Draw random triangle
 function generateRandomTriangle() {
-  let www = 256;
   let x1, y1, x2, y2, x3, y3;
-  x1 = Math.random() * www;
-  y1 = Math.random() * www;
-  x2 = Math.random() * www;
-  y2 = Math.random() * www;
-  x3 = Math.random() * www;
-  y3 = Math.random() * www;
+
+  // 頂点の位置がカンバスの端に行きすぎない範囲でランダムに位置決定
+  x1 = CANVAS_WIDTH / 4 + Math.random() * CANVAS_WIDTH / 2;
+  y1 = CANVAS_HEIGHT / 4 + Math.random() * CANVAS_HEIGHT / 2;
+  x2 = CANVAS_WIDTH / 4 + Math.random() * CANVAS_WIDTH / 2;
+  y2 = CANVAS_HEIGHT / 4 + Math.random() * CANVAS_HEIGHT / 2;
+  x3 = CANVAS_WIDTH / 4 + Math.random() * CANVAS_WIDTH / 2;
+  y3 = CANVAS_HEIGHT / 4 + Math.random() * CANVAS_HEIGHT / 2;
 
   document.getElementById("x1").value = x1;
   document.getElementById("y1").value = y1;
