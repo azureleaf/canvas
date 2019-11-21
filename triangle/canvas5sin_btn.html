@@ -22,12 +22,15 @@
   </head>
 
   <body>
-    <canvas width="1024" height="256">
+    <canvas
+      width="1024"
+      height="256"
+      style="border-style: solid; border-width: 4px; border-color:#cccccc"
+    >
       Canvas not supported.
     </canvas>
 
     <script>
-      let t = 0;
       var canvas = document.querySelector("canvas");
 
       // Hold the (x, y) coordinate of a point
@@ -37,6 +40,12 @@
           this.y = y;
         }
       }
+
+      /* Global variables*/
+      let clickLoc = {
+        x: [],
+        y: []
+      };
 
       function calcParams(x1, y1, x2, y2, x3, y3) {
         // ３辺の長さ (Pythagorean theorem)
@@ -149,7 +158,7 @@
         document.getElementById("y0ic").value = excenter.c.y;
         document.getElementById("rc").value = excenter.c.radius;
 
-        let params = {
+        return {
           excenter: excenter,
           incenter: incenter,
           orthocenter: orthocenter,
@@ -162,8 +171,6 @@
           b: b,
           c: c
         };
-
-        return params;
       }
 
       function draw(x1, y1, x2, y2, x3, y3, content = "all") {
@@ -194,10 +201,27 @@
         ctx.fillStyle = "lightgray";
         ctx.fill();
 
+        // 頂点の描画
+        ctx.beginPath();
+        ctx.arc(x1, y1, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "black";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(x2, y2, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "black";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(x3, y3, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "black";
+        ctx.fill();
+
         // Get parameters based on the 3 vertices (various centers, radius, etc.)
         let params = calcParams(x1, y1, x2, y2, x3, y3);
 
-        /* Conditional Rendering */
+        // Conditional rendering
+        // "content"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
         if (content == "centroid" || content == "all") {
           drawCentroid(
             params.centroid,
@@ -297,12 +321,20 @@
       }
 
       function drawIncenter(incenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
+        // cicle
         ctx.beginPath();
         ctx.arc(incenter.x, incenter.y, r, 0, 2 * Math.PI);
         ctx.strokeStyle = "skyblue";
         ctx.stroke();
+
+        // center
+        ctx.beginPath();
+        ctx.arc(incenter.x, incenter.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "skyblue";
+        ctx.fill();
       }
 
+      // 外心の変数を受け取り、それに則って描写
       function drawCircumcenter(
         circumcenter,
         r,
@@ -316,12 +348,20 @@
         y3,
         ctx
       ) {
+        // circle
         ctx.beginPath();
         ctx.arc(circumcenter.x, circumcenter.y, R, 0, 2 * Math.PI);
         ctx.strokeStyle = "skyblue";
         ctx.stroke();
+
+        // center
+        ctx.beginPath();
+        ctx.arc(circumcenter.x, circumcenter.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "skyblue";
+        ctx.fill();
       }
 
+      // 垂心の変数を受け取り、それに則って描写
       function drawOrthocenter(
         orthocenter,
         r,
@@ -335,80 +375,125 @@
         y3,
         ctx
       ) {
+        // perpendicular line 1
         ctx.beginPath();
         ctx.moveTo(orthocenter.x, orthocenter.y);
         ctx.lineTo(x1, y1);
         ctx.strokeStyle = "orange";
         ctx.stroke();
 
+        // perpendicular line 2
         ctx.beginPath();
         ctx.moveTo(orthocenter.x, orthocenter.y);
         ctx.lineTo(x2, y2);
         ctx.strokeStyle = "orange";
         ctx.stroke();
 
+        // perpendicular line 3
         ctx.beginPath();
         ctx.moveTo(orthocenter.x, orthocenter.y);
         ctx.lineTo(x3, y3);
         ctx.strokeStyle = "orange";
         ctx.stroke();
+
+        // center
+        ctx.beginPath();
+        ctx.arc(orthocenter.x, orthocenter.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "orange";
+        ctx.fill();
       }
 
+      // 重心の変数を受け取り、それに則って描写
       function drawCentroid(centroid, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
+        // bisector line 1
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(centroid.x, centroid.y);
         ctx.strokeStyle = "blue";
         ctx.stroke();
 
+        // bisector line 2
         ctx.beginPath();
         ctx.moveTo(x2, y2);
         ctx.lineTo(centroid.x, centroid.y);
         ctx.strokeStyle = "blue";
         ctx.stroke();
 
+        // bisector line 3
         ctx.beginPath();
         ctx.moveTo(x3, y3);
         ctx.lineTo(centroid.x, centroid.y);
         ctx.strokeStyle = "blue";
         ctx.stroke();
+
+        // center
+        ctx.beginPath();
+        ctx.arc(centroid.x, centroid.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "blue";
+        ctx.fill();
       }
 
+      // 傍心の変数を受け取り、それに則って描写
       function drawExcenter(excenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
+        // circle 1
         ctx.beginPath();
         ctx.arc(excenter.a.x, excenter.a.y, excenter.a.radius, 0, 2 * Math.PI);
         ctx.strokeStyle = "purple";
         ctx.stroke();
 
+        // circle 2
         ctx.beginPath();
         ctx.arc(excenter.b.x, excenter.b.y, excenter.b.radius, 0, 2 * Math.PI);
         ctx.strokeStyle = "purple";
         ctx.stroke();
 
+        // circle 3
         ctx.beginPath();
         ctx.arc(excenter.c.x, excenter.c.y, excenter.c.radius, 0, 2 * Math.PI);
         ctx.strokeStyle = "purple";
         ctx.stroke();
 
+        // vertex to excenter line 1
         ctx.beginPath();
         ctx.moveTo(excenter.a.x, excenter.a.y);
         ctx.lineTo(x1, y1);
         ctx.strokeStyle = "plum";
         ctx.stroke();
 
+        // vertex to excenter line 2
         ctx.beginPath();
         ctx.moveTo(excenter.b.x, excenter.b.y);
         ctx.lineTo(x2, y2);
         ctx.strokeStyle = "plum";
         ctx.stroke();
 
+        // vertex to excenter line 3
         ctx.beginPath();
         ctx.moveTo(excenter.c.x, excenter.c.y);
         ctx.lineTo(x3, y3);
         ctx.strokeStyle = "plum";
         ctx.stroke();
+
+        // center 1
+        ctx.beginPath();
+        ctx.arc(excenter.a.x, excenter.a.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "purple";
+        ctx.fill();
+
+        // center 2
+        ctx.beginPath();
+        ctx.arc(excenter.b.x, excenter.b.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "purple";
+        ctx.fill();
+
+        // center 3
+        ctx.beginPath();
+        ctx.arc(excenter.c.x, excenter.c.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "purple";
+        ctx.fill();
       }
 
+      // 五心の変数を受け取り、それに則ってオイラー線を描写
       function drawConnectors(
         incenter,
         circumcenter,
@@ -426,47 +511,42 @@
         y3,
         ctx
       ) {
-        //各点を結ぶ(オイラー線含む)
+        // 外心-垂心の結合線
         ctx.beginPath();
-        ctx.moveTo(incenter.x, incenter.y);
+        ctx.moveTo(orthocenter.x, orthocenter.y);
         ctx.lineTo(circumcenter.x, circumcenter.y);
         ctx.strokeStyle = "red";
         ctx.stroke();
 
+        // 重心-外心の結合線
         ctx.beginPath();
         ctx.moveTo(circumcenter.x, circumcenter.y);
         ctx.lineTo(centroid.x, centroid.y);
-        ctx.strokeStyle = "yellow";
+        ctx.strokeStyle = "red";
         ctx.stroke();
 
-        ctx.beginPath();
-        ctx.moveTo(incenter.x, incenter.y);
-        ctx.lineTo(centroid.x, centroid.y);
-        ctx.strokeStyle = "green";
-        ctx.stroke();
-
+        // 重心-垂心の結合線
         ctx.beginPath();
         ctx.moveTo(centroid.x, centroid.y);
         ctx.lineTo(orthocenter.x, orthocenter.y);
-        ctx.strokeStyle = "orange";
+        ctx.strokeStyle = "red";
         ctx.stroke();
       }
 
       // Handle the free triangle input by user
-      function onClick(e) {
-        var za = [];
-
+      function freeClick(e) {
+        
         var x = e.clientX - canvas.offsetLeft;
         var y = e.clientY - canvas.offsetTop;
-        za.push(x);
-        za.push(y);
+        clickLoc.x.push(x);
+        clickLoc.y.push(y);
 
-        var x1 = za[0];
-        var y1 = za[1];
-        var x2 = za[2];
-        var y2 = za[3];
-        var x3 = za[4];
-        var y3 = za[5];
+        var x1 = clickLoc.x[0];
+        var y1 = clickLoc.y[0];
+        var x2 = clickLoc.x[1];
+        var y2 = clickLoc.y[1];
+        var x3 = clickLoc.x[2];
+        var y3 = clickLoc.y[2];
 
         document.getElementById("x1").value = x1;
         document.getElementById("y1").value = y1;
@@ -476,6 +556,13 @@
         document.getElementById("y3").value = y3;
 
         draw(x1, y1, x2, y2, x3, y3);
+
+        // Empty the click history when clicked 3 times
+        // so that it can accept future input
+        if (clickLoc.x.length == 3) {
+          clickLoc.x = [];
+          clickLoc.y = [];
+        }
       }
 
       // Draw 直角三角形 Right triangle
@@ -551,19 +638,20 @@
         draw(x1, y1, x2, y2, x3, y3, content);
       }
 
-      canvas.addEventListener("click", onClick, false);
+      canvas.addEventListener("click", freeClick, false);
     </script>
 
     <div id="container">
       <p>
         canvas内の任意の三点をクリックしてください。三角形の五心が表示されます。
       </p>
-      <input
+      <!-- <input
         type="button"
         value="このページを再読込します"
         onclick="window.location.reload();"
-      />
+      /> -->
       <form>
+        <h2>三角形形状の指定</h2>
         <input
           type="button"
           value="直角三角形"
@@ -585,79 +673,130 @@
         <input type="text" id="y2" placeholder="y2" size="4" />) P3(
         <input type="text" id="x3" placeholder="x3" size="4" />,
         <input type="text" id="y3" placeholder="y3" size="4" />)<br />
-        a,b,c( <input type="text" id="a" placeholder="a" size="4" />,
-        <input type="text" id="b" placeholder="b" size="4" />,
-        <input type="text" id="c" placeholder="c" size="4" />)<br />
-        s,S( <input type="text" id="s" placeholder="s" size="4" />,
-        <input type="text" id="S" placeholder="S" size="4" />)
+        <input
+          type="button"
+          value="この三点座標で再描画"
+          onclick="renderCircle('all')"
+        />
+
+        <h2>計算結果</h2>
+        a,b,c( <input type="text" id="a" placeholder="a" size="4" disabled />,
+        <input type="text" id="b" placeholder="b" size="4" disabled />,
+        <input type="text" id="c" placeholder="c" size="4" disabled />)<br />
+        s,S( <input type="text" id="s" placeholder="s" size="4" disabled />,
+        <input type="text" id="S" placeholder="S" size="4" disabled />)
         内心・外心半径r,R(
-        <input type="text" id="r" placeholder="r" size="4" />,
-        <input type="text" id="R" placeholder="R" size="4" />)<br />
+        <input type="text" id="r" placeholder="r" size="4" disabled />,
+        <input type="text" id="R" placeholder="R" size="4" disabled />)<br />
 
         <input type="button" value="内心" onclick="renderCircle('incenter');" />
-        内心:I( <input type="text" id="x0i" placeholder="x0i" size="4" />,<input
+        内心:I(
+        <input
           type="text"
-          id="y0i"
-          placeholder="y0i"
+          id="x0i"
+          placeholder="x0i"
           size="4"
-        />)
+          disabled
+        />,<input type="text" id="y0i" placeholder="y0i" size="4" disabled />)
         <input
           type="button"
           value="外心"
           onclick="renderCircle('circumcenter');"
         />
-        外心:O( <input type="text" id="x0O" placeholder="x0O" size="4" />,<input
+        外心:O(
+        <input
+          type="text"
+          id="x0O"
+          placeholder="x0O"
+          size="4"
+          disabled
+        />,<input
           type="text"
           id="y0O"
           placeholder="y0O"
           size="4"
+          disabled
         />)<br />
+
         <input type="button" value="重心" onclick="renderCircle('centroid');" />
-        重心:G( <input type="text" id="x0g" placeholder="x0g" size="4" />,<input
+        重心:G(
+        <input
           type="text"
-          id="y0g"
-          placeholder="y0g"
+          id="x0g"
+          placeholder="x0g"
           size="4"
-        />)
+          disabled
+        />,<input type="text" id="y0g" placeholder="y0g" size="4" disabled />)
         <input
           type="button"
           value="垂心"
           onclick="renderCircle('orthocenter');"
         />
-        垂心:H( <input type="text" id="x0h" placeholder="x0h" size="4" />,<input
+        垂心:H(
+        <input
+          type="text"
+          id="x0h"
+          placeholder="x0h"
+          size="4"
+          disabled
+        />,<input
           type="text"
           id="y0h"
           placeholder="y0h"
           size="4"
+          disabled
         />)<br />
         <input type="button" value="傍心" onclick="renderCircle('excenter');" />
         傍心: ia(
-        <input type="text" id="x0ia" placeholder="x0ia" size="4" />,<input
+        <input
           type="text"
-          id="y0ia"
-          placeholder="y0ia"
+          id="x0ia"
+          placeholder="x0ia"
           size="4"
-        />) ib(
-        <input type="text" id="x0ib" placeholder="x0ib" size="4" />,<input
+          disabled
+        />,<input type="text" id="y0ia" placeholder="y0ia" size="4" disabled />)
+        ib(
+        <input
           type="text"
-          id="y0ib"
-          placeholder="y0ib"
+          id="x0ib"
+          placeholder="x0ib"
           size="4"
-        />) ic(
-        <input type="text" id="x0ic" placeholder="x0ic" size="4" />,<input
+          disabled
+        />,<input type="text" id="y0ib" placeholder="y0ib" size="4" disabled />)
+        ic(
+        <input
+          type="text"
+          id="x0ic"
+          placeholder="x0ic"
+          size="4"
+          disabled
+        />,<input
           type="text"
           id="y0ic"
           placeholder="y0ic"
           size="4"
+          disabled
         />)<br />
         傍心半径 (ra
-        <input type="text" id="ra" placeholder="ra" size="4" />,rb<input
+        <input
+          type="text"
+          id="ra"
+          placeholder="ra"
+          size="4"
+          disabled
+        />,rb<input
           type="text"
           id="rb"
           placeholder="rb"
           size="4"
-        />,rc<input type="text" id="rc" placeholder="rc" size="4" />)<br />
-        <input type="button" value="オイラー線" onclick="Euler();" />
+          disabled
+        />,rc<input
+          type="text"
+          id="rc"
+          placeholder="rc"
+          size="4"
+          disabled
+        />)<br />
       </form>
     </div>
   </body>
