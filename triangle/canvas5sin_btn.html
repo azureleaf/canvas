@@ -38,34 +38,7 @@
         }
       }
 
-      function draw(x1, y1, x2, y2, x3, y3) {
-        if (typeof canvas.getContext === "undefined") {
-          return;
-        }
-        var ctx = canvas.getContext("2d");
-
-        // Config canvas size & resolution
-        const CANVAS_WIDTH = 1024;
-        const CANVAS_HEIGHT = 256;
-        const dpr = window.devicePixelRatio || 1; // This Web API is supported by most browser
-        canvas.width = CANVAS_WIDTH * dpr;
-        canvas.height = CANVAS_HEIGHT * dpr;
-
-        ctx.scale(dpr, dpr);
-        canvas.style.width = CANVAS_WIDTH + "px";
-        canvas.style.height = CANVAS_HEIGHT + "px";
-
-        // 三角形描画
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x3, y3);
-        ctx.strokeStyle = "black";
-        ctx.closePath();
-        ctx.stroke();
-        ctx.fillStyle = "lightgray";
-        ctx.fill();
-
+      function calcParams(x1, y1, x2, y2, x3, y3) {
         // ３辺の長さ (Pythagorean theorem)
         var c = Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 1 / 2);
         var a = Math.pow(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2), 1 / 2);
@@ -76,7 +49,7 @@
 
         // 三角形の面積 (Heron's formula)
         var s = (a + b + c) / 2;
-        var S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2); // surface
+        var S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
 
         document.getElementById("s").value = s;
         document.getElementById("S").value = S;
@@ -114,10 +87,7 @@
         document.getElementById("y0O").value = circumcenter.y;
 
         // 重心 Centroid
-        var centroid = new Point(
-          (x1 + x2 + x3) / 3, // x
-          (y1 + y2 + y3) / 3 // y
-        );
+        var centroid = new Point((x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3);
 
         document.getElementById("x0g").value = centroid.x;
         document.getElementById("y0g").value = centroid.y;
@@ -179,28 +149,151 @@
         document.getElementById("y0ic").value = excenter.c.y;
         document.getElementById("rc").value = excenter.c.radius;
 
-        // Draw in canvas
-        drawCentroid(centroid, r, R, S, x1, y1, x2, y2, x3, y3, ctx);
-        drawCircumcenter(circumcenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx);
-        drawExcenter(excenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx);
-        drawOrthocenter(orthocenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx);
-        drawConnectors(
-          incenter,
-          circumcenter,
-          centroid,
-          orthocenter,
-          excenter,
-          r,
-          R,
-          S,
-          x1,
-          y1,
-          x2,
-          y2,
-          x3,
-          y3,
-          ctx
-        );
+        let params = {
+          excenter: excenter,
+          incenter: incenter,
+          orthocenter: orthocenter,
+          circumcenter: circumcenter,
+          centroid: centroid,
+          S: S,
+          r: r,
+          R: R,
+          a: a,
+          b: b,
+          c: c
+        };
+
+        return params;
+      }
+
+      function draw(x1, y1, x2, y2, x3, y3, content = "all") {
+        if (typeof canvas.getContext === "undefined") {
+          return;
+        }
+        var ctx = canvas.getContext("2d");
+
+        // Config canvas size & resolution
+        const CANVAS_WIDTH = 1024;
+        const CANVAS_HEIGHT = 256;
+        const dpr = window.devicePixelRatio || 1; // This Web API is supported by most browser
+        canvas.width = CANVAS_WIDTH * dpr;
+        canvas.height = CANVAS_HEIGHT * dpr;
+
+        ctx.scale(dpr, dpr);
+        canvas.style.width = CANVAS_WIDTH + "px";
+        canvas.style.height = CANVAS_HEIGHT + "px";
+
+        // 三角形描画
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(x3, y3);
+        ctx.strokeStyle = "black";
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillStyle = "lightgray";
+        ctx.fill();
+
+        // Get parameters based on the 3 vertices (various centers, radius, etc.)
+        let params = calcParams(x1, y1, x2, y2, x3, y3);
+
+        /* Conditional Rendering */
+        if (content == "centroid" || content == "all") {
+          drawCentroid(
+            params.centroid,
+            params.r,
+            params.R,
+            params.S,
+            x1,
+            y1,
+            x2,
+            y2,
+            x3,
+            y3,
+            ctx
+          );
+        }
+
+        if (content == "circumcenter" || content == "all") {
+          drawCircumcenter(
+            params.circumcenter,
+            params.r,
+            params.R,
+            params.S,
+            x1,
+            y1,
+            x2,
+            y2,
+            x3,
+            y3,
+            ctx
+          );
+        }
+        if (content == "excenter" || content == "all") {
+          drawExcenter(
+            params.excenter,
+            params.r,
+            params.R,
+            params.S,
+            x1,
+            y1,
+            x2,
+            y2,
+            x3,
+            y3,
+            ctx
+          );
+        }
+        if (content == "orthocenter" || content == "all") {
+          drawOrthocenter(
+            params.orthocenter,
+            params.r,
+            params.R,
+            params.S,
+            x1,
+            y1,
+            x2,
+            y2,
+            x3,
+            y3,
+            ctx
+          );
+        }
+        if (content == "incenter" || content == "all") {
+          drawIncenter(
+            params.incenter,
+            params.r,
+            params.R,
+            params.S,
+            x1,
+            y1,
+            x2,
+            y2,
+            x3,
+            y3,
+            ctx
+          );
+        }
+
+        if (content == "all") {
+          drawConnectors(
+            params.incenter,
+            params.circumcenter,
+            params.centroid,
+            params.orthocenter,
+            params.excenter,
+            params.r,
+            params.R,
+            params.S,
+            x1,
+            y1,
+            x2,
+            y2,
+            x3,
+            y3,
+            ctx
+          );
+        }
       }
 
       function drawIncenter(incenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
@@ -359,6 +452,7 @@
         ctx.stroke();
       }
 
+      // Handle the free triangle input by user
       function onClick(e) {
         var za = [];
 
@@ -426,7 +520,8 @@
 
       // Draw random triangle
       function generateRandomTriangle() {
-        var www = 256;
+        let www = 256;
+        let x1, y1, x2, y2, x3, y3;
         x1 = Math.random() * www;
         y1 = Math.random() * www;
         x2 = Math.random() * www;
@@ -444,92 +539,19 @@
         draw(x1, y1, x2, y2, x3, y3);
       }
 
-      //内心
-      function naisin() {
-        // alert(a);
-        //draw(x0i, y0i, s, S, r, R, a, b, c, x1, y1, x2, y2, x3, y3);
+      // Render only one center (centroid, incenter, etc.)
+      function renderCircle(content) {
+        let x1 = Number(document.getElementById("x1").value);
+        let y1 = Number(document.getElementById("y1").value);
+        let x2 = Number(document.getElementById("x2").value);
+        let y2 = Number(document.getElementById("y2").value);
+        let x3 = Number(document.getElementById("x3").value);
+        let y3 = Number(document.getElementById("y3").value);
+
+        draw(x1, y1, x2, y2, x3, y3, content);
       }
 
-      //外心
-      function gaisin() {
-        draw(x0O, y0O, s, S, r, R, a, b, c, x1, y1, x2, y2, x3, y3);
-      }
-
-      //重心
-      function jyuusin() {
-        var x0g = (x1 + x2 + x3) / 3;
-        var y0g = (y1 + y2 + y3) / 3;
-
-        document.getElementById("x0g").value = x0g;
-        document.getElementById("y0g").value = y0g;
-
-        draw(x1, y1, x2, y2, x3, y3, x0g, y0g, r, R, s, S, a, b, c);
-      }
-
-      //垂心
-      function suisin() {
-        // alert(a);
-        var thetaA = Math.acos(
-          ((x2 - x1) * (x3 - x1) + (y2 - y1) * (y3 - y1)) / (b * c)
-        );
-        var thetaB = Math.acos(
-          ((x3 - x2) * (x1 - x2) + (y3 - y2) * (y1 - y2)) / (c * a)
-        );
-        var thetaC = Math.acos(
-          ((x1 - x3) * (x2 - x3) + (y1 - y3) * (y2 - y3)) / (a * b)
-        );
-
-        var x0h =
-          (Math.tan(thetaA) * x1 +
-            Math.tan(thetaB) * x2 +
-            Math.tan(thetaC) * x3) /
-          (Math.tan(thetaA) + Math.tan(thetaB) + Math.tan(thetaC));
-        var y0h =
-          (Math.tan(thetaA) * y1 +
-            Math.tan(thetaB) * y2 +
-            Math.tan(thetaC) * y3) /
-          (Math.tan(thetaA) + Math.tan(thetaB) + Math.tan(thetaC));
-
-        document.getElementById("x0h").value = x0h;
-        document.getElementById("y0h").value = y0h;
-
-        draw(x1, y1, x2, y2, x3, y3);
-      }
-
-      //傍心
-      function bousin() {
-        var x0ia = (b * x2 + c * x3 - a * x1) / (b + c - a);
-        var y0ia = (b * y2 + c * y3 - a * y1) / (b + c - a);
-        var ra = S / (s - a);
-
-        document.getElementById("x0ia").value = x0ia;
-        document.getElementById("y0ia").value = y0ia;
-        document.getElementById("ra").value = ra;
-
-        var x0ib = (-b * x2 + c * x3 + a * x1) / (-b + c + a);
-        var y0ib = (-b * y2 + c * y3 + a * y1) / (-b + c + a);
-        var rb = S / (s - b);
-
-        document.getElementById("x0ib").value = x0ib;
-        document.getElementById("y0ib").value = y0ib;
-        document.getElementById("rb").value = rb;
-
-        var x0ic = (b * x2 - c * x3 + a * x1) / (b - c + a);
-        var y0ic = (b * y2 - c * y3 + a * y1) / (b - c + a);
-        var rc = S / (s - c);
-
-        document.getElementById("x0ic").value = x0ic;
-        document.getElementById("y0ic").value = y0ic;
-        document.getElementById("rc").value = rc;
-
-        draw(x1, y1, x2, y2, x3, y3);
-      }
-      //オイラー線（外心、重心、垂心を結ぶ線。この３つは常に一つの直線上に並ぶ）
-      function Euler() {
-        draw(x0i, y0i, x0O, y0O, x0g, y0g, x0i, y0i, x0h, y0h, s, S);
-      }
       canvas.addEventListener("click", onClick, false);
-      //}
     </script>
 
     <div id="container">
@@ -542,8 +564,16 @@
         onclick="window.location.reload();"
       />
       <form>
-        <input type="button" value="直角三角形" onclick="generateRightTriangle();" />
-        <input type="button" value="正三角形" onclick="generateEquilateralTriangle();" />
+        <input
+          type="button"
+          value="直角三角形"
+          onclick="generateRightTriangle();"
+        />
+        <input
+          type="button"
+          value="正三角形"
+          onclick="generateEquilateralTriangle();"
+        />
         <input
           type="button"
           value="ランダム三角形"
@@ -564,33 +594,44 @@
         <input type="text" id="r" placeholder="r" size="4" />,
         <input type="text" id="R" placeholder="R" size="4" />)<br />
 
-        <input type="button" value="内心" onclick="naisin();" /> 内心:I(
-        <input type="text" id="x0i" placeholder="x0i" size="4" />,<input
+        <input type="button" value="内心" onclick="renderCircle('incenter');" />
+        内心:I( <input type="text" id="x0i" placeholder="x0i" size="4" />,<input
           type="text"
           id="y0i"
           placeholder="y0i"
           size="4"
-        />) <input type="button" value="外心" onclick="gaisin();" /> 外心:O(
-        <input type="text" id="x0O" placeholder="x0O" size="4" />,<input
+        />)
+        <input
+          type="button"
+          value="外心"
+          onclick="renderCircle('circumcenter');"
+        />
+        外心:O( <input type="text" id="x0O" placeholder="x0O" size="4" />,<input
           type="text"
           id="y0O"
           placeholder="y0O"
           size="4"
         />)<br />
-        <input type="button" value="重心" onclick="jyuusin();" /> 重心:G(
-        <input type="text" id="x0g" placeholder="x0g" size="4" />,<input
+        <input type="button" value="重心" onclick="renderCircle('centroid');" />
+        重心:G( <input type="text" id="x0g" placeholder="x0g" size="4" />,<input
           type="text"
           id="y0g"
           placeholder="y0g"
           size="4"
-        />) <input type="button" value="垂心" onclick="suisin();" /> 垂心:H(
-        <input type="text" id="x0h" placeholder="x0h" size="4" />,<input
+        />)
+        <input
+          type="button"
+          value="垂心"
+          onclick="renderCircle('orthocenter');"
+        />
+        垂心:H( <input type="text" id="x0h" placeholder="x0h" size="4" />,<input
           type="text"
           id="y0h"
           placeholder="y0h"
           size="4"
         />)<br />
-        <input type="button" value="傍心" onclick="bousin();" /> 傍心: ia(
+        <input type="button" value="傍心" onclick="renderCircle('excenter');" />
+        傍心: ia(
         <input type="text" id="x0ia" placeholder="x0ia" size="4" />,<input
           type="text"
           id="y0ia"
