@@ -46,6 +46,37 @@ COLORS = {
   EULER_LINE: "orangered"
 };
 
+// Set attr of color sample in the HTML
+var elem = document.getElementById("sampleIncenter");
+elem.style.color = COLORS.INCENTER;
+elem.style.backgroundColor = COLORS.INCENTER;
+elem.style.borderRadius = "50%";
+elem.style.marginRight = "5px";
+
+var elem = document.getElementById("sampleCircumcenter");
+elem.style.color = COLORS.CIRCUMCENTER;
+elem.style.backgroundColor = COLORS.CIRCUMCENTER;
+elem.style.borderRadius = "50%";
+elem.style.marginRight = "5px";
+
+var elem = document.getElementById("sampleExcenter");
+elem.style.color = COLORS.EXCENTER;
+elem.style.backgroundColor = COLORS.EXCENTER;
+elem.style.borderRadius = "50%";
+elem.style.marginRight = "5px";
+
+var elem = document.getElementById("sampleOrthocenter");
+elem.style.color = COLORS.ORTHOCENTER;
+elem.style.backgroundColor = COLORS.ORTHOCENTER;
+elem.style.borderRadius = "50%";
+elem.style.marginRight = "5px";
+
+var elem = document.getElementById("sampleCentroid");
+elem.style.color = COLORS.CENTROID;
+elem.style.backgroundColor = COLORS.CENTROID;
+elem.style.borderRadius = "50%";
+elem.style.marginRight = "5px";
+
 /**
  * FUNCTIONS
  */

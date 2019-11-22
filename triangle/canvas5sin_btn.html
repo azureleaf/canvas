@@ -12,7 +12,6 @@
       </canvas>
     </div>
 
-    <script src="./circle.js"></script>
 
     <div id="container">
       <p>
@@ -76,7 +75,7 @@
           onclick="renderCircle('incenter');"
           class="btn btn-primary"
         />
-        内心座標: I(
+        <span id="sampleIncenter">あ</span>内心座標: I(
         <input type="text" id="x0i" placeholder="x0i" size="4" disabled />,
         <!--  -->
         <input
@@ -92,7 +91,7 @@
           class="btn btn-primary"
           onclick="renderCircle('circumcenter');"
         />
-        外心座標: O(
+        <span id="sampleCircumcenter">あ</span>外心座標: O(
         <input type="text" id="x0O" placeholder="x0O" size="4" disabled />,
         <!--  -->
         <input
@@ -109,7 +108,7 @@
           onclick="renderCircle('centroid');"
           class="btn btn-primary"
         />
-        重心座標: G(
+        <span id="sampleCentroid">あ</span>重心座標: G(
         <input type="text" id="x0g" placeholder="x0g" size="4" disabled />,
         <!--  -->
         <input
@@ -125,7 +124,7 @@
           class="btn btn-primary"
           onclick="renderCircle('orthocenter');"
         />
-        垂心座標: H(
+        <span id="sampleOrthocenter">あ</span>垂心座標: H(
         <input
           type="text"
           id="x0h"
@@ -145,7 +144,7 @@
           onclick="renderCircle('excenter');"
           class="btn btn-primary"
         />
-        傍心座標: ia(
+        <span id="sampleExcenter">あ</span>傍心座標: ia(
         <input
           type="text"
           id="x0ia"
@@ -197,5 +196,8 @@
         />)<br />
       </form>
     </div>
+
+    <script src="./circle.js"></script>
+
   </body>
 </html>
