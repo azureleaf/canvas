@@ -263,6 +263,11 @@ function calcParams(x1, y1, x2, y2, x3, y3) {
   function getEdgePoints(vertex1, vertex2) {
     let edgePoints = [];
 
+    if (typeof vertex1.x === "undefined" || typeof vertex2.x === "undefined") {
+      console.log("二点の座標が正しく入力されていません");
+      return null;
+    }
+
     // x=0の時のy座標
     let y1 =
       ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) * (0 - vertex1.x) +
@@ -276,32 +281,36 @@ function calcParams(x1, y1, x2, y2, x3, y3) {
 
     // y=0の時のx座標
     let x1 =
-      ((vertex1.x - vertex2.x) * (0 - vertex1.y)) / (vertex1.y - vertex2.y) -
+      ((vertex1.x - vertex2.x) * (0 - vertex1.y)) / (vertex1.y - vertex2.y) +
       vertex1.x;
 
     // 直線がcanvas下端（の延長線上）に達した時のy座標
     let x2 =
       ((vertex1.x - vertex2.x) * (CANVAS_HEIGHT - vertex1.y)) /
-        (vertex1.y - vertex2.y) -
+        (vertex1.y - vertex2.y) +
       vertex1.x;
 
-    if (y1 >= 0 && y1 <= CANVAS_HEIGHT) edgePoints.push(new Point(0, y1));
+    if (y1 >= 0 && y1 <= CANVAS_HEIGHT) edgePoints.push(new Point(0, y1)); // Canvas左端との交点
     if (y2 >= 0 && y2 <= CANVAS_HEIGHT)
-      edgePoints.push(new Point(CANVAS_WIDTH, y2));
-    if (x1 >= 0 && x1 <= CANVAS_WIDTH) edgePoints.push(new Point(x1, 0));
-    if (x1 >= 0 && x2 <= CANVAS_WIDTH)
-      edgePoints.push(new Point(x2, CANVAS_HEIGHT));
+      edgePoints.push(new Point(CANVAS_WIDTH, y2)); // Canvas右端との交点
+    if (x1 >= 0 && x1 <= CANVAS_WIDTH) edgePoints.push(new Point(x1, 0)); // Canvas上端との交点
+    if (x2 >= 0 && x2 <= CANVAS_WIDTH)
+      edgePoints.push(new Point(x2, CANVAS_HEIGHT)); // Canvas下端との交点
 
     return edgePoints;
   }
 
   let edgePoints = {};
   // 各辺がCanvas領域端と交わる点を計算
-  edgePoints.a = getEdgePoints(new Point(x2, y2), new Point(x3, y3));
-  edgePoints.b = getEdgePoints(new Point(x1, y1), new Point(x3, y3));
-  edgePoints.c = getEdgePoints(new Point(x1, y1), new Point(x2, y2));
-
-  console.log(edgePoints);
+  if (
+    typeof x1 !== "undefined" &&
+    typeof x2 !== "undefined" &&
+    typeof x3 !== "undefined"
+  ) {
+    edgePoints.a = getEdgePoints(new Point(x2, y2), new Point(x3, y3));
+    edgePoints.b = getEdgePoints(new Point(x1, y1), new Point(x3, y3));
+    edgePoints.c = getEdgePoints(new Point(x1, y1), new Point(x2, y2));
+  }
 
   // 全ての計算結果をオブジェクトとして返却
   return {
@@ -381,19 +390,7 @@ function drawOrthocenter(orthocenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
 }
 
 // 重心の変数を受け取り、それに則って描写
-function drawCentroid(
-  centroid,
-  r,
-  R,
-  S,
-  x1,
-  y1,
-  x2,
-  y2,
-  x3,
-  y3,
-  ctx
-) {
+function drawCentroid(centroid, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
   // bisector line 1
   ctx.beginPath();
   ctx.moveTo(x1, y1);
@@ -423,7 +420,20 @@ function drawCentroid(
 }
 
 // 傍心の変数を受け取り、それに則って描写
-function drawExcenter(excenter, r, R, S, edgePoints, x1, y1, x2, y2, x3, y3, ctx) {
+function drawExcenter(
+  excenter,
+  r,
+  R,
+  S,
+  edgePoints,
+  x1,
+  y1,
+  x2,
+  y2,
+  x3,
+  y3,
+  ctx
+) {
   // circle 1
   ctx.beginPath();
   ctx.arc(excenter.a.x, excenter.a.y, excenter.a.radius, 0, 2 * Math.PI);
@@ -502,12 +512,36 @@ function drawExcenter(excenter, r, R, S, edgePoints, x1, y1, x2, y2, x3, y3, ctx
   ctx.strokeStyle = "plum";
   ctx.stroke();
 
-  //
-  // ctx.beginPath();
-  // ctx.moveTo(edgePoints.a[0].x, edgePoints.a[0].y);
-  // ctx.lineTo(edgePoints.a[1].x, edgePoints.a[1].y);
-  // ctx.strokeStyle = "black";
-  // ctx.stroke();
+  // 接線の描写
+  if (
+    typeof edgePoints.a !== "undefined" &&
+    typeof edgePoints.b !== "undefined" &&
+    typeof edgePoints.c !== "undefined"
+  ) {
+    // 破線にする
+    ctx.setLineDash([1, 2]);
+
+    ctx.beginPath();
+    ctx.moveTo(edgePoints.a[0].x, edgePoints.a[0].y);
+    ctx.lineTo(edgePoints.a[1].x, edgePoints.a[1].y);
+    ctx.strokeStyle = "purple";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(edgePoints.b[0].x, edgePoints.b[0].y);
+    ctx.lineTo(edgePoints.b[1].x, edgePoints.b[1].y);
+    ctx.strokeStyle = "purple";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(edgePoints.c[0].x, edgePoints.c[0].y);
+    ctx.lineTo(edgePoints.c[1].x, edgePoints.c[1].y);
+    ctx.strokeStyle = "purple";
+    ctx.stroke();
+
+    // 破線設定を実線に戻す
+    ctx.setLineDash([]);
+  }
 }
 
 // 五心の変数を受け取り、それに則ってオイラー線を描写
