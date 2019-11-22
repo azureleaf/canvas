@@ -1,5 +1,9 @@
 var canvas = document.querySelector("canvas");
 
+/**
+ * GLOBAL VARIABLES
+ */
+
 // Hold the (x, y) coordinate value of a point
 class Point {
   constructor(x, y) {
@@ -29,6 +33,23 @@ document
        border-color:#ffcccc"
   );
 
+// Colors for paths
+COLORS = {
+  TRIANGLE_EDGE: "black",
+  TRIANGLE_FILL: "gainsboro",
+  EXCENTER: "purple",
+  EXCENTER_LINE: "plum",
+  ORTHOCENTER: "orange",
+  INCENTER: "green",
+  CENTROID: "blue",
+  CIRCUMCENTER: "deepskyblue",
+  EULER_LINE: "orangered"
+};
+
+/**
+ * FUNCTIONS
+ */
+
 //　三角形の三点の座標を受け取り、描画する。主関数。
 function draw(x1, y1, x2, y2, x3, y3, content = "all") {
   if (typeof canvas.getContext === "undefined") {
@@ -49,26 +70,26 @@ function draw(x1, y1, x2, y2, x3, y3, content = "all") {
   ctx.moveTo(x1, y1);
   ctx.lineTo(x2, y2);
   ctx.lineTo(x3, y3);
-  ctx.strokeStyle = "black";
+  ctx.strokeStyle = COLORS.TRIANGLE_EDGE;
   ctx.closePath();
   ctx.stroke();
-  ctx.fillStyle = "rgb(240, 240, 240";
+  ctx.fillStyle = COLORS.TRIANGLE_FILL;
   ctx.fill();
 
   // 頂点の描画
   ctx.beginPath();
   ctx.arc(x1, y1, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "black";
+  ctx.fillStyle = COLORS.TRIANGLE_EDGE;
   ctx.fill();
 
   ctx.beginPath();
   ctx.arc(x2, y2, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "black";
+  ctx.fillStyle = COLORS.TRIANGLE_EDGE;
   ctx.fill();
 
   ctx.beginPath();
   ctx.arc(x3, y3, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "black";
+  ctx.fillStyle = COLORS.TRIANGLE_EDGE;
   ctx.fill();
 
   // Get parameters based on the 3 vertices (various centers, radius, etc.)
@@ -261,7 +282,9 @@ function calcParams(x1, y1, x2, y2, x3, y3) {
         (vertex1.y - vertex2.y) +
       vertex1.x;
 
-    if (y1 >= 0 && y1 <= CANVAS_HEIGHT) edgePoints.push(new Point(0, y1)); // Canvas左端との交点
+    // prettier-ignore
+    if (y1 >= 0 && y1 <= CANVAS_HEIGHT)
+      edgePoints.push(new Point(0, y1)); // Canvas左端との交点
     if (y2 >= 0 && y2 <= CANVAS_HEIGHT)
       edgePoints.push(new Point(CANVAS_WIDTH, y2)); // Canvas右端との交点
     if (x1 >= 0 && x1 <= CANVAS_WIDTH) edgePoints.push(new Point(x1, 0)); // Canvas上端との交点
@@ -305,13 +328,13 @@ function drawIncenter(params, ctx) {
   // cicle
   ctx.beginPath();
   ctx.arc(params.incenter.x, params.incenter.y, params.r, 0, 2 * Math.PI);
-  ctx.strokeStyle = "green";
+  ctx.strokeStyle = COLORS.INCENTER;
   ctx.stroke();
 
   // center
   ctx.beginPath();
   ctx.arc(params.incenter.x, params.incenter.y, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "green";
+  ctx.fillStyle = COLORS.INCENTER;
   ctx.fill();
 }
 
@@ -326,13 +349,13 @@ function drawCircumcenter(params, ctx) {
     0,
     2 * Math.PI
   );
-  ctx.strokeStyle = "skyblue";
+  ctx.strokeStyle = COLORS.CIRCUMCENTER;
   ctx.stroke();
 
   // center
   ctx.beginPath();
   ctx.arc(params.circumcenter.x, params.circumcenter.y, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "skyblue";
+  ctx.fillStyle = COLORS.CIRCUMCENTER;
   ctx.fill();
 }
 
@@ -342,27 +365,27 @@ function drawOrthocenter(params, x1, y1, x2, y2, x3, y3, ctx) {
   ctx.beginPath();
   ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
   ctx.lineTo(x1, y1);
-  ctx.strokeStyle = "orange";
+  ctx.strokeStyle = COLORS.ORTHOCENTER;
   ctx.stroke();
 
   // perpendicular line 2
   ctx.beginPath();
   ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
   ctx.lineTo(x2, y2);
-  ctx.strokeStyle = "orange";
+  ctx.strokeStyle = COLORS.ORTHOCENTER;
   ctx.stroke();
 
   // perpendicular line 3
   ctx.beginPath();
   ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
   ctx.lineTo(x3, y3);
-  ctx.strokeStyle = "orange";
+  ctx.strokeStyle = COLORS.ORTHOCENTER;
   ctx.stroke();
 
   // center
   ctx.beginPath();
   ctx.arc(params.orthocenter.x, params.orthocenter.y, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "orange";
+  ctx.fillStyle = COLORS.ORTHOCENTER;
   ctx.fill();
 }
 
@@ -372,27 +395,27 @@ function drawCentroid(params, x1, y1, x2, y2, x3, y3, ctx) {
   ctx.beginPath();
   ctx.moveTo(x1, y1);
   ctx.lineTo(params.centroid.x, params.centroid.y);
-  ctx.strokeStyle = "blue";
+  ctx.strokeStyle = COLORS.CENTROID;
   ctx.stroke();
 
   // bisector line 2
   ctx.beginPath();
   ctx.moveTo(x2, y2);
   ctx.lineTo(params.centroid.x, params.centroid.y);
-  ctx.strokeStyle = "blue";
+  ctx.strokeStyle = COLORS.CENTROID;
   ctx.stroke();
 
   // bisector line 3
   ctx.beginPath();
   ctx.moveTo(x3, y3);
   ctx.lineTo(params.centroid.x, params.centroid.y);
-  ctx.strokeStyle = "blue";
+  ctx.strokeStyle = COLORS.CENTROID;
   ctx.stroke();
 
   // center
   ctx.beginPath();
   ctx.arc(params.centroid.x, params.centroid.y, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = COLORS.CENTROID;
   ctx.fill();
 }
 
@@ -418,7 +441,7 @@ function drawExcenter(params, x1, y1, x2, y2, x3, y3, ctx) {
     0,
     2 * Math.PI
   );
-  ctx.strokeStyle = "purple";
+  ctx.strokeStyle = COLORS.EXCENTER;
   ctx.stroke();
 
   // circle B
@@ -430,7 +453,7 @@ function drawExcenter(params, x1, y1, x2, y2, x3, y3, ctx) {
     0,
     2 * Math.PI
   );
-  ctx.strokeStyle = "purple";
+  ctx.strokeStyle = COLORS.EXCENTER;
   ctx.stroke();
 
   // circle C
@@ -442,67 +465,67 @@ function drawExcenter(params, x1, y1, x2, y2, x3, y3, ctx) {
     0,
     2 * Math.PI
   );
-  ctx.strokeStyle = "purple";
+  ctx.strokeStyle = COLORS.EXCENTER;
   ctx.stroke();
 
   // Line from vertex 1 to Excenter A
   ctx.beginPath();
   ctx.moveTo(params.excenter.a.x, params.excenter.a.y);
   ctx.lineTo(x1, y1);
-  ctx.strokeStyle = "plum";
+  ctx.strokeStyle = COLORS.EXCENTER_LINE;
   ctx.stroke();
 
   // Line from vertex 2 to Excenter B
   ctx.beginPath();
   ctx.moveTo(params.excenter.b.x, params.excenter.b.y);
   ctx.lineTo(x2, y2);
-  ctx.strokeStyle = "plum";
+  ctx.strokeStyle = COLORS.EXCENTER_LINE;
   ctx.stroke();
 
   // Line from vertex 3 to Excenter C
   ctx.beginPath();
   ctx.moveTo(params.excenter.c.x, params.excenter.c.y);
   ctx.lineTo(x3, y3);
-  ctx.strokeStyle = "plum";
+  ctx.strokeStyle = COLORS.EXCENTER_LINE;
   ctx.stroke();
 
   // Excenter A
   ctx.beginPath();
   ctx.arc(params.excenter.a.x, params.excenter.a.y, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "purple";
+  ctx.fillStyle = COLORS.EXCENTER;
   ctx.fill();
 
   // Excenter B
   ctx.beginPath();
   ctx.arc(params.excenter.b.x, params.excenter.b.y, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "purple";
+  ctx.fillStyle = COLORS.EXCENTER;
   ctx.fill();
 
   // Excenter C
   ctx.beginPath();
   ctx.arc(params.excenter.c.x, params.excenter.c.y, 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "purple";
+  ctx.fillStyle = COLORS.EXCENTER;
   ctx.fill();
 
   // Line from Excenter A to Excenter B
   ctx.beginPath();
   ctx.moveTo(params.excenter.a.x, params.excenter.a.y);
   ctx.lineTo(params.excenter.b.x, params.excenter.b.y);
-  ctx.strokeStyle = "plum";
+  ctx.strokeStyle = COLORS.EXCENTER_LINE;
   ctx.stroke();
 
   // Line from Excenter B to Excenter C
   ctx.beginPath();
   ctx.moveTo(params.excenter.b.x, params.excenter.b.y);
   ctx.lineTo(params.excenter.c.x, params.excenter.c.y);
-  ctx.strokeStyle = "plum";
+  ctx.strokeStyle = COLORS.EXCENTER_LINE;
   ctx.stroke();
 
   // Line from Excenter C to Excenter A
   ctx.beginPath();
   ctx.moveTo(params.excenter.c.x, params.excenter.c.y);
   ctx.lineTo(params.excenter.a.x, params.excenter.a.y);
-  ctx.strokeStyle = "plum";
+  ctx.strokeStyle = COLORS.EXCENTER_LINE;
   ctx.stroke();
 
   // 傍心円の接線を描画
@@ -518,19 +541,19 @@ function drawExcenter(params, x1, y1, x2, y2, x3, y3, ctx) {
     ctx.beginPath();
     ctx.moveTo(params.edgePoints.a[0].x, params.edgePoints.a[0].y);
     ctx.lineTo(params.edgePoints.a[1].x, params.edgePoints.a[1].y);
-    ctx.strokeStyle = "purple";
+    ctx.strokeStyle = COLORS.EXCENTER_LINE;
     ctx.stroke();
 
     ctx.beginPath();
     ctx.moveTo(params.edgePoints.b[0].x, params.edgePoints.b[0].y);
     ctx.lineTo(params.edgePoints.b[1].x, params.edgePoints.b[1].y);
-    ctx.strokeStyle = "purple";
+    ctx.strokeStyle = COLORS.EXCENTER_LINE;
     ctx.stroke();
 
     ctx.beginPath();
     ctx.moveTo(params.edgePoints.c[0].x, params.edgePoints.c[0].y);
     ctx.lineTo(params.edgePoints.c[1].x, params.edgePoints.c[1].y);
-    ctx.strokeStyle = "purple";
+    ctx.strokeStyle = COLORS.EXCENTER_LINE;
     ctx.stroke();
 
     // これ以降の線のスタイルを実線に戻す
@@ -549,21 +572,21 @@ function drawEulerLine(ctx, params) {
   ctx.beginPath();
   ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
   ctx.lineTo(params.circumcenter.x, params.circumcenter.y);
-  ctx.strokeStyle = "red";
+  ctx.strokeStyle = COLORS.EULER_LINE;
   ctx.stroke();
 
   // 重心-外心の結合線
   ctx.beginPath();
   ctx.moveTo(params.circumcenter.x, params.circumcenter.y);
   ctx.lineTo(params.centroid.x, params.centroid.y);
-  ctx.strokeStyle = "red";
+  ctx.strokeStyle = COLORS.EULER_LINE;
   ctx.stroke();
 
   // 重心-垂心の結合線
   ctx.beginPath();
   ctx.moveTo(params.centroid.x, params.centroid.y);
   ctx.lineTo(params.orthocenter.x, params.orthocenter.y);
-  ctx.strokeStyle = "red";
+  ctx.strokeStyle = COLORS.EULER_LINE;
   ctx.stroke();
 }
 
@@ -613,15 +636,17 @@ function freeClick(e) {
  *  直角三角形 Right triangleの自動生成
  */
 function generateRightTriangle() {
-  var ran = Math.random() * (1024 - 256);
+  let x1, y1, x2, y2, x3, y3;
 
-  x1 = ran;
-  y1 = ran;
-  x2 = ran + 300;
-  y2 = ran;
-  x3 = ran;
-  y3 = ran + 400;
+  // ２点は固定、残る１点の高さのみランダム
+  x1 = CANVAS_WIDTH / 4;
+  y1 = CANVAS_HEIGHT / 3;
+  x2 = CANVAS_WIDTH / 2;
+  y2 = CANVAS_HEIGHT / 3;
+  x3 = CANVAS_WIDTH / 4;
+  y3 = CANVAS_HEIGHT / 3 + (Math.random() * CANVAS_HEIGHT) / 2;
 
+  // 生成値をinput formに表示
   document.getElementById("x1").value = x1;
   document.getElementById("y1").value = y1;
   document.getElementById("x2").value = x2;
@@ -634,12 +659,12 @@ function generateRightTriangle() {
 
 // 正三角形 Equilateral triangleの生成
 function generateEquilateralTriangle() {
-  x1 = 200;
-  y1 = 200;
-  x2 = 200 + 100;
-  y2 = 200;
-  x3 = 200 + 50;
-  y3 = 200 - 50 * Math.pow(3, 1 / 2);
+  x1 = CANVAS_WIDTH / 2;
+  y1 = CANVAS_HEIGHT / 4;
+  x2 = CANVAS_WIDTH / 2 + 50;
+  y2 = CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2);
+  x3 = CANVAS_WIDTH / 2 - 50;
+  y3 = CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2);
 
   document.getElementById("x1").value = x1;
   document.getElementById("y1").value = y1;
