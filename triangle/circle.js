@@ -11,9 +11,23 @@ class Point {
 // ユーザーがクリックした位置を保持する配列（最大で３要素入る）
 let clickPoints = [];
 
-// Note that these 2 values must be identical with their equivalents in HTML
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 512;
+
+// Set Canvas attribute in the HTML file
+document
+  .getElementsByTagName("canvas")[0]
+  .setAttribute(
+    "style",
+    "width:" +
+      CANVAS_WIDTH +
+      "px; height:" +
+      CANVAS_HEIGHT +
+      "px;" +
+      "border-style: solid; \
+       border-width: 4px; \
+       border-color:#ffcccc"
+  );
 
 //　三角形の三点の座標を受け取り、描画する。主関数。
 function draw(x1, y1, x2, y2, x3, y3, content = "all") {
@@ -62,7 +76,9 @@ function draw(x1, y1, x2, y2, x3, y3, content = "all") {
 
   // Conditional rendering
   // "content"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
-  if (content == "incenter" || content == "all") drawIncenter(params, ctx);
+  // prettier-ignore
+  if (content == "incenter" || content == "all")
+    drawIncenter(params, ctx);
   if (content == "circumcenter" || content == "all")
     drawCircumcenter(params, ctx);
   if (content == "centroid" || content == "all")

@@ -3,32 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <title>Canvas triangle 5center</title>
-    <!--   //<link rel="stylesheet" href="css/styles.css"> -->
-    <style>
-      #axisCanvasRapper {
-        margin: 30px auto;
-        text-align: center;
-      }
-
-      #axisCanvas {
-        border: 1px solid #ff0000;
-      }
-
-      #container {
-        display: inline;
-        text-align: left;
-      }
-    </style>
+    <link rel="stylesheet" href="./style.css" />
   </head>
 
   <body>
-    <canvas
-      width="800"
-      height="512"
-      style="border-style: solid; border-width: 4px; border-color:#ffcccc"
-    >
-      Canvas not supported.
-    </canvas>
+    <div id="canvas_wrapper">
+      <canvas>
+        Canvas not supported.
+      </canvas>
+    </div>
 
     <script src="./circle.js"></script>
 
@@ -42,7 +25,22 @@
         onclick="window.location.reload();"
       /> -->
       <form>
-        <h2>三角形形状の指定</h2>
+        <h3>三角形の頂点座標</h3>
+        P1(
+        <!--  -->
+        <input type="text" id="x1" placeholder="x1" size="4" />,
+        <input type="text" id="y1" placeholder="y1" size="4" />) P2(
+        <input type="text" id="x2" placeholder="x2" size="4" />,
+        <input type="text" id="y2" placeholder="y2" size="4" />) P3(
+        <input type="text" id="x3" placeholder="x3" size="4" />,
+        <input type="text" id="y3" placeholder="y3" size="4" />)
+
+        <h3>三角形の自動生成</h3>
+        <input
+          type="button"
+          value="ランダム三角形"
+          onclick="generateRandomTriangle();"
+        />
         <input
           type="button"
           value="直角三角形"
@@ -55,53 +53,50 @@
         />
         <input
           type="button"
-          value="ランダム三角形"
-          onclick="generateRandomTriangle();"
-        /><br />
-        P1( <input type="text" id="x1" placeholder="x1" size="4" />,
-        <input type="text" id="y1" placeholder="y1" size="4" />) P2(
-        <input type="text" id="x2" placeholder="x2" size="4" />,
-        <input type="text" id="y2" placeholder="y2" size="4" />) P3(
-        <input type="text" id="x3" placeholder="x3" size="4" />,
-        <input type="text" id="y3" placeholder="y3" size="4" />)<br />
-        <input
-          type="button"
-          value="この三点座標で再描画"
+          value="上記の三点座標で描画"
           onclick="renderCircle('all')"
         />
 
-        <h2>計算結果</h2>
-        辺長 a,b,c( <input type="text" id="a" placeholder="a" size="4" disabled />,
+        <h3>計算結果</h3>
+        辺長 a,b,c(
+        <input type="text" id="a" placeholder="a" size="4" disabled />,
         <input type="text" id="b" placeholder="b" size="4" disabled />,
         <input type="text" id="c" placeholder="c" size="4" disabled />)<br />
-        s,S( <input type="text" id="s" placeholder="s" size="4" disabled />,
-        <input type="text" id="S" placeholder="S" size="4" disabled />)
+        s,S(
+
+        <!--  -->
+        <input type="text" id="s" placeholder="s" size="4" disabled />,
+        <input type="text" id="S" placeholder="S" size="4" disabled />)<br />
         内心・外心半径r,R(
         <input type="text" id="r" placeholder="r" size="4" disabled />,
         <input type="text" id="R" placeholder="R" size="4" disabled />)<br />
 
-        <input type="button" value="内心" onclick="renderCircle('incenter');" />
-        内心:I(
+        <input
+          type="button"
+          value="内心"
+          onclick="renderCircle('incenter');"
+          class="btn btn-primary"
+        />
+        内心座標: I(
+        <input type="text" id="x0i" placeholder="x0i" size="4" disabled />,
+        <!--  -->
         <input
           type="text"
-          id="x0i"
-          placeholder="x0i"
+          id="y0i"
+          placeholder="y0i"
           size="4"
           disabled
-        />,<input type="text" id="y0i" placeholder="y0i" size="4" disabled />)
+        />)<br />
         <input
           type="button"
           value="外心"
+          class="btn btn-primary"
           onclick="renderCircle('circumcenter');"
         />
-        外心:O(
+        外心座標: O(
+        <input type="text" id="x0O" placeholder="x0O" size="4" disabled />,
+        <!--  -->
         <input
-          type="text"
-          id="x0O"
-          placeholder="x0O"
-          size="4"
-          disabled
-        />,<input
           type="text"
           id="y0O"
           placeholder="y0O"
@@ -109,21 +104,29 @@
           disabled
         />)<br />
 
-        <input type="button" value="重心" onclick="renderCircle('centroid');" />
-        重心:G(
+        <input
+          type="button"
+          value="重心"
+          onclick="renderCircle('centroid');"
+          class="btn btn-primary"
+        />
+        重心座標: G(
+        <input type="text" id="x0g" placeholder="x0g" size="4" disabled />,
+        <!--  -->
         <input
           type="text"
-          id="x0g"
-          placeholder="x0g"
+          id="y0g"
+          placeholder="y0g"
           size="4"
           disabled
-        />,<input type="text" id="y0g" placeholder="y0g" size="4" disabled />)
+        />)<br />
         <input
           type="button"
           value="垂心"
+          class="btn btn-primary"
           onclick="renderCircle('orthocenter');"
         />
-        垂心:H(
+        垂心座標: H(
         <input
           type="text"
           id="x0h"
@@ -137,8 +140,13 @@
           size="4"
           disabled
         />)<br />
-        <input type="button" value="傍心" onclick="renderCircle('excenter');" />
-        傍心: ia(
+        <input
+          type="button"
+          value="傍心"
+          onclick="renderCircle('excenter');"
+          class="btn btn-primary"
+        />
+        傍心座標: ia(
         <input
           type="text"
           id="x0ia"
