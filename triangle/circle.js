@@ -101,6 +101,7 @@ function draw(x1, y1, x2, y2, x3, y3, content = "all") {
       params.r,
       params.R,
       params.S,
+      params.edgePoints,
       x1,
       y1,
       x2,
@@ -235,7 +236,6 @@ function calcParams(x1, y1, x2, y2, x3, y3) {
     (b * y2 + c * y3 - a * y1) / (b + c - a)
   );
   excenter.a.radius = S / (s - a);
-
   document.getElementById("x0ia").value = excenter.a.x;
   document.getElementById("y0ia").value = excenter.a.y;
   document.getElementById("ra").value = excenter.a.radius;
@@ -245,7 +245,6 @@ function calcParams(x1, y1, x2, y2, x3, y3) {
     (-b * y2 + c * y3 + a * y1) / (-b + c + a)
   );
   excenter.b.radius = S / (s - b);
-
   document.getElementById("x0ib").value = excenter.b.x;
   document.getElementById("y0ib").value = excenter.b.y;
   document.getElementById("rb").value = excenter.b.radius;
@@ -255,10 +254,54 @@ function calcParams(x1, y1, x2, y2, x3, y3) {
     (b * y2 - c * y3 + a * y1) / (b - c + a)
   );
   excenter.c.radius = S / (s - c);
-
   document.getElementById("x0ic").value = excenter.c.x;
   document.getElementById("y0ic").value = excenter.c.y;
   document.getElementById("rc").value = excenter.c.radius;
+
+  // 三角形各辺の延長線がCanvasエッジと交わる点の座標を計算
+  // 引数および返り値: Pointクラスで表記された、２つの座標
+  function getEdgePoints(vertex1, vertex2) {
+    let edgePoints = [];
+
+    // x=0の時のy座標
+    let y1 =
+      ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) * (0 - vertex1.x) +
+      vertex1.y;
+
+    // 直線がcanvas右端（の延長線上）に達した時のy座標
+    let y2 =
+      ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) *
+        (CANVAS_WIDTH - vertex1.x) +
+      vertex1.y;
+
+    // y=0の時のx座標
+    let x1 =
+      ((vertex1.x - vertex2.x) * (0 - vertex1.y)) / (vertex1.y - vertex2.y) -
+      vertex1.x;
+
+    // 直線がcanvas下端（の延長線上）に達した時のy座標
+    let x2 =
+      ((vertex1.x - vertex2.x) * (CANVAS_HEIGHT - vertex1.y)) /
+        (vertex1.y - vertex2.y) -
+      vertex1.x;
+
+    if (y1 >= 0 && y1 <= CANVAS_HEIGHT) edgePoints.push(new Point(0, y1));
+    if (y2 >= 0 && y2 <= CANVAS_HEIGHT)
+      edgePoints.push(new Point(CANVAS_WIDTH, y2));
+    if (x1 >= 0 && x1 <= CANVAS_WIDTH) edgePoints.push(new Point(x1, 0));
+    if (x1 >= 0 && x2 <= CANVAS_WIDTH)
+      edgePoints.push(new Point(x2, CANVAS_HEIGHT));
+
+    return edgePoints;
+  }
+
+  let edgePoints = {};
+  // 各辺がCanvas領域端と交わる点を計算
+  edgePoints.a = getEdgePoints(new Point(x2, y2), new Point(x3, y3));
+  edgePoints.b = getEdgePoints(new Point(x1, y1), new Point(x3, y3));
+  edgePoints.c = getEdgePoints(new Point(x1, y1), new Point(x2, y2));
+
+  console.log(edgePoints);
 
   // 全ての計算結果をオブジェクトとして返却
   return {
@@ -272,7 +315,8 @@ function calcParams(x1, y1, x2, y2, x3, y3) {
     R: R,
     a: a,
     b: b,
-    c: c
+    c: c,
+    edgePoints: edgePoints
   };
 }
 
@@ -337,7 +381,19 @@ function drawOrthocenter(orthocenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
 }
 
 // 重心の変数を受け取り、それに則って描写
-function drawCentroid(centroid, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
+function drawCentroid(
+  centroid,
+  r,
+  R,
+  S,
+  x1,
+  y1,
+  x2,
+  y2,
+  x3,
+  y3,
+  ctx
+) {
   // bisector line 1
   ctx.beginPath();
   ctx.moveTo(x1, y1);
@@ -367,7 +423,7 @@ function drawCentroid(centroid, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
 }
 
 // 傍心の変数を受け取り、それに則って描写
-function drawExcenter(excenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
+function drawExcenter(excenter, r, R, S, edgePoints, x1, y1, x2, y2, x3, y3, ctx) {
   // circle 1
   ctx.beginPath();
   ctx.arc(excenter.a.x, excenter.a.y, excenter.a.radius, 0, 2 * Math.PI);
@@ -386,21 +442,21 @@ function drawExcenter(excenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
   ctx.strokeStyle = "purple";
   ctx.stroke();
 
-  // vertex to excenter line 1
+  // vertex-to-excenter line 1
   ctx.beginPath();
   ctx.moveTo(excenter.a.x, excenter.a.y);
   ctx.lineTo(x1, y1);
   ctx.strokeStyle = "plum";
   ctx.stroke();
 
-  // vertex to excenter line 2
+  // vertex-to-excenter line 2
   ctx.beginPath();
   ctx.moveTo(excenter.b.x, excenter.b.y);
   ctx.lineTo(x2, y2);
   ctx.strokeStyle = "plum";
   ctx.stroke();
 
-  // vertex to excenter line 3
+  // vertex-to-excenter line 3
   ctx.beginPath();
   ctx.moveTo(excenter.c.x, excenter.c.y);
   ctx.lineTo(x3, y3);
@@ -424,6 +480,34 @@ function drawExcenter(excenter, r, R, S, x1, y1, x2, y2, x3, y3, ctx) {
   ctx.arc(excenter.c.x, excenter.c.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = "purple";
   ctx.fill();
+
+  // excenter-to-excenter line 1
+  ctx.beginPath();
+  ctx.moveTo(excenter.a.x, excenter.a.y);
+  ctx.lineTo(excenter.b.x, excenter.b.y);
+  ctx.strokeStyle = "plum";
+  ctx.stroke();
+
+  // excenter-to-excenter line 2
+  ctx.beginPath();
+  ctx.moveTo(excenter.b.x, excenter.b.y);
+  ctx.lineTo(excenter.c.x, excenter.c.y);
+  ctx.strokeStyle = "plum";
+  ctx.stroke();
+
+  // excenter-to-excenter line 3
+  ctx.beginPath();
+  ctx.moveTo(excenter.c.x, excenter.c.y);
+  ctx.lineTo(excenter.a.x, excenter.a.y);
+  ctx.strokeStyle = "plum";
+  ctx.stroke();
+
+  //
+  // ctx.beginPath();
+  // ctx.moveTo(edgePoints.a[0].x, edgePoints.a[0].y);
+  // ctx.lineTo(edgePoints.a[1].x, edgePoints.a[1].y);
+  // ctx.strokeStyle = "black";
+  // ctx.stroke();
 }
 
 // 五心の変数を受け取り、それに則ってオイラー線を描写
@@ -526,12 +610,12 @@ function generateRandomTriangle() {
   let x1, y1, x2, y2, x3, y3;
 
   // 頂点の位置がカンバスの端に行きすぎない範囲でランダムに位置決定
-  x1 = CANVAS_WIDTH / 4 + Math.random() * CANVAS_WIDTH / 2;
-  y1 = CANVAS_HEIGHT / 4 + Math.random() * CANVAS_HEIGHT / 2;
-  x2 = CANVAS_WIDTH / 4 + Math.random() * CANVAS_WIDTH / 2;
-  y2 = CANVAS_HEIGHT / 4 + Math.random() * CANVAS_HEIGHT / 2;
-  x3 = CANVAS_WIDTH / 4 + Math.random() * CANVAS_WIDTH / 2;
-  y3 = CANVAS_HEIGHT / 4 + Math.random() * CANVAS_HEIGHT / 2;
+  x1 = CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2;
+  y1 = CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2;
+  x2 = CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2;
+  y2 = CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2;
+  x3 = CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2;
+  y3 = CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2;
 
   document.getElementById("x1").value = x1;
   document.getElementById("y1").value = y1;
