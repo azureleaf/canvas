@@ -36,15 +36,15 @@ document
 
 // Colors for paths
 const COLORS = {
-  TRIANGLE_EDGE: "black",
-  TRIANGLE_FILL: "gainsboro",
+  TRIANGLE_EDGE: "gray",
+  TRIANGLE_FILL: "lightyellow",
   EXCENTER: "purple",
   EXCENTER_LINE: "plum",
   ORTHOCENTER: "orange",
   INCENTER: "green",
-  CENTROID: "blue",
-  CIRCUMCENTER: "deepskyblue",
-  EULER_LINE: "orangered"
+  CENTROID: "dodgerblue",
+  CIRCUMCENTER: "orangered",
+  EULER_LINE: "red"
 };
 
 // HTMLの五心それぞれについての色見本部分のstyle属性を設定
@@ -513,6 +513,9 @@ function drawExcenter(params, vertices, ctx) {
  * @param {*} params 五心の各座標などの計算結果
  */
 function drawEulerLine(ctx, vertices, params) {
+  // 破線にする
+  ctx.setLineDash([1, 2]);
+
   // 外心-垂心の結合線
   ctx.beginPath();
   ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
@@ -520,19 +523,8 @@ function drawEulerLine(ctx, vertices, params) {
   ctx.strokeStyle = COLORS.EULER_LINE;
   ctx.stroke();
 
-  // 重心-外心の結合線
-  ctx.beginPath();
-  ctx.moveTo(params.circumcenter.x, params.circumcenter.y);
-  ctx.lineTo(params.centroid.x, params.centroid.y);
-  ctx.strokeStyle = COLORS.EULER_LINE;
-  ctx.stroke();
-
-  // 重心-垂心の結合線
-  ctx.beginPath();
-  ctx.moveTo(params.centroid.x, params.centroid.y);
-  ctx.lineTo(params.orthocenter.x, params.orthocenter.y);
-  ctx.strokeStyle = COLORS.EULER_LINE;
-  ctx.stroke();
+  // これ以降の線のスタイルを実線に戻す
+  ctx.setLineDash([]);
 }
 
 /**
