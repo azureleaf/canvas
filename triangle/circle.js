@@ -356,7 +356,7 @@ function drawIncenter(params, vertices, ctx) {
   ctx.strokeStyle = COLORS.INCENTER;
   ctx.stroke();
 
-  // center
+  // incenter
   ctx.beginPath();
   ctx.arc(params.incenter.x, params.incenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.INCENTER;
@@ -377,7 +377,7 @@ function drawCircumcenter(params, vertices, ctx) {
   ctx.strokeStyle = COLORS.CIRCUMCENTER;
   ctx.stroke();
 
-  // center
+  // circumcenter
   ctx.beginPath();
   ctx.arc(params.circumcenter.x, params.circumcenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.CIRCUMCENTER;
@@ -413,7 +413,7 @@ function drawCentroid(params, vertices, ctx) {
     ctx.stroke();
   }
 
-  // center
+  // centroid
   ctx.beginPath();
   ctx.arc(params.centroid.x, params.centroid.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.CENTROID;
@@ -463,26 +463,24 @@ function drawExcenter(params, vertices, ctx) {
     ctx.stroke();
   });
 
-  // Line from Excenter A to Excenter B
-  ctx.beginPath();
-  ctx.moveTo(params.excenter.a.x, params.excenter.a.y);
-  ctx.lineTo(params.excenter.b.x, params.excenter.b.y);
-  ctx.strokeStyle = COLORS.EXCENTER_LINE;
-  ctx.stroke();
-
-  // Line from Excenter B to Excenter C
-  ctx.beginPath();
-  ctx.moveTo(params.excenter.b.x, params.excenter.b.y);
-  ctx.lineTo(params.excenter.c.x, params.excenter.c.y);
-  ctx.strokeStyle = COLORS.EXCENTER_LINE;
-  ctx.stroke();
-
-  // Line from Excenter C to Excenter A
-  ctx.beginPath();
-  ctx.moveTo(params.excenter.c.x, params.excenter.c.y);
-  ctx.lineTo(params.excenter.a.x, params.excenter.a.y);
-  ctx.strokeStyle = COLORS.EXCENTER_LINE;
-  ctx.stroke();
+  // 傍心同士の間の連結線の描画
+  [
+    { from: "a", to: "b" },
+    { from: "b", to: "c" },
+    { from: "c", to: "a" }
+  ].forEach(direction => {
+    ctx.beginPath();
+    ctx.moveTo(
+      params.excenter[direction.from].x,
+      params.excenter[direction.from].y
+    );
+    ctx.lineTo(
+      params.excenter[direction.to].x,
+      params.excenter[direction.to].y
+    );
+    ctx.strokeStyle = COLORS.EXCENTER_LINE;
+    ctx.stroke();
+  });
 
   // 傍心円の接線を描画
   // 三角形が完成し、その各辺の延長線位置が判明しているときのみ描画
@@ -494,6 +492,7 @@ function drawExcenter(params, vertices, ctx) {
     // 破線にする
     ctx.setLineDash([1, 2]);
 
+    // 3つの辺の延長線を描画
     ["a", "b", "c"].forEach(key => {
       ctx.beginPath();
       ctx.moveTo(params.edgePoints[key][0].x, params.edgePoints[key][0].y);
@@ -542,48 +541,34 @@ function drawEulerLine(ctx, vertices, params) {
  * @param {*} e Click event
  */
 function freeClick(e) {
-  let x = e.clientX - canvas.offsetLeft;
-  let y = e.clientY - canvas.offsetTop;
+  // ユーザーからのクリック位置を代入
+  clickPoints.push(
+    // prettier-ignore
+    new Point(
+      e.clientX - canvas.offsetLeft,
+      e.clientY - canvas.offsetTop)
+  );
 
   /**
    * 描画関数に渡すPoint Objectの配列
    * clickPoints[]は要素が３つない場合があるのに対して、
-   * vertices[]は常に３つの要素を持ち、２点目３点目が未定の場合はundefinedで埋まっているようにする
+   * vertices[]は常に３つの要素を持つ
    */
   let vertices = [];
 
-  clickPoints.push(new Point(x, y));
-
-  // clickPoints配列に３頂点分揃っていない時は
-  // 単に無視して何も代入しないよう条件分岐
-  if (clickPoints[0]) {
-    var x1 = clickPoints[0].x;
-    var y1 = clickPoints[0].y;
+  // checkPoints配列をverticesにコピー
+  // ただしclickPoints配列に３頂点分揃っていない時はundefinedで埋める
+  for (i = 0; i < 3; i++) {
+    if (clickPoints[i]) {
+      vertices.push(new Point(clickPoints[i].x, clickPoints[i].y));
+    } else {
+      vertices.push(new Point(undefined, undefined));
+    }
   }
 
-  if (clickPoints[1]) {
-    var x2 = clickPoints[1].x;
-    var y2 = clickPoints[1].y;
-  }
+  displayVertexCoordinates(vertices);
 
-  if (clickPoints[2]) {
-    var x3 = clickPoints[2].x;
-    var y3 = clickPoints[2].y;
-  }
-
-  // 二点目以降がまだ指定されていない時は、座標値はundefinedとなる
-  document.getElementById("x1").value = x1;
-  document.getElementById("y1").value = y1;
-  document.getElementById("x2").value = x2;
-  document.getElementById("y2").value = y2;
-  document.getElementById("x3").value = x3;
-  document.getElementById("y3").value = y3;
-
-  vertices.push(new Point(x1, y1));
-  vertices.push(new Point(x2, y2));
-  vertices.push(new Point(x3, y3));
-
-  // 点を随時描画する。３点揃った時は、五心全てが描画される
+  // 点を随時描画する。３点揃っている場合は、五心全てが描画される
   draw(vertices);
 
   // 3つの点がクリックされたら、用済みなので履歴をクリアし将来のクリックに備える
@@ -614,13 +599,7 @@ function generateRightTriangle() {
     )
   );
 
-  document.getElementById("x1").value = vertices[0].x;
-  document.getElementById("y1").value = vertices[0].y;
-  document.getElementById("x2").value = vertices[1].x;
-  document.getElementById("y2").value = vertices[1].y;
-  document.getElementById("x3").value = vertices[2].x;
-  document.getElementById("y3").value = vertices[2].y;
-
+  displayVertexCoordinates(vertices);
   draw(vertices);
 }
 
@@ -646,13 +625,7 @@ function generateEquilateralTriangle() {
     )
   );
 
-  document.getElementById("x1").value = vertices[0].x;
-  document.getElementById("y1").value = vertices[0].y;
-  document.getElementById("x2").value = vertices[1].x;
-  document.getElementById("y2").value = vertices[1].y;
-  document.getElementById("x3").value = vertices[2].x;
-  document.getElementById("y3").value = vertices[2].y;
-
+  displayVertexCoordinates(vertices);
   draw(vertices);
 }
 
@@ -674,13 +647,7 @@ function generateRandomTriangle() {
     );
   }
 
-  document.getElementById("x1").value = vertices[0].x;
-  document.getElementById("y1").value = vertices[0].y;
-  document.getElementById("x2").value = vertices[1].x;
-  document.getElementById("y2").value = vertices[1].y;
-  document.getElementById("x3").value = vertices[2].x;
-  document.getElementById("y3").value = vertices[2].y;
-
+  displayVertexCoordinates(vertices);
   draw(vertices);
 }
 
@@ -713,6 +680,20 @@ function renderCircle(content) {
   );
 
   draw(vertices, content);
+}
+
+/**
+ * 三角形頂点それぞれの座標値をユーザーから見えるよう欄に表示する
+ *
+ * @param {Object[]} vertices
+ */
+function displayVertexCoordinates(vertices) {
+  document.getElementById("x1").value = vertices[0].x;
+  document.getElementById("y1").value = vertices[0].y;
+  document.getElementById("x2").value = vertices[1].x;
+  document.getElementById("y2").value = vertices[1].y;
+  document.getElementById("x3").value = vertices[2].x;
+  document.getElementById("y3").value = vertices[2].y;
 }
 
 // Canvasへのクリックイベントに対するリスナー
