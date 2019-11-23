@@ -75,7 +75,7 @@
           onclick="renderCircle('incenter');"
           class="btn btn-primary"
         />
-        <span id="sampleIncenter">あ</span>内心座標: I(
+        <span id="sampleIncenter">Ｏ</span>内心座標: I(
         <input type="text" id="x0i" placeholder="x0i" size="4" disabled />,
         <!--  -->
         <input
@@ -91,7 +91,7 @@
           class="btn btn-primary"
           onclick="renderCircle('circumcenter');"
         />
-        <span id="sampleCircumcenter">あ</span>外心座標: O(
+        <span id="sampleCircumcenter">Ｏ</span>外心座標: O(
         <input type="text" id="x0O" placeholder="x0O" size="4" disabled />,
         <!--  -->
         <input
@@ -108,7 +108,7 @@
           onclick="renderCircle('centroid');"
           class="btn btn-primary"
         />
-        <span id="sampleCentroid">あ</span>重心座標: G(
+        <span id="sampleCentroid">Ｏ</span>重心座標: G(
         <input type="text" id="x0g" placeholder="x0g" size="4" disabled />,
         <!--  -->
         <input
@@ -124,7 +124,7 @@
           class="btn btn-primary"
           onclick="renderCircle('orthocenter');"
         />
-        <span id="sampleOrthocenter">あ</span>垂心座標: H(
+        <span id="sampleOrthocenter">Ｏ</span>垂心座標: H(
         <input
           type="text"
           id="x0h"
@@ -144,7 +144,7 @@
           onclick="renderCircle('excenter');"
           class="btn btn-primary"
         />
-        <span id="sampleExcenter">あ</span>傍心座標: ia(
+        <span id="sampleExcenter">Ｏ</span>傍心座標: ia(
         <input
           type="text"
           id="x0ia"
@@ -195,6 +195,24 @@
           disabled
         />)<br />
       </form>
+      <div id="quiz">
+        <h4>観察ポイント</h4>
+        <ul>
+          <li>重心は、各辺の中線（頂点と辺の中点を結ぶ線）の交点である。</li>
+          <li>外心は、各辺の垂直二等分線の交点である。</li>
+          <li>垂心は、各頂点から各辺に下ろした垂線の交点である。</li>
+          <li>内心は、各角の二等分線の交点である。</li>
+          <li>傍心は、あるの角の二等分線と残り2つの角の外角の二等分線の交点である。</li>
+          <li>重心は、中線を２：１に分離する。</li>
+          <li>直角三角形の外心は、常に一番長い辺の上に存在する。</li>
+          <li>重心は常に三角形の内部に存在する。</li>
+          <li>外心・垂心・重心は常に一直線上に存在する。（オイラー線）</li>
+          <li>傍心同士を結合すると、必ず頂点上を通る。</li>
+          <li>鈍角三角形の場合、垂心と外心は三角形外部になる。</li>
+          <li>傍心と向き合う頂点を結んだ三直線は一点で交わり、それは内心と一致する。</li>
+          <li></li>
+        </ul>
+      </div>
     </div>
 
     <script src="./circle.js"></script>
