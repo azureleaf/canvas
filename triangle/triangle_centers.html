@@ -4,198 +4,431 @@
     <meta charset="utf-8" />
     <title>Canvas triangle 5center</title>
     <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
   </head>
   <body onload="setVertices('random')">
-    <div id="canvas_wrapper">
-      <canvas>
-        Canvas not supported.
-      </canvas>
-    </div>
+    <div id="wrapper" class="row">
+      <div id="canvas_wrapper" class="col-lg-6">
+        <canvas>
+          Canvas not supported.
+        </canvas>
+      </div>
 
+      <div id="container" class="col-lg-6">
+        <p>
+          canvas内の任意の三点をクリックしてください。三角形の五心が表示されます。
+        </p>
+        <form>
+          <h3>三角形生成</h3>
+          <!--  -->
+          <div class="row">
+            P1:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x1"
+                placeholder="x1"
+                size="4"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y1"
+                placeholder="y1"
+                size="4"
+                class="form-control form-control-sm"
+              />
+            </div>
 
-    <div id="container">
-      <p>
-        canvas内の任意の三点をクリックしてください。三角形の五心が表示されます。
-      </p>
-      <!-- <input
-        type="button"
-        value="このページを再読込します"
-        onclick="window.location.reload();"
-      /> -->
-      <form>
-        <h3>三角形の頂点座標</h3>
-        P1(
-        <!--  -->
-        <input type="text" id="x1" placeholder="x1" size="4" />,
-        <input type="text" id="y1" placeholder="y1" size="4" />) P2(
-        <input type="text" id="x2" placeholder="x2" size="4" />,
-        <input type="text" id="y2" placeholder="y2" size="4" />) P3(
-        <input type="text" id="x3" placeholder="x3" size="4" />,
-        <input type="text" id="y3" placeholder="y3" size="4" />)
+            P2:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x2"
+                placeholder="x2"
+                size="4"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y2"
+                placeholder="y2"
+                size="4"
+                class="form-control form-control-sm"
+              />
+            </div>
 
-        <h3>三角形の自動生成</h3>
-        <input
-          type="button"
-          value="ランダム三角形"
-          onclick="setVertices('random');"
-        />
-        <input
-          type="button"
-          value="直角三角形"
-          onclick="setVertices('right');"
-        />
-        <input
-          type="button"
-          value="正三角形"
-          onclick="setVertices('equilateral');"
-        />
-        <input
-          type="button"
-          value="上記の三点座標で描画"
-          onclick="redraw('all')"
-        />
+            P3:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x3"
+                placeholder="x3"
+                size="4"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y3"
+                placeholder="y3"
+                size="4"
+                class="form-control form-control-sm"
+              />
+            </div>
+          </div>
 
-        <h3>計算結果</h3>
-        辺長 a,b,c(
-        <input type="text" id="a" placeholder="a" size="4" disabled />,
-        <input type="text" id="b" placeholder="b" size="4" disabled />,
-        <input type="text" id="c" placeholder="c" size="4" disabled />)<br />
-        s,S(
+          <input
+            type="button"
+            value="ランダム三角形"
+            onclick="setVertices('random');"
+            class="btn btn-primary"
+          />
+          <input
+            type="button"
+            value="直角三角形"
+            onclick="setVertices('right');"
+            class="btn btn-primary"
+          />
+          <input
+            type="button"
+            value="正三角形"
+            onclick="setVertices('equilateral');"
+            class="btn btn-primary"
+          />
+          <input
+            type="button"
+            value="上記の三点座標で描画"
+            onclick="redraw('all')"
+            class="btn btn-primary"
+          />
 
-        <!--  -->
-        <input type="text" id="s" placeholder="s" size="4" disabled />,
-        <input type="text" id="S" placeholder="S" size="4" disabled />)<br />
-        内心・外心半径r,R(
-        <input type="text" id="r" placeholder="r" size="4" disabled />,
-        <input type="text" id="R" placeholder="R" size="4" disabled />)<br />
+          <h3>計算結果</h3>
+          <div class="row">
+            辺の長さ a:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="a"
+                placeholder="a"
+                size="4"
+                class="form-control form-control-sm"
+                readonly
+                disabled
+              />
+            </div>
+            b:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="b"
+                placeholder="b"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            c:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="c"
+                placeholder="c"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
 
-        <input
-          type="button"
-          value="内心"
-          onclick="redraw('incenter');"
-          class="btn btn-primary"
-        />
-        <span id="sampleIncenter">Ｏ</span>内心座標: I(
-        <input type="text" id="x0i" placeholder="x0i" size="4" disabled />,
-        <!--  -->
-        <input
-          type="text"
-          id="y0i"
-          placeholder="y0i"
-          size="4"
-          disabled
-        />)<br />
-        <input
-          type="button"
-          value="外心"
-          class="btn btn-primary"
-          onclick="redraw('circumcenter');"
-        />
-        <span id="sampleCircumcenter">Ｏ</span>外心座標: O(
-        <input type="text" id="x0O" placeholder="x0O" size="4" disabled />,
-        <!--  -->
-        <input
-          type="text"
-          id="y0O"
-          placeholder="y0O"
-          size="4"
-          disabled
-        />)<br />
+          <div class="row">
+            s = (a+b+c)/2
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="s"
+                placeholder="s"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            面積S
+            <div>
+              <input
+                type="text"
+                id="S"
+                placeholder="S"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="row">
+            内接円半径r：
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="r"
+                placeholder="r"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
 
-        <input
-          type="button"
-          value="重心"
-          onclick="redraw('centroid');"
-          class="btn btn-primary"
-        />
-        <span id="sampleCentroid">Ｏ</span>重心座標: G(
-        <input type="text" id="x0g" placeholder="x0g" size="4" disabled />,
-        <!--  -->
-        <input
-          type="text"
-          id="y0g"
-          placeholder="y0g"
-          size="4"
-          disabled
-        />)<br />
-        <input
-          type="button"
-          value="垂心"
-          class="btn btn-primary"
-          onclick="redraw('orthocenter');"
-        />
-        <span id="sampleOrthocenter">Ｏ</span>垂心座標: H(
-        <input
-          type="text"
-          id="x0h"
-          placeholder="x0h"
-          size="4"
-          disabled
-        />,<input
-          type="text"
-          id="y0h"
-          placeholder="y0h"
-          size="4"
-          disabled
-        />)<br />
-        <input
-          type="button"
-          value="傍心"
-          onclick="redraw('excenter');"
-          class="btn btn-primary"
-        />
-        <span id="sampleExcenter">Ｏ</span>傍心座標: ia(
-        <input
-          type="text"
-          id="x0ia"
-          placeholder="x0ia"
-          size="4"
-          disabled
-        />,<input type="text" id="y0ia" placeholder="y0ia" size="4" disabled />)
-        ib(
-        <input
-          type="text"
-          id="x0ib"
-          placeholder="x0ib"
-          size="4"
-          disabled
-        />,<input type="text" id="y0ib" placeholder="y0ib" size="4" disabled />)
-        ic(
-        <input
-          type="text"
-          id="x0ic"
-          placeholder="x0ic"
-          size="4"
-          disabled
-        />,<input
-          type="text"
-          id="y0ic"
-          placeholder="y0ic"
-          size="4"
-          disabled
-        />)<br />
-        傍心半径 (ra
-        <input
-          type="text"
-          id="ra"
-          placeholder="ra"
-          size="4"
-          disabled
-        />,rb<input
-          type="text"
-          id="rb"
-          placeholder="rb"
-          size="4"
-          disabled
-        />,rc<input
-          type="text"
-          id="rc"
-          placeholder="rc"
-          size="4"
-          disabled
-        />)<br />
-      </form>
-      <!-- <div id="hints">
+            外接円半径R：
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="R"
+                placeholder="R"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <input
+              type="button"
+              value="内心のみ表示"
+              onclick="redraw('incenter');"
+              class="btn btn-primary"
+            />
+            <span id="sampleIncenter">Ｏ</span>内心座標: I
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x0i"
+                placeholder="x0i"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y0i"
+                placeholder="y0i"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="row">
+            <input
+              type="button"
+              value="外心のみ表示"
+              class="btn btn-primary"
+              onclick="redraw('circumcenter');"
+            />
+            <span id="sampleCircumcenter">Ｏ</span>外心座標: O
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x0O"
+                placeholder="x0O"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y0O"
+                placeholder="y0O"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <input
+              type="button"
+              value="重心のみ表示"
+              onclick="redraw('centroid');"
+              class="btn btn-primary"
+            />
+            <span id="sampleCentroid">Ｏ</span>重心座標: G
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x0g"
+                placeholder="x0g"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y0g"
+                placeholder="y0g"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <input
+              type="button"
+              value="垂心のみ表示"
+              class="btn btn-primary"
+              onclick="redraw('orthocenter');"
+            />
+            <span id="sampleOrthocenter">Ｏ</span>垂心座標: H
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x0h"
+                placeholder="x0h"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y0h"
+                placeholder="y0h"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <input
+              type="button"
+              value="傍心のみ表示"
+              onclick="redraw('excenter');"
+              class="btn btn-primary"
+            />
+            <span id="sampleExcenter">Ｏ</span>傍心座標: ia(
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x0ia"
+                placeholder="x0ia"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y0ia"
+                placeholder="y0ia"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            ib:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="x0ib"
+                placeholder="x0ib"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y0ib"
+                placeholder="y0ib"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            ic:
+            <div class="col-xs-2">
+              
+              <input
+                type="text"
+                id="x0ic"
+                placeholder="x0ic"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="y0ic"
+                placeholder="y0ic"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="row">
+            傍心半径 ra:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="ra"
+                placeholder="ra"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            rb:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="rb"
+                placeholder="rb"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+            rc:
+            <div class="col-xs-2">
+              <input
+                type="text"
+                id="rc"
+                placeholder="rc"
+                size="4"
+                class="form-control form-control-sm"
+                disabled
+              />
+            </div>
+          </div>
+        </form>
+        <!-- <div id="hints">
         <h4>観察ポイント</h4>
         <ul>
           <li>重心は、各辺の中線（頂点と辺の中点を結ぶ線）の交点である。</li>
@@ -212,9 +445,9 @@
           <li>傍心と向き合う頂点を結んだ三直線は一点で交わり、それは内心と一致する。</li>
         </ul>
       </div> -->
+      </div>
+
+      <script src="./circle.js"></script>
     </div>
-
-    <script src="./circle.js"></script>
-
   </body>
 </html>

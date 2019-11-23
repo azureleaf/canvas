@@ -1,8 +1,5 @@
+// Select <canvas>
 var canvas = document.querySelector("canvas");
-
-/**
- * GLOBAL VARIABLES
- */
 
 // Class to hold the (x, y) coordinate value of a point
 class Point {
@@ -19,7 +16,7 @@ let clickPoints = [];
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 512;
 
-// Set attributes of <canvas> in the HTML file
+// Set attributes of <canvas> in the DOM
 document
   .getElementsByTagName("canvas")[0]
   .setAttribute(
@@ -31,7 +28,7 @@ document
       "px;" +
       "border-style: solid; \
        border-width: 4px; \
-       border-color:#ffcccc"
+       border-color:#cccccc"
   );
 
 // Colors for paths
@@ -63,10 +60,11 @@ const COLORS = {
 });
 
 /**
- * FUNCTIONS
+ * 三角形の三点の座標を受け取り、描画する。
+ * 
+ * @param {Object[]} vertices ３つの頂点の座標のオブジェクト（Point Class）
+ * @param {string} centerType "incenter", "excenter", "all"など描画する円の指定
  */
-
-//　三角形の三点の座標を受け取り、描画する。主関数。
 function draw(vertices, centerType = "all") {
   if (typeof canvas.getContext === "undefined") {
     return;
@@ -82,12 +80,12 @@ function draw(vertices, centerType = "all") {
   canvas.style.height = CANVAS_HEIGHT + "px";
 
   // 頂点の描画
-  for (let i = 0; i < 3; i++) {
+  vertices.forEach(vertex => {
     ctx.beginPath();
-    ctx.arc(vertices[i].x, vertices[i].y, 2, 0, 2 * Math.PI);
+    ctx.arc(vertex.x, vertex.y, 2, 0, 2 * Math.PI);
     ctx.fillStyle = COLORS.TRIANGLE_EDGE;
     ctx.fill();
-  }
+  });
 
   // 三角形の描画
   ctx.beginPath();
@@ -118,7 +116,7 @@ function draw(vertices, centerType = "all") {
     drawOrthocenter(params, vertices, ctx);
 
   // オイラー線は常に表示する
-  drawEulerLine(ctx, vertices, params);
+  drawEulerLine(params, vertices, ctx);
 }
 
 /**
@@ -129,43 +127,41 @@ function draw(vertices, centerType = "all") {
  */
 function calcParams(vertices) {
   // 式の表記が長ったらしくなるのを防ぐため、各頂点座標を短い中間変数で表現
-  var x1, x2, x3, y1, y2, y3;
-
-  x1 = vertices[0].x;
-  y1 = vertices[0].y;
-  x2 = vertices[1].x;
-  y2 = vertices[1].y;
-  x3 = vertices[2].x;
-  y3 = vertices[2].y;
+  let x1 = vertices[0].x;
+  let y1 = vertices[0].y;
+  let x2 = vertices[1].x;
+  let y2 = vertices[1].y;
+  let x3 = vertices[2].x;
+  let y3 = vertices[2].y;
 
   // ３辺の長さを算出 (Pythagorean theorem)
-  var c = Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 1 / 2);
-  var a = Math.pow(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2), 1 / 2);
-  var b = Math.pow(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2), 1 / 2);
+  let c = Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 1 / 2);
+  let a = Math.pow(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2), 1 / 2);
+  let b = Math.pow(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2), 1 / 2);
   document.getElementById("a").value = a;
   document.getElementById("b").value = b;
   document.getElementById("c").value = c;
 
   // 三角形の面積を算出 (Heron's formula)
-  var s = (a + b + c) / 2;
-  var S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
+  let s = (a + b + c) / 2;
+  let S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
 
   document.getElementById("s").value = s;
   document.getElementById("S").value = S;
 
   // 内接円の半径を計算
-  var r = (2 * S) / (a + b + c);
+  let r = (2 * S) / (a + b + c);
   document.getElementById("r").value = r;
 
   // 外接円の半径を計算
-  var R = (a * b * c) / (4 * r * s);
+  let R = (a * b * c) / (4 * r * s);
   document.getElementById("R").value = R;
 
   /**
    * 内心 Incenter の位置計算
    */
 
-  var incenter = new Point(
+  let incenter = new Point(
     (a * x1 + b * x2 + c * x3) / (a + b + c),
     (a * y1 + b * y2 + c * y3) / (a + b + c)
   );
@@ -176,7 +172,7 @@ function calcParams(vertices) {
   /**
    * 外心 Circumcenter の位置計算
    */
-  var circumcenter = new Point(
+  let circumcenter = new Point(
     (a * a * (b * b + c * c - a * a) * x1 +
       b * b * (c * c + a * a - b * b) * x2 +
       c * c * (a * a + b * b - c * c) * x3) /
@@ -193,7 +189,7 @@ function calcParams(vertices) {
   /**
    * 重心 Centroid の位置計算
    */
-  var centroid = new Point((x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3);
+  let centroid = new Point((x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3);
 
   document.getElementById("x0g").value = centroid.x;
   document.getElementById("y0g").value = centroid.y;
@@ -202,18 +198,18 @@ function calcParams(vertices) {
    * 垂心 Orthocenter の位置計算
    */
   // 辺の長さから角度を計算
-  var thetaA = Math.acos(
+  let thetaA = Math.acos(
     ((x2 - x1) * (x3 - x1) + (y2 - y1) * (y3 - y1)) / (b * c)
   );
-  var thetaB = Math.acos(
+  let thetaB = Math.acos(
     ((x3 - x2) * (x1 - x2) + (y3 - y2) * (y1 - y2)) / (c * a)
   );
-  var thetaC = Math.acos(
+  let thetaC = Math.acos(
     ((x1 - x3) * (x2 - x3) + (y1 - y3) * (y2 - y3)) / (a * b)
   );
 
   // 垂心の位置を計算
-  var orthocenter = new Point(
+  let orthocenter = new Point(
     (Math.tan(thetaA) * x1 + Math.tan(thetaB) * x2 + Math.tan(thetaC) * x3) /
       (Math.tan(thetaA) + Math.tan(thetaB) + Math.tan(thetaC)),
     (Math.tan(thetaA) * y1 + Math.tan(thetaB) * y2 + Math.tan(thetaC) * y3) /
@@ -228,7 +224,7 @@ function calcParams(vertices) {
    */
 
   // 3つの傍心のPoint objectを格納する変数
-  var excenter = {};
+  let excenter = {};
 
   // Excenter 1
   excenter.a = new Point(
@@ -350,13 +346,13 @@ function calcParams(vertices) {
 
 // 内心関係の描画
 function drawIncenter(params, vertices, ctx) {
-  // cicle
+  // Inscribed Circle
   ctx.beginPath();
   ctx.arc(params.incenter.x, params.incenter.y, params.r, 0, 2 * Math.PI);
   ctx.strokeStyle = COLORS.INCENTER;
   ctx.stroke();
 
-  // incenter
+  // Incenter
   ctx.beginPath();
   ctx.arc(params.incenter.x, params.incenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.INCENTER;
@@ -365,7 +361,7 @@ function drawIncenter(params, vertices, ctx) {
 
 // 外心関係の描画
 function drawCircumcenter(params, vertices, ctx) {
-  // circle
+  // Circumscribed circle
   ctx.beginPath();
   ctx.arc(
     params.circumcenter.x,
@@ -377,7 +373,7 @@ function drawCircumcenter(params, vertices, ctx) {
   ctx.strokeStyle = COLORS.CIRCUMCENTER;
   ctx.stroke();
 
-  // circumcenter
+  // Circumcenter
   ctx.beginPath();
   ctx.arc(params.circumcenter.x, params.circumcenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.CIRCUMCENTER;
@@ -386,16 +382,15 @@ function drawCircumcenter(params, vertices, ctx) {
 
 // 垂心関係の描画
 function drawOrthocenter(params, vertices, ctx) {
-  // Draw Perpendicular lines
-  for (let i = 0; i < 3; i++) {
+  // perpendicular lines
+  vertices.forEach(vertex => {
     ctx.beginPath();
     ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
-    ctx.lineTo(vertices[i].x, vertices[i].y);
+    ctx.lineTo(vertex.x, vertex.y);
     ctx.strokeStyle = COLORS.ORTHOCENTER;
     ctx.stroke();
-  }
-
-  // Draw the orthocenter
+  });
+  // orthocenter
   ctx.beginPath();
   ctx.arc(params.orthocenter.x, params.orthocenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.ORTHOCENTER;
@@ -405,13 +400,13 @@ function drawOrthocenter(params, vertices, ctx) {
 // 重心関係の描画
 function drawCentroid(params, vertices, ctx) {
   // bisector lines
-  for (let i = 0; i < 3; i++) {
+  vertices.forEach(vertex => {
     ctx.beginPath();
-    ctx.moveTo(vertices[i].x, vertices[i].y);
+    ctx.moveTo(vertex.x, vertex.y);
     ctx.lineTo(params.centroid.x, params.centroid.y);
     ctx.strokeStyle = COLORS.CENTROID;
     ctx.stroke();
-  }
+  });
 
   // centroid
   ctx.beginPath();
@@ -424,11 +419,10 @@ function drawCentroid(params, vertices, ctx) {
  * 傍心関係の描画
  *
  * @param {*} params
- * @param {*} vertices
+ * @param {Object[]} vertices
  * @param {*} ctx Canvas Context
  */
 function drawExcenter(params, vertices, ctx) {
-  // 同じものを３回ずつ書くのは非効率なので、文字列の配列を使って反復する
   ["a", "b", "c"].forEach((excenterKey, index) => {
     // 傍心円の描画
     ctx.beginPath();
@@ -490,7 +484,7 @@ function drawExcenter(params, vertices, ctx) {
     typeof params.edgePoints.c !== "undefined"
   ) {
     // 破線にする
-    ctx.setLineDash([1, 2]);
+    ctx.setLineDash([2, 2]);
 
     // 3つの辺の延長線を描画
     ["a", "b", "c"].forEach(edgeKey => {
@@ -514,13 +508,14 @@ function drawExcenter(params, vertices, ctx) {
 
 /**
  * 五心の変数を受け取り、それに則ってオイラー線を描写
- *
- * @param {*} ctx Canvas Context
+ * 
  * @param {*} params 五心の各座標などの計算結果
+ * @param {*} vertices
+ * @param {*} ctx Canvas Context
  */
-function drawEulerLine(ctx, vertices, params) {
+function drawEulerLine(params, vertices, ctx) {
   // 破線にする
-  ctx.setLineDash([1, 2]);
+  ctx.setLineDash([2, 2]);
 
   // 外心-垂心の結合線
   ctx.beginPath();
@@ -542,20 +537,21 @@ function drawEulerLine(ctx, vertices, params) {
 function setVertices(triangleType, event) {
   let vertices = [];
 
+  // 引数の三角形種別によって頂点座標の計算方法を切り替え
   switch (triangleType) {
     // 直角三角形
     case "right":
       // ２点は固定、残る１点の高さのみランダム
       // prettier-ignore
       vertices.push(
-    new Point(
-      CANVAS_WIDTH / 4,
-      CANVAS_HEIGHT / 3));
+        new Point(
+          CANVAS_WIDTH / 4,
+          CANVAS_HEIGHT / 3));
       // prettier-ignore
       vertices.push(
-    new Point(
-      CANVAS_WIDTH / 2,
-      CANVAS_HEIGHT / 3));
+        new Point(
+        CANVAS_WIDTH / 2,
+        CANVAS_HEIGHT / 3));
       vertices.push(
         new Point(
           CANVAS_WIDTH / 4,
@@ -568,9 +564,9 @@ function setVertices(triangleType, event) {
     case "equilateral":
       // prettier-ignore
       vertices.push(
-      new Point(
-        CANVAS_WIDTH / 2,
-        CANVAS_HEIGHT / 4));
+        new Point(
+          CANVAS_WIDTH / 2,
+          CANVAS_HEIGHT / 4));
       vertices.push(
         new Point(
           CANVAS_WIDTH / 2 + 50,
@@ -625,6 +621,7 @@ function setVertices(triangleType, event) {
       console.log("Error: Unknown triangle type assigned");
   }
 
+  // DOMでの表示
   document.getElementById("x1").value = vertices[0].x;
   document.getElementById("y1").value = vertices[0].y;
   document.getElementById("x2").value = vertices[1].x;
