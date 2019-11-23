@@ -67,7 +67,7 @@ const COLORS = {
  */
 
 //　三角形の三点の座標を受け取り、描画する。主関数。
-function draw(vertices, content = "all") {
+function draw(vertices, centerType = "all") {
   if (typeof canvas.getContext === "undefined") {
     return;
   }
@@ -104,17 +104,17 @@ function draw(vertices, content = "all") {
   let params = calcParams(vertices);
 
   // Conditional rendering
-  // "content"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
+  // "centerType"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
   // prettier-ignore
-  if (content == "incenter" || content == "all")
+  if (centerType == "incenter" || centerType == "all")
     drawIncenter(params, vertices, ctx);
-  if (content == "circumcenter" || content == "all")
+  if (centerType == "circumcenter" || centerType == "all")
     drawCircumcenter(params, vertices, ctx);
-  if (content == "centroid" || content == "all")
+  if (centerType == "centroid" || centerType == "all")
     drawCentroid(params, vertices, ctx);
-  if (content == "excenter" || content == "all")
+  if (centerType == "excenter" || centerType == "all")
     drawExcenter(params, vertices, ctx);
-  if (content == "orthocenter" || content == "all")
+  if (centerType == "orthocenter" || centerType == "all")
     drawOrthocenter(params, vertices, ctx);
 
   // オイラー線は常に表示する
@@ -429,13 +429,13 @@ function drawCentroid(params, vertices, ctx) {
  */
 function drawExcenter(params, vertices, ctx) {
   // 同じものを３回ずつ書くのは非効率なので、文字列の配列を使って反復する
-  ["a", "b", "c"].forEach((key, index) => {
+  ["a", "b", "c"].forEach((excenterKey, index) => {
     // 傍心円の描画
     ctx.beginPath();
     ctx.arc(
-      params.excenter[key].x,
-      params.excenter[key].y,
-      params.excenter[key].radius,
+      params.excenter[excenterKey].x,
+      params.excenter[excenterKey].y,
+      params.excenter[excenterKey].radius,
       0,
       2 * Math.PI
     );
@@ -446,8 +446,8 @@ function drawExcenter(params, vertices, ctx) {
     ctx.beginPath();
     // prettier-ignore
     ctx.arc(
-      params.excenter[key].x,
-      params.excenter[key].y,
+      params.excenter[excenterKey].x,
+      params.excenter[excenterKey].y,
       2,
       0,
       2 * Math.PI
@@ -457,7 +457,7 @@ function drawExcenter(params, vertices, ctx) {
 
     // 頂点と傍心を結ぶ線の描画
     ctx.beginPath();
-    ctx.moveTo(params.excenter[key].x, params.excenter[key].y);
+    ctx.moveTo(params.excenter[excenterKey].x, params.excenter[excenterKey].y);
     ctx.lineTo(vertices[index].x, vertices[index].y);
     ctx.strokeStyle = COLORS.EXCENTER_LINE;
     ctx.stroke();
@@ -493,10 +493,16 @@ function drawExcenter(params, vertices, ctx) {
     ctx.setLineDash([1, 2]);
 
     // 3つの辺の延長線を描画
-    ["a", "b", "c"].forEach(key => {
+    ["a", "b", "c"].forEach(edgeKey => {
       ctx.beginPath();
-      ctx.moveTo(params.edgePoints[key][0].x, params.edgePoints[key][0].y);
-      ctx.lineTo(params.edgePoints[key][1].x, params.edgePoints[key][1].y);
+      ctx.moveTo(
+        params.edgePoints[edgeKey][0].x,
+        params.edgePoints[edgeKey][0].y
+      );
+      ctx.lineTo(
+        params.edgePoints[edgeKey][1].x,
+        params.edgePoints[edgeKey][1].y
+      );
       ctx.strokeStyle = COLORS.EXCENTER_LINE;
       ctx.stroke();
     });
@@ -528,127 +534,113 @@ function drawEulerLine(ctx, vertices, params) {
 }
 
 /**
- * ユーザのクリックによる任意の三角形指定のハンドラ
- * クリック毎に呼ばれる
- * @param {*} e Click event
- */
-function freeClick(e) {
-  // ユーザーからのクリック位置を代入
-  clickPoints.push(
-    // prettier-ignore
-    new Point(
-      e.clientX - canvas.offsetLeft,
-      e.clientY - canvas.offsetTop)
-  );
-
-  /**
-   * 描画関数に渡すPoint Objectの配列
-   * clickPoints[]は要素が３つない場合があるのに対して、
-   * vertices[]は常に３つの要素を持つ
-   */
-  let vertices = [];
-
-  // checkPoints配列をverticesにコピー
-  // ただしclickPoints配列に３頂点分揃っていない時はundefinedで埋める
-  for (i = 0; i < 3; i++) {
-    if (clickPoints[i]) {
-      vertices.push(new Point(clickPoints[i].x, clickPoints[i].y));
-    } else {
-      vertices.push(new Point(undefined, undefined));
-    }
-  }
-
-  displayVertexCoordinates(vertices);
-
-  // 点を随時描画する。３点揃っている場合は、五心全てが描画される
-  draw(vertices);
-
-  // 3つの点がクリックされたら、用済みなので履歴をクリアし将来のクリックに備える
-  if (clickPoints.length == 3) clickPoints = [];
-}
-
-/**
- *  直角三角形 Right triangleの自動生成
- */
-function generateRightTriangle() {
-  let vertices = [];
-
-  // ２点は固定、残る１点の高さのみランダム
-  // prettier-ignore
-  vertices.push(
-    new Point(
-      CANVAS_WIDTH / 4,
-      CANVAS_HEIGHT / 3));
-  // prettier-ignore
-  vertices.push(
-    new Point(
-      CANVAS_WIDTH / 2,
-      CANVAS_HEIGHT / 3));
-  vertices.push(
-    new Point(
-      CANVAS_WIDTH / 4,
-      CANVAS_HEIGHT / 3 + (Math.random() * CANVAS_HEIGHT) / 2
-    )
-  );
-
-  displayVertexCoordinates(vertices);
-  draw(vertices);
-}
-
-// 正三角形 Equilateral triangleの生成
-function generateEquilateralTriangle() {
-  let vertices = [];
-
-  // prettier-ignore
-  vertices.push(
-    new Point(
-      CANVAS_WIDTH / 2,
-      CANVAS_HEIGHT / 4));
-  vertices.push(
-    new Point(
-      CANVAS_WIDTH / 2 + 50,
-      CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2)
-    )
-  );
-  vertices.push(
-    new Point(
-      CANVAS_WIDTH / 2 - 50,
-      CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2)
-    )
-  );
-
-  displayVertexCoordinates(vertices);
-  draw(vertices);
-}
-
-/**
- * 形状がランダムな三角形の自動生成
- */
-function generateRandomTriangle() {
-  // 3つの頂点座標を配列として保持する中間変数
-  let vertices = [];
-
-  // 3つの頂点座標をランダムに生成
-  for (let i = 0; i < 3; i++) {
-    vertices.push(
-      new Point(
-        // 頂点の位置がカンバスの端に行きすぎない範囲とする
-        CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2,
-        CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2
-      )
-    );
-  }
-
-  displayVertexCoordinates(vertices);
-  draw(vertices);
-}
-
-/**
- * 五心のうち指定されたものだけを描画する
+ * 三角形の３つの頂点座標を生成し描画関数に渡す
  *
- * @param {string} content "incenter", "excenter"のような、描画したい五心の指定（省略可）
+ * @param {string} triangleType 生成する三角形の種別
+ * @param {*} event クリックイベント。triangleTypeがclicksではない場合は空引数
  */
-function renderCircle(content) {
+function setVertices(triangleType, event) {
+  let vertices = [];
+
+  switch (triangleType) {
+    // 直角三角形
+    case "right":
+      // ２点は固定、残る１点の高さのみランダム
+      // prettier-ignore
+      vertices.push(
+    new Point(
+      CANVAS_WIDTH / 4,
+      CANVAS_HEIGHT / 3));
+      // prettier-ignore
+      vertices.push(
+    new Point(
+      CANVAS_WIDTH / 2,
+      CANVAS_HEIGHT / 3));
+      vertices.push(
+        new Point(
+          CANVAS_WIDTH / 4,
+          CANVAS_HEIGHT / 3 + (Math.random() * CANVAS_HEIGHT) / 2
+        )
+      );
+      break;
+
+    // 正三角形
+    case "equilateral":
+      // prettier-ignore
+      vertices.push(
+      new Point(
+        CANVAS_WIDTH / 2,
+        CANVAS_HEIGHT / 4));
+      vertices.push(
+        new Point(
+          CANVAS_WIDTH / 2 + 50,
+          CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2)
+        )
+      );
+      vertices.push(
+        new Point(
+          CANVAS_WIDTH / 2 - 50,
+          CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2)
+        )
+      );
+      break;
+
+    // ランダム形状の三角形
+    case "random":
+      // 3つの頂点座標をランダムに生成
+      for (let i = 0; i < 3; i++) {
+        vertices.push(
+          new Point(
+            // 頂点の位置がカンバスの端に行きすぎない範囲とする
+            CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2,
+            CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2
+          )
+        );
+      }
+      break;
+
+    // ユーザーからの自由三点クリックによる三角形
+    case "clicks":
+      clickPoints.push(
+        // prettier-ignore
+        new Point(
+          event.clientX - canvas.offsetLeft,
+          event.clientY - canvas.offsetTop)
+      );
+      // checkPoints配列をverticesにコピー
+      // ただしclickPoints配列に３頂点分揃っていない時はundefinedで埋める
+      for (i = 0; i < 3; i++) {
+        if (clickPoints[i]) {
+          vertices.push(new Point(clickPoints[i].x, clickPoints[i].y));
+        } else {
+          vertices.push(new Point(undefined, undefined));
+        }
+      }
+
+      // 3つの点がクリックされたら、用済みなので履歴をクリアし将来のクリックに備える
+      if (clickPoints.length == 3) clickPoints = [];
+      break;
+
+    default:
+      console.log("Error: Unknown triangle type assigned");
+  }
+
+  document.getElementById("x1").value = vertices[0].x;
+  document.getElementById("y1").value = vertices[0].y;
+  document.getElementById("x2").value = vertices[1].x;
+  document.getElementById("y2").value = vertices[1].y;
+  document.getElementById("x3").value = vertices[2].x;
+  document.getElementById("y3").value = vertices[2].y;
+
+  draw(vertices);
+}
+
+/**
+ * 現在の三角形座標情報を維持したまま、五心のうち指定されたものだけを再描画する
+ *
+ * @param {string} centerType "incenter", "excenter"のような、描画したい五心の指定（省略可）
+ */
+function redraw(centerType) {
   let vertices = [];
 
   // HTMLの入力欄から三角形頂点の座標を取得
@@ -671,22 +663,21 @@ function renderCircle(content) {
     )
   );
 
-  draw(vertices, content);
+  draw(vertices, centerType);
 }
 
 /**
- * 三角形頂点それぞれの座標値をユーザーから見えるよう欄に表示する
+ * 技術メモ：Canvasへのクリックイベントに対するリスナーの書き方３通り
  *
- * @param {Object[]} vertices
+ * .addEventListener("click", myFunc, false)
+ *    イベントハンドラに引数が必要ない場合。myFunc()と書くと動かなくなるので、カッコはつけない
+ *    ここには書かなくても、イベントハンドラにはイベントが引数として自動で渡される。
+ *    例：function myFunc(e){ console.log(e.clientX)}
+ *
+ * .addEventListener("click", function() {myFunc(arg)}, false)
+ *    イベントハンドラに引数が必要な場合。外側に引数なしの関数を書き、中に実体の関数を引数付きで書く
+ *
+ * .addEventListener("click", (event) => myFunc(arg, event), false)
+ *    イベントハンドラに引数が必要で、なおかつイベントが第一引数では困るのでその引数の順序を変える場合
  */
-function displayVertexCoordinates(vertices) {
-  document.getElementById("x1").value = vertices[0].x;
-  document.getElementById("y1").value = vertices[0].y;
-  document.getElementById("x2").value = vertices[1].x;
-  document.getElementById("y2").value = vertices[1].y;
-  document.getElementById("x3").value = vertices[2].x;
-  document.getElementById("y3").value = vertices[2].y;
-}
-
-// Canvasへのクリックイベントに対するリスナー
-canvas.addEventListener("click", freeClick, false);
+canvas.addEventListener("click", event => setVertices("clicks", event), false);

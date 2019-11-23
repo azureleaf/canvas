@@ -5,7 +5,7 @@
     <title>Canvas triangle 5center</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
-  <body onload="generateRandomTriangle()">
+  <body onload="setVertices('random')">
     <div id="canvas_wrapper">
       <canvas>
         Canvas not supported.
@@ -37,22 +37,22 @@
         <input
           type="button"
           value="ランダム三角形"
-          onclick="generateRandomTriangle();"
+          onclick="setVertices('random');"
         />
         <input
           type="button"
           value="直角三角形"
-          onclick="generateRightTriangle();"
+          onclick="setVertices('right');"
         />
         <input
           type="button"
           value="正三角形"
-          onclick="generateEquilateralTriangle();"
+          onclick="setVertices('equilateral');"
         />
         <input
           type="button"
           value="上記の三点座標で描画"
-          onclick="renderCircle('all')"
+          onclick="redraw('all')"
         />
 
         <h3>計算結果</h3>
@@ -72,7 +72,7 @@
         <input
           type="button"
           value="内心"
-          onclick="renderCircle('incenter');"
+          onclick="redraw('incenter');"
           class="btn btn-primary"
         />
         <span id="sampleIncenter">Ｏ</span>内心座標: I(
@@ -89,7 +89,7 @@
           type="button"
           value="外心"
           class="btn btn-primary"
-          onclick="renderCircle('circumcenter');"
+          onclick="redraw('circumcenter');"
         />
         <span id="sampleCircumcenter">Ｏ</span>外心座標: O(
         <input type="text" id="x0O" placeholder="x0O" size="4" disabled />,
@@ -105,7 +105,7 @@
         <input
           type="button"
           value="重心"
-          onclick="renderCircle('centroid');"
+          onclick="redraw('centroid');"
           class="btn btn-primary"
         />
         <span id="sampleCentroid">Ｏ</span>重心座標: G(
@@ -122,7 +122,7 @@
           type="button"
           value="垂心"
           class="btn btn-primary"
-          onclick="renderCircle('orthocenter');"
+          onclick="redraw('orthocenter');"
         />
         <span id="sampleOrthocenter">Ｏ</span>垂心座標: H(
         <input
@@ -141,7 +141,7 @@
         <input
           type="button"
           value="傍心"
-          onclick="renderCircle('excenter');"
+          onclick="redraw('excenter');"
           class="btn btn-primary"
         />
         <span id="sampleExcenter">Ｏ</span>傍心座標: ia(
