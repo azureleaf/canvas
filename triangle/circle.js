@@ -167,15 +167,6 @@ function calcParams(vertices) {
   let R = (a * b * c) / (4 * r * s);
   document.getElementById("R").value = R;
 
-  // 各辺の中点を計算
-  let midpoints = {};
-  midpoints.a = new Point((x2 + x3) / 2, (y2 + y3) / 2);
-  midpoints.b = new Point((x3 + x1) / 2, (y3 + y1) / 2);
-  midpoints.c = new Point((x1 + x2) / 2, (y1 + y2) / 2);
-
-  // 頂点から各辺に下ろした垂線の交点を計算
-  let altitudes = {};
-
   /**
    * 内心 Incenter の位置計算
    */
@@ -290,6 +281,29 @@ function calcParams(vertices) {
     edgePoints.c = getEdgePoints(new Point(x1, y1), new Point(x2, y2));
   }
 
+  // 各辺の中点を計算
+  let midpoints = {};
+  midpoints.a = new Point((x2 + x3) / 2, (y2 + y3) / 2);
+  midpoints.b = new Point((x3 + x1) / 2, (y3 + y1) / 2);
+  midpoints.c = new Point((x1 + x2) / 2, (y1 + y2) / 2);
+
+  // 頂点から各辺に下ろした垂線の交点を計算
+  let altitudes = {};
+  altitudes.a = new Point(
+    x2 + ((x3 - x2) * c * Math.cos(thetaB)) / a,
+    y2 + ((y3 - y2) * c * Math.cos(thetaB)) / a
+  );
+  altitudes.b = new Point(
+    x3 + ((x1 - x3) * a * Math.cos(thetaC)) / b,
+    y3 + ((y1 - y3) * a * Math.cos(thetaC)) / b
+  );
+  altitudes.c = new Point(
+    x1 + ((x2 - x1) * b * Math.cos(thetaA)) / c,
+    y1 + ((y2 - y1) * b * Math.cos(thetaA)) / c
+  );
+
+  console.log(altitudes);
+
   // 全ての計算結果をオブジェクトとして返却
   return {
     excenter: excenter,
@@ -304,7 +318,8 @@ function calcParams(vertices) {
     b: b,
     c: c,
     edgePoints: edgePoints,
-    midpoints: midpoints
+    midpoints: midpoints,
+    altitudes: altitudes
   };
 }
 
@@ -426,6 +441,9 @@ function drawCircumcenter(params, vertices, ctx) {
   ctx.fillStyle = COLORS.CIRCUMCENTER;
   ctx.fill();
 
+  // 破線にする
+  ctx.setLineDash([2, 2]);
+
   // vertical bisectors
   ["a", "b", "c"].forEach(edgeKey => {
     ctx.beginPath();
@@ -434,6 +452,9 @@ function drawCircumcenter(params, vertices, ctx) {
     ctx.strokeStyle = COLORS.CIRCUMCENTER;
     ctx.stroke();
   });
+
+  // 実線に戻す
+  ctx.setLineDash([]);
 }
 
 /**
@@ -444,14 +465,25 @@ function drawCircumcenter(params, vertices, ctx) {
  * @param {*} ctx
  */
 function drawOrthocenter(params, vertices, ctx) {
-  // altitude lines
-  vertices.forEach(vertex => {
+  // 垂線の描画。垂心が三角形の内部の場合・外部の場合の双方がある
+  // このため、垂心-頂点の線分と垂線の足-頂点の線分のどちらが長くなるか一定でないため
+  // 両者を描画する
+  ["a", "b", "c"].forEach((edgeKey, index) => {
+    // line from vertex to orthocenter
     ctx.beginPath();
     ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
-    ctx.lineTo(vertex.x, vertex.y);
+    ctx.lineTo(vertices[index].x, vertices[index].y);
+    ctx.strokeStyle = COLORS.ORTHOCENTER;
+    ctx.stroke();
+
+    // line from vertex to altitude intersection point
+    ctx.beginPath();
+    ctx.moveTo(params.altitudes[edgeKey].x, params.altitudes[edgeKey].y);
+    ctx.lineTo(vertices[index].x, vertices[index].y);
     ctx.strokeStyle = COLORS.ORTHOCENTER;
     ctx.stroke();
   });
+
   // orthocenter
   ctx.beginPath();
   ctx.arc(params.orthocenter.x, params.orthocenter.y, 2, 0, 2 * Math.PI);
@@ -713,6 +745,7 @@ function setVertices(triangleType, event) {
  *
  * @param {string} centerType "incenter", "excenter"のような、描画したい五心の指定（省略可）
  */
+// eslint-disable-next-line no-unused-vars
 function redraw(centerType) {
   let vertices = [];
 
