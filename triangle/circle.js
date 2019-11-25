@@ -1,9 +1,5 @@
 var canvas = document.querySelector("canvas");
 
-/**
- * GLOBAL VARIABLES
- */
-
 // Class to hold the (x, y) coordinate value of a point
 class Point {
   constructor(x, y) {
@@ -63,10 +59,11 @@ const COLORS = {
 });
 
 /**
- * FUNCTIONS
+ * 三角形の３つの頂点の座標を受取り、それを描画する
+ *
+ * @param {Object[]} vertices 三つの頂点の座標オブジェクト（Point Class）の配列
+ * @param {string} centerType "incenter"のように円の種別を指定する。"all"の場合は全て描画
  */
-
-// 三角形の三点の座標を受け取り、描画する。主関数。
 function draw(vertices, centerType = "all") {
   if (typeof canvas.getContext === "undefined") {
     return;
@@ -118,13 +115,13 @@ function draw(vertices, centerType = "all") {
     drawOrthocenter(params, vertices, ctx);
 
   // オイラー線は常に表示する
-  drawEulerLine(ctx, vertices, params);
+  drawEulerLine(params, vertices, ctx);
 }
 
 /**
  * 三角形の三点座標を基に、五心に関する全変数を計算
  *
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object[]} vertices 3つの頂点座標（Point object）の配列
  * @return {Object} 五心の中心座標、円の半径などの変数
  */
 function calcParams(vertices) {
@@ -260,62 +257,6 @@ function calcParams(vertices) {
   document.getElementById("y0ic").value = excenter.c.y;
   document.getElementById("rc").value = excenter.c.radius;
 
-  /**
-   * 三角形各辺の延長線がCanvasエッジと交わる点の座標を計算
-   * @param {Object} vertex1 頂点のPoint object
-   * @param {Object} vertex2 頂点のPoint object
-   * @return {Object[]} ２つの交点のPoint Object
-   */
-  function getEdgePoints(vertex1, vertex2) {
-    // 長方形のCanvas領域を横切る直線は必ず２つの交点を持つので
-    // ２つのPoint objectがこれに格納される
-    let edgePoints = [];
-
-    if (typeof vertex1.x === "undefined" || typeof vertex2.x === "undefined") {
-      alert("内部エラー：二点の座標が正しく入力されていません");
-      return null;
-    }
-
-    // x=0の時のy座標
-    let y1 =
-      ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) * (0 - vertex1.x) +
-      vertex1.y;
-
-    // 直線がcanvas右端（の延長線上）に達した時のy座標
-    let y2 =
-      ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) *
-        (CANVAS_WIDTH - vertex1.x) +
-      vertex1.y;
-
-    // y=0の時のx座標
-    let x1 =
-      ((vertex1.x - vertex2.x) * (0 - vertex1.y)) / (vertex1.y - vertex2.y) +
-      vertex1.x;
-
-    // 直線がcanvas下端（の延長線上）に達した時のy座標
-    let x2 =
-      ((vertex1.x - vertex2.x) * (CANVAS_HEIGHT - vertex1.y)) /
-        (vertex1.y - vertex2.y) +
-      vertex1.x;
-
-    // 交点が各エッジ上にあるときはedgePoints配列に追加する（つまり、２つ追加されるはず）
-    // エッジの線分ではなくその延長線上にあるときは追加しない
-    // prettier-ignore
-    if (y1 >= 0 && y1 <= CANVAS_HEIGHT)
-      edgePoints.push(new Point(0, y1)); // Canvas左端との交点
-    // prettier-ignore
-    if (y2 >= 0 && y2 <= CANVAS_HEIGHT)
-      edgePoints.push(new Point(CANVAS_WIDTH, y2)); // Canvas右端との交点
-    // prettier-ignore
-    if (x1 >= 0 && x1 <= CANVAS_WIDTH) 
-      edgePoints.push(new Point(x1, 0)); // Canvas上端との交点
-    // prettier-ignore
-    if (x2 >= 0 && x2 <= CANVAS_WIDTH)
-      edgePoints.push(new Point(x2, CANVAS_HEIGHT)); // Canvas下端との交点
-
-    return edgePoints;
-  }
-
   // ３つの辺の各延長線とCanvasエッジとの交点座標（全部で６点）を格納する変数
   let edgePoints = {};
 
@@ -348,9 +289,73 @@ function calcParams(vertices) {
   };
 }
 
-// 内心関係の描画
+/**
+ * 三角形各辺の延長線がCanvasエッジと交わる点の座標を計算
+ *
+ * @param {Object} vertex1 頂点のPoint object
+ * @param {Object} vertex2 頂点のPoint object
+ * @return {Object[]|null} ２つの交点のPoint Object。エラー時はnull
+ *
+ */
+function getEdgePoints(vertex1, vertex2) {
+  // 長方形のCanvas領域を横切る直線は必ず２つの交点を持つので
+  // ２つのPoint objectがこれに格納される
+  let edgePoints = [];
+
+  if (typeof vertex1.x === "undefined" || typeof vertex2.x === "undefined") {
+    console.log("error: coordinates of 2 points are incorrect!");
+    return null;
+  }
+
+  // x=0の時のy座標
+  let y1 =
+    ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) * (0 - vertex1.x) +
+    vertex1.y;
+
+  // 直線がcanvas右端（の延長線上）に達した時のy座標
+  let y2 =
+    ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) *
+      (CANVAS_WIDTH - vertex1.x) +
+    vertex1.y;
+
+  // y=0の時のx座標
+  let x1 =
+    ((vertex1.x - vertex2.x) * (0 - vertex1.y)) / (vertex1.y - vertex2.y) +
+    vertex1.x;
+
+  // 直線がcanvas下端（の延長線上）に達した時のy座標
+  let x2 =
+    ((vertex1.x - vertex2.x) * (CANVAS_HEIGHT - vertex1.y)) /
+      (vertex1.y - vertex2.y) +
+    vertex1.x;
+
+  // 交点が各エッジ上にあるときはedgePoints配列に追加する（つまり、２つ追加されるはず）
+  // エッジの線分ではなくその延長線上にあるときは追加しない
+  // prettier-ignore
+  if (y1 >= 0 && y1 <= CANVAS_HEIGHT)
+      edgePoints.push(new Point(0, y1)); // Canvas左端との交点
+  // prettier-ignore
+  if (y2 >= 0 && y2 <= CANVAS_HEIGHT)
+      edgePoints.push(new Point(CANVAS_WIDTH, y2)); // Canvas右端との交点
+  // prettier-ignore
+  if (x1 >= 0 && x1 <= CANVAS_WIDTH) 
+      edgePoints.push(new Point(x1, 0)); // Canvas上端との交点
+  // prettier-ignore
+  if (x2 >= 0 && x2 <= CANVAS_WIDTH)
+      edgePoints.push(new Point(x2, CANVAS_HEIGHT)); // Canvas下端との交点
+
+  return edgePoints;
+}
+
+/**
+ * 内心関係の描画
+ *
+ * @param {Object} params 五心の座標、内接円外接円の半径など変数
+ * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object} ctx
+ */
 function drawIncenter(params, vertices, ctx) {
-  // cicle
+  // inscribed circle
   ctx.beginPath();
   ctx.arc(params.incenter.x, params.incenter.y, params.r, 0, 2 * Math.PI);
   ctx.strokeStyle = COLORS.INCENTER;
@@ -363,9 +368,15 @@ function drawIncenter(params, vertices, ctx) {
   ctx.fill();
 }
 
-// 外心関係の描画
+/**
+ * 外心関係の描画
+ *
+ * @param {Object} params 五心の座標、内接円外接円の半径など変数
+ * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object} ctx
+ */
 function drawCircumcenter(params, vertices, ctx) {
-  // circle
+  // circumscribed circle
   ctx.beginPath();
   ctx.arc(
     params.circumcenter.x,
@@ -384,9 +395,15 @@ function drawCircumcenter(params, vertices, ctx) {
   ctx.fill();
 }
 
-// 垂心関係の描画
+/**
+ * 垂心関係の描画
+ *
+ * @param {*} params
+ * @param {*} vertices
+ * @param {*} ctx
+ */
 function drawOrthocenter(params, vertices, ctx) {
-  // Draw Perpendicular lines
+  // altitude lines
   vertices.forEach(vertex => {
     ctx.beginPath();
     ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
@@ -395,14 +412,20 @@ function drawOrthocenter(params, vertices, ctx) {
     ctx.stroke();
   });
 
-  // Draw the orthocenter
+  // orthocenter
   ctx.beginPath();
   ctx.arc(params.orthocenter.x, params.orthocenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.ORTHOCENTER;
   ctx.fill();
 }
 
-// 重心関係の描画
+/**
+ * 重心関係の描画
+ *
+ * @param {Object} params 五心の座標、内接円外接円の半径など変数
+ * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object} ctx
+ */
 function drawCentroid(params, vertices, ctx) {
   // bisector lines
   vertices.forEach(vertex => {
@@ -423,9 +446,9 @@ function drawCentroid(params, vertices, ctx) {
 /**
  * 傍心関係の描画
  *
- * @param {*} params
- * @param {*} vertices
- * @param {*} ctx Canvas Context
+ * @param {Object} params 五心の座標、内接円外接円の半径など変数
+ * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object} ctx
  */
 function drawExcenter(params, vertices, ctx) {
   // 同じものを３回ずつ書くのは非効率なので、文字列の配列を使って反復する
@@ -515,10 +538,11 @@ function drawExcenter(params, vertices, ctx) {
 /**
  * 五心の変数を受け取り、それに則ってオイラー線を描写
  *
- * @param {*} ctx Canvas Context
- * @param {*} params 五心の各座標などの計算結果
- */
-function drawEulerLine(ctx, vertices, params) {
+ * @param {Object} params 五心の座標、内接円外接円の半径など変数
+ * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object} ctx
+ * */
+function drawEulerLine(params, vertices, ctx) {
   // 破線にする
   ctx.setLineDash([1, 2]);
 
@@ -542,20 +566,21 @@ function drawEulerLine(ctx, vertices, params) {
 function setVertices(triangleType, event) {
   let vertices = [];
 
+  // 指定された三角形の種別により、verticesの出力内容を変える
   switch (triangleType) {
     // 直角三角形
     case "right":
       // ２点は固定、残る１点の高さのみランダム
       // prettier-ignore
       vertices.push(
-    new Point(
-      CANVAS_WIDTH / 4,
-      CANVAS_HEIGHT / 3));
+        new Point(
+          CANVAS_WIDTH / 4,
+          CANVAS_HEIGHT / 3));
       // prettier-ignore
       vertices.push(
-    new Point(
-      CANVAS_WIDTH / 2,
-      CANVAS_HEIGHT / 3));
+        new Point(
+          CANVAS_WIDTH / 2,
+          CANVAS_HEIGHT / 3));
       vertices.push(
         new Point(
           CANVAS_WIDTH / 4,
@@ -568,9 +593,9 @@ function setVertices(triangleType, event) {
     case "equilateral":
       // prettier-ignore
       vertices.push(
-      new Point(
-        CANVAS_WIDTH / 2,
-        CANVAS_HEIGHT / 4));
+        new Point(
+          CANVAS_WIDTH / 2,
+          CANVAS_HEIGHT / 4));
       vertices.push(
         new Point(
           CANVAS_WIDTH / 2 + 50,
