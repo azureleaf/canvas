@@ -15,21 +15,6 @@ let clickPoints = [];
 const CANVAS_WIDTH = 750;
 const CANVAS_HEIGHT = 750;
 
-// Set attributes of <canvas> in the DOM
-document
-  .getElementsByTagName("canvas")[0]
-  .setAttribute(
-    "style",
-    "width:" +
-      CANVAS_WIDTH +
-      "px; height:" +
-      CANVAS_HEIGHT +
-      "px;" +
-      "border-style: solid; \
-       border-width: 4px; \
-       border-color:#cccccc"
-  );
-
 // Colors for paths
 const COLORS = {
   TRIANGLE_EDGE: "gray",
@@ -43,33 +28,52 @@ const COLORS = {
   EULER_LINE: "red"
 };
 
-// HTMLの五心それぞれについての色見本部分のstyle属性を設定
-[
-  { id: "sampleIncenter", color: COLORS.INCENTER },
-  { id: "sampleCircumcenter", color: COLORS.CIRCUMCENTER },
-  { id: "sampleExcenter", color: COLORS.EXCENTER_LINE },
-  { id: "sampleOrthocenter", color: COLORS.ORTHOCENTER },
-  { id: "sampleCentroid", color: COLORS.CENTROID }
-].forEach(attr => {
-  var elem = document.getElementById(attr.id);
-  elem.style.color = attr.color;
-  elem.style.backgroundColor = attr.color;
-  elem.style.borderRadius = "50%";
-  elem.style.marginRight = "5px";
-});
+setStyle();
 
 /**
-<<<<<<< HEAD
+ * HTML DOMのstyle属性を設定する
+ */
+function setStyle() {
+  // Set attributes of <canvas> in the DOM
+  document
+    .getElementsByTagName("canvas")[0]
+    .setAttribute(
+      "style",
+      "width:" +
+        CANVAS_WIDTH +
+        "px; height:" +
+        CANVAS_HEIGHT +
+        "px;" +
+        "border-style: solid; \
+       border-width: 4px; \
+       border-color:#cccccc"
+    );
+
+  document
+    .getElementById("canvas_wrapper")
+    .setAttribute("style", "width:" + CANVAS_WIDTH + "px; ");
+
+  // HTMLの五心それぞれについての色見本部分のstyle属性を設定
+  [
+    { id: "sampleIncenter", color: COLORS.INCENTER },
+    { id: "sampleCircumcenter", color: COLORS.CIRCUMCENTER },
+    { id: "sampleExcenter", color: COLORS.EXCENTER_LINE },
+    { id: "sampleOrthocenter", color: COLORS.ORTHOCENTER },
+    { id: "sampleCentroid", color: COLORS.CENTROID }
+  ].forEach(attr => {
+    var elem = document.getElementById(attr.id);
+    elem.style.color = attr.color;
+    elem.style.backgroundColor = attr.color;
+    elem.style.borderRadius = "50%";
+    elem.style.marginRight = "5px";
+  });
+}
+
+/**
  * 三角形の三点の座標を受け取り、描画する。
- * 
+ *
  * @param {Object[]} vertices ３つの頂点の座標のオブジェクト（Point Class）
  * @param {string} centerType "incenter", "excenter", "all"など描画する円の指定
-=======
- * 三角形の３つの頂点の座標を受取り、それを描画する
- *
- * @param {Object[]} vertices 三つの頂点の座標オブジェクト（Point Class）の配列
- * @param {string} centerType "incenter"のように円の種別を指定する。"all"の場合は全て描画
->>>>>>> 98e5423156662a086eb0f896a1b9f0d89d1824ed
  */
 function draw(vertices, centerType = "all") {
   if (typeof canvas.getContext === "undefined") {
@@ -623,7 +627,6 @@ function drawEulerLine(params, vertices, ctx) {
  * @param {Object} event クリックイベント。triangleTypeがclicksではない場合は空引数
  */
 function setVertices(triangleType, event) {
-
   // 3つの頂点座標オブジェクト（Point Class）を収納する配列
   let vertices = [];
 
