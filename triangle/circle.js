@@ -66,7 +66,7 @@ const COLORS = {
  * FUNCTIONS
  */
 
-//　三角形の三点の座標を受け取り、描画する。主関数。
+// 三角形の三点の座標を受け取り、描画する。主関数。
 function draw(vertices, centerType = "all") {
   if (typeof canvas.getContext === "undefined") {
     return;
@@ -82,12 +82,12 @@ function draw(vertices, centerType = "all") {
   canvas.style.height = CANVAS_HEIGHT + "px";
 
   // 頂点の描画
-  for (let i = 0; i < 3; i++) {
+  vertices.forEach(vertex => {
     ctx.beginPath();
-    ctx.arc(vertices[i].x, vertices[i].y, 2, 0, 2 * Math.PI);
+    ctx.arc(vertex.x, vertex.y, 2, 0, 2 * Math.PI);
     ctx.fillStyle = COLORS.TRIANGLE_EDGE;
     ctx.fill();
-  }
+  });
 
   // 三角形の描画
   ctx.beginPath();
@@ -387,13 +387,13 @@ function drawCircumcenter(params, vertices, ctx) {
 // 垂心関係の描画
 function drawOrthocenter(params, vertices, ctx) {
   // Draw Perpendicular lines
-  for (let i = 0; i < 3; i++) {
+  vertices.forEach(vertex => {
     ctx.beginPath();
     ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
-    ctx.lineTo(vertices[i].x, vertices[i].y);
+    ctx.lineTo(vertex.x, vertex.y);
     ctx.strokeStyle = COLORS.ORTHOCENTER;
     ctx.stroke();
-  }
+  });
 
   // Draw the orthocenter
   ctx.beginPath();
@@ -405,13 +405,13 @@ function drawOrthocenter(params, vertices, ctx) {
 // 重心関係の描画
 function drawCentroid(params, vertices, ctx) {
   // bisector lines
-  for (let i = 0; i < 3; i++) {
+  vertices.forEach(vertex => {
     ctx.beginPath();
-    ctx.moveTo(vertices[i].x, vertices[i].y);
+    ctx.moveTo(vertex.x, vertex.y);
     ctx.lineTo(params.centroid.x, params.centroid.y);
     ctx.strokeStyle = COLORS.CENTROID;
     ctx.stroke();
-  }
+  });
 
   // centroid
   ctx.beginPath();
@@ -609,7 +609,7 @@ function setVertices(triangleType, event) {
       );
       // checkPoints配列をverticesにコピー
       // ただしclickPoints配列に３頂点分揃っていない時はundefinedで埋める
-      for (i = 0; i < 3; i++) {
+      for (let i = 0; i < 3; i++) {
         if (clickPoints[i]) {
           vertices.push(new Point(clickPoints[i].x, clickPoints[i].y));
         } else {
@@ -637,6 +637,7 @@ function setVertices(triangleType, event) {
 
 /**
  * 現在の三角形座標情報を維持したまま、五心のうち指定されたものだけを再描画する
+ * HTML DOMのボタンから呼び出される
  *
  * @param {string} centerType "incenter", "excenter"のような、描画したい五心の指定（省略可）
  */
