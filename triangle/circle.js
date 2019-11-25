@@ -1,4 +1,4 @@
-var canvas = document.querySelector("canvas");
+let canvas = document.querySelector("canvas");
 
 // Class to hold the (x, y) coordinate value of a point
 class Point {
@@ -126,43 +126,41 @@ function draw(vertices, centerType = "all") {
  */
 function calcParams(vertices) {
   // 式の表記が長ったらしくなるのを防ぐため、各頂点座標を短い中間変数で表現
-  var x1, x2, x3, y1, y2, y3;
-
-  x1 = vertices[0].x;
-  y1 = vertices[0].y;
-  x2 = vertices[1].x;
-  y2 = vertices[1].y;
-  x3 = vertices[2].x;
-  y3 = vertices[2].y;
+  let x1 = vertices[0].x;
+  let y1 = vertices[0].y;
+  let x2 = vertices[1].x;
+  let y2 = vertices[1].y;
+  let x3 = vertices[2].x;
+  let y3 = vertices[2].y;
 
   // ３辺の長さを算出 (Pythagorean theorem)
-  var c = Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 1 / 2);
-  var a = Math.pow(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2), 1 / 2);
-  var b = Math.pow(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2), 1 / 2);
+  let c = Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 1 / 2);
+  let a = Math.pow(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2), 1 / 2);
+  let b = Math.pow(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2), 1 / 2);
   document.getElementById("a").value = a;
   document.getElementById("b").value = b;
   document.getElementById("c").value = c;
 
   // 三角形の面積を算出 (Heron's formula)
-  var s = (a + b + c) / 2;
-  var S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
+  let s = (a + b + c) / 2;
+  let S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
 
   document.getElementById("s").value = s;
   document.getElementById("S").value = S;
 
   // 内接円の半径を計算
-  var r = (2 * S) / (a + b + c);
+  let r = (2 * S) / (a + b + c);
   document.getElementById("r").value = r;
 
   // 外接円の半径を計算
-  var R = (a * b * c) / (4 * r * s);
+  let R = (a * b * c) / (4 * r * s);
   document.getElementById("R").value = R;
 
   /**
    * 内心 Incenter の位置計算
    */
 
-  var incenter = new Point(
+  let incenter = new Point(
     (a * x1 + b * x2 + c * x3) / (a + b + c),
     (a * y1 + b * y2 + c * y3) / (a + b + c)
   );
@@ -173,7 +171,7 @@ function calcParams(vertices) {
   /**
    * 外心 Circumcenter の位置計算
    */
-  var circumcenter = new Point(
+  let circumcenter = new Point(
     (a * a * (b * b + c * c - a * a) * x1 +
       b * b * (c * c + a * a - b * b) * x2 +
       c * c * (a * a + b * b - c * c) * x3) /
@@ -190,7 +188,7 @@ function calcParams(vertices) {
   /**
    * 重心 Centroid の位置計算
    */
-  var centroid = new Point((x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3);
+  let centroid = new Point((x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3);
 
   document.getElementById("x0g").value = centroid.x;
   document.getElementById("y0g").value = centroid.y;
@@ -199,18 +197,18 @@ function calcParams(vertices) {
    * 垂心 Orthocenter の位置計算
    */
   // 辺の長さから角度を計算
-  var thetaA = Math.acos(
+  let thetaA = Math.acos(
     ((x2 - x1) * (x3 - x1) + (y2 - y1) * (y3 - y1)) / (b * c)
   );
-  var thetaB = Math.acos(
+  let thetaB = Math.acos(
     ((x3 - x2) * (x1 - x2) + (y3 - y2) * (y1 - y2)) / (c * a)
   );
-  var thetaC = Math.acos(
+  let thetaC = Math.acos(
     ((x1 - x3) * (x2 - x3) + (y1 - y3) * (y2 - y3)) / (a * b)
   );
 
   // 垂心の位置を計算
-  var orthocenter = new Point(
+  let orthocenter = new Point(
     (Math.tan(thetaA) * x1 + Math.tan(thetaB) * x2 + Math.tan(thetaC) * x3) /
       (Math.tan(thetaA) + Math.tan(thetaB) + Math.tan(thetaC)),
     (Math.tan(thetaA) * y1 + Math.tan(thetaB) * y2 + Math.tan(thetaC) * y3) /
@@ -225,7 +223,7 @@ function calcParams(vertices) {
    */
 
   // 3つの傍心のPoint objectを格納する変数
-  var excenter = {};
+  let excenter = {};
 
   // Excenter 1
   excenter.a = new Point(
@@ -451,7 +449,6 @@ function drawCentroid(params, vertices, ctx) {
  * @param {Object} ctx
  */
 function drawExcenter(params, vertices, ctx) {
-  // 同じものを３回ずつ書くのは非効率なので、文字列の配列を使って反復する
   ["a", "b", "c"].forEach((excenterKey, index) => {
     // 傍心円の描画
     ctx.beginPath();
@@ -465,7 +462,7 @@ function drawExcenter(params, vertices, ctx) {
     ctx.strokeStyle = COLORS.EXCENTER;
     ctx.stroke();
 
-    // 傍心の中心点の描画
+    // excenter
     ctx.beginPath();
     // prettier-ignore
     ctx.arc(
@@ -478,7 +475,7 @@ function drawExcenter(params, vertices, ctx) {
     ctx.fillStyle = COLORS.EXCENTER;
     ctx.fill();
 
-    // 頂点と傍心を結ぶ線の描画
+    // line from excenter to vertex
     ctx.beginPath();
     ctx.moveTo(params.excenter[excenterKey].x, params.excenter[excenterKey].y);
     ctx.lineTo(vertices[index].x, vertices[index].y);
@@ -486,7 +483,7 @@ function drawExcenter(params, vertices, ctx) {
     ctx.stroke();
   });
 
-  // 傍心同士の間の連結線の描画
+  // connector lines among excenters
   [
     { from: "a", to: "b" },
     { from: "b", to: "c" },
@@ -561,9 +558,11 @@ function drawEulerLine(params, vertices, ctx) {
  * 三角形の３つの頂点座標を生成し描画関数に渡す
  *
  * @param {string} triangleType 生成する三角形の種別
- * @param {*} event クリックイベント。triangleTypeがclicksではない場合は空引数
+ * @param {Object} event クリックイベント。triangleTypeがclicksではない場合は空引数
  */
 function setVertices(triangleType, event) {
+
+  // 3つの頂点座標オブジェクト（Point Class）を収納する配列
   let vertices = [];
 
   // 指定された三角形の種別により、verticesの出力内容を変える
@@ -696,9 +695,9 @@ function redraw(centerType) {
  * 技術メモ：Canvasへのクリックイベントに対するリスナーの書き方３通り
  *
  * .addEventListener("click", myFunc, false)
- *    イベントハンドラに引数が必要ない場合。myFunc()と書くと動かなくなるので、カッコはつけない
+ *    イベントハンドラに引数が必要ない場合。myFunc()と書くと動かなくなるので、括弧は書かない
  *    ここには書かなくても、イベントハンドラにはイベントが引数として自動で渡される。
- *    例：function myFunc(e){ console.log(e.clientX)}
+ *    例：function myFunc(e){ console.log(e.clientX)} のようにイベントを利用できる
  *
  * .addEventListener("click", function() {myFunc(arg)}, false)
  *    イベントハンドラに引数が必要な場合。外側に引数なしの関数を書き、中に実体の関数を引数付きで書く
