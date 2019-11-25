@@ -13,8 +13,8 @@ class Point {
 let clickPoints = [];
 
 // Set canvas size
-const CANVAS_WIDTH = 800;
-const CANVAS_HEIGHT = 512;
+const CANVAS_WIDTH = 750;
+const CANVAS_HEIGHT = 750;
 
 // Set attributes of <canvas> in the DOM
 document
@@ -294,8 +294,8 @@ function calcParams(vertices) {
         (vertex1.y - vertex2.y) +
       vertex1.x;
 
-    // 交点が各エッジ上にあるときはedgePoints配列に追加する（つまり、２つ追加されるはず）
-    // エッジの線分ではなくその延長線上にあるときは追加しない
+    // 交点が各エッジ上にあるときはedgePoints配列に追加する
+    // エッジの線分ではなくその延長線上にあるときは追加しないので、２つpushされるはず
     // prettier-ignore
     if (y1 >= 0 && y1 <= CANVAS_HEIGHT)
       edgePoints.push(new Point(0, y1)); // Canvas左端との交点
@@ -382,7 +382,7 @@ function drawCircumcenter(params, vertices, ctx) {
 
 // 垂心関係の描画
 function drawOrthocenter(params, vertices, ctx) {
-  // perpendicular lines
+  // altitude lines
   vertices.forEach(vertex => {
     ctx.beginPath();
     ctx.moveTo(params.orthocenter.x, params.orthocenter.y);
