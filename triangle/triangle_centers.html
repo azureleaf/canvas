@@ -24,7 +24,7 @@
           canvas内の任意の三点をクリックしてください。三角形の五心が表示されます。
         </p>
         <form>
-          <h2>三角形生成</h2>
+          <h2>表示設定</h2>
           <div class="form-group row">
             <label for="x1" class="col-xs-2 col-form-label">P1:</label>
             <div class="col-xs-2">
@@ -91,25 +91,56 @@
             type="button"
             value="ランダム三角形"
             onclick="setVertices('random');"
-            class="btn btn-dark"
+            class="btn btn-dark m-1"
           />
           <input
             type="button"
             value="直角三角形"
             onclick="setVertices('right');"
-            class="btn btn-dark"
+            class="btn btn-dark m-1"
           />
           <input
             type="button"
             value="正三角形"
             onclick="setVertices('equilateral');"
-            class="btn btn-dark"
+            class="btn btn-dark m-1"
           />
           <input
             type="button"
-            value="上記の三点座標で描画"
+            value="上記座標の三角形"
             onclick="redraw('all')"
-            class="btn btn-dark"
+            class="btn btn-dark m-1"
+          />
+          <br />
+          <input
+            type="button"
+            value="内心のみ表示"
+            onclick="redraw('incenter');"
+            class="btn btn-dark m-1"
+          />
+          <input
+            type="button"
+            value="外心のみ表示"
+            onclick="redraw('circumcenter');"
+            class="btn btn-dark m-1"
+          />
+          <input
+            type="button"
+            value="重心のみ表示"
+            onclick="redraw('centroid');"
+            class="btn btn-dark m-1"
+          />
+          <input
+            type="button"
+            value="垂心のみ表示"
+            class="btn btn-dark m-1"
+            onclick="redraw('orthocenter');"
+          />
+          <input
+            type="button"
+            value="傍心のみ表示"
+            onclick="redraw('excenter');"
+            class="btn btn-dark m-1"
           />
 
           <h2>計算結果</h2>
@@ -204,15 +235,9 @@
           </div>
 
           <div class="row">
-            <input
-              type="button"
-              value="内心のみ表示"
-              onclick="redraw('incenter');"
-              class="btn btn-dark"
-            />
             <label for="x0i" class="col-xs-2 col-form-label">
-                <span id="sampleIncenter">Ｏ</span>I:</label
-              >
+              <span id="sampleIncenter">Ｏ</span>内心I:</label
+            >
             <div class="col-xs-2">
               <input
                 type="text"
@@ -235,15 +260,9 @@
             </div>
           </div>
           <div class="row">
-            <input
-              type="button"
-              value="外心のみ表示"
-              class="btn btn-dark"
-              onclick="redraw('circumcenter');"
-            />
             <label for="x0O" class="col-xs-2 col-form-label">
-                <span id="sampleCircumcenter">Ｏ</span>O:</label
-              >
+              <span id="sampleCircumcenter">Ｏ</span>外心O:</label
+            >
             <div class="col-xs-2">
               <input
                 type="text"
@@ -267,15 +286,9 @@
           </div>
 
           <div class="row">
-            <input
-              type="button"
-              value="重心のみ表示"
-              onclick="redraw('centroid');"
-              class="btn btn-dark"
-            />
             <label for="x0g" class="col-xs-2 col-form-label">
-                <span id="sampleCentroid">Ｏ</span>G:</label
-              >
+              <span id="sampleCentroid">Ｏ</span>重心G:</label
+            >
             <div class="col-xs-2">
               <input
                 type="text"
@@ -299,14 +312,8 @@
           </div>
 
           <div class="row">
-            <input
-              type="button"
-              value="垂心のみ表示"
-              class="btn btn-dark"
-              onclick="redraw('orthocenter');"
-            />
             <label for="x0h" class="col-xs-2 col-form-label">
-              <span id="sampleOrthocenter">Ｏ</span>H:</label
+              <span id="sampleOrthocenter">Ｏ</span>垂心H:</label
             >
             <div class="col-xs-2">
               <input
@@ -331,15 +338,8 @@
           </div>
 
           <div class="row">
-            <input
-              type="button"
-              value="傍心のみ表示"
-              onclick="redraw('excenter');"
-              class="btn btn-dark"
-            />
-
             <label for="x0ia" class="col-xs-2 col-form-label">
-              <span id="sampleExcenter">Ｏ</span> ia:</label
+              <span id="sampleExcenter">Ｏ</span>傍心ia:</label
             >
             <div class="col-xs-2">
               <input
