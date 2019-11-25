@@ -25,7 +25,7 @@ const COLORS = {
   INCENTER: "green",
   CENTROID: "dodgerblue",
   CIRCUMCENTER: "orangered",
-  EULER_LINE: "red"
+  EULER_LINE: "black"
 };
 
 setStyle();
@@ -167,6 +167,15 @@ function calcParams(vertices) {
   let R = (a * b * c) / (4 * r * s);
   document.getElementById("R").value = R;
 
+  // 各辺の中点を計算
+  let midpoints = {};
+  midpoints.a = new Point((x2 + x3) / 2, (y2 + y3) / 2);
+  midpoints.b = new Point((x3 + x1) / 2, (y3 + y1) / 2);
+  midpoints.c = new Point((x1 + x2) / 2, (y1 + y2) / 2);
+
+  // 頂点から各辺に下ろした垂線の交点を計算
+  let altitudes = {};
+
   /**
    * 内心 Incenter の位置計算
    */
@@ -266,62 +275,6 @@ function calcParams(vertices) {
   document.getElementById("y0ic").value = excenter.c.y;
   document.getElementById("rc").value = excenter.c.radius;
 
-  /**
-   * 三角形各辺の延長線がCanvasエッジと交わる点の座標を計算
-   * @param {Object} vertex1 頂点のPoint object
-   * @param {Object} vertex2 頂点のPoint object
-   * @return {Object[]} ２つの交点のPoint Object
-   */
-  function getEdgePoints(vertex1, vertex2) {
-    // 長方形のCanvas領域を横切る直線は必ず２つの交点を持つので
-    // ２つのPoint objectがこれに格納される
-    let edgePoints = [];
-
-    if (typeof vertex1.x === "undefined" || typeof vertex2.x === "undefined") {
-      alert("内部エラー：二点の座標が正しく入力されていません");
-      return null;
-    }
-
-    // x=0の時のy座標
-    let y1 =
-      ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) * (0 - vertex1.x) +
-      vertex1.y;
-
-    // 直線がcanvas右端（の延長線上）に達した時のy座標
-    let y2 =
-      ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) *
-        (CANVAS_WIDTH - vertex1.x) +
-      vertex1.y;
-
-    // y=0の時のx座標
-    let x1 =
-      ((vertex1.x - vertex2.x) * (0 - vertex1.y)) / (vertex1.y - vertex2.y) +
-      vertex1.x;
-
-    // 直線がcanvas下端（の延長線上）に達した時のy座標
-    let x2 =
-      ((vertex1.x - vertex2.x) * (CANVAS_HEIGHT - vertex1.y)) /
-        (vertex1.y - vertex2.y) +
-      vertex1.x;
-
-    // 交点が各エッジ上にあるときはedgePoints配列に追加する
-    // エッジの線分ではなくその延長線上にあるときは追加しないので、２つpushされるはず
-    // prettier-ignore
-    if (y1 >= 0 && y1 <= CANVAS_HEIGHT)
-      edgePoints.push(new Point(0, y1)); // Canvas左端との交点
-    // prettier-ignore
-    if (y2 >= 0 && y2 <= CANVAS_HEIGHT)
-      edgePoints.push(new Point(CANVAS_WIDTH, y2)); // Canvas右端との交点
-    // prettier-ignore
-    if (x1 >= 0 && x1 <= CANVAS_WIDTH) 
-      edgePoints.push(new Point(x1, 0)); // Canvas上端との交点
-    // prettier-ignore
-    if (x2 >= 0 && x2 <= CANVAS_WIDTH)
-      edgePoints.push(new Point(x2, CANVAS_HEIGHT)); // Canvas下端との交点
-
-    return edgePoints;
-  }
-
   // ３つの辺の各延長線とCanvasエッジとの交点座標（全部で６点）を格納する変数
   let edgePoints = {};
 
@@ -350,17 +303,16 @@ function calcParams(vertices) {
     a: a,
     b: b,
     c: c,
-    edgePoints: edgePoints
+    edgePoints: edgePoints,
+    midpoints: midpoints
   };
 }
 
 /**
  * 三角形各辺の延長線がCanvasエッジと交わる点の座標を計算
- *
  * @param {Object} vertex1 頂点のPoint object
  * @param {Object} vertex2 頂点のPoint object
- * @return {Object[]|null} ２つの交点のPoint Object。エラー時はnull
- *
+ * @return {Object[]} ２つの交点のPoint Object
  */
 function getEdgePoints(vertex1, vertex2) {
   // 長方形のCanvas領域を横切る直線は必ず２つの交点を持つので
@@ -368,7 +320,7 @@ function getEdgePoints(vertex1, vertex2) {
   let edgePoints = [];
 
   if (typeof vertex1.x === "undefined" || typeof vertex2.x === "undefined") {
-    console.log("error: coordinates of 2 points are incorrect!");
+    alert("内部エラー：二点の座標が正しく入力されていません");
     return null;
   }
 
@@ -394,8 +346,8 @@ function getEdgePoints(vertex1, vertex2) {
       (vertex1.y - vertex2.y) +
     vertex1.x;
 
-  // 交点が各エッジ上にあるときはedgePoints配列に追加する（つまり、２つ追加されるはず）
-  // エッジの線分ではなくその延長線上にあるときは追加しない
+  // 交点が各エッジ上にあるときはedgePoints配列に追加する
+  // エッジの線分ではなくその延長線上にあるときは追加しないので、２つpushされるはず
   // prettier-ignore
   if (y1 >= 0 && y1 <= CANVAS_HEIGHT)
       edgePoints.push(new Point(0, y1)); // Canvas左端との交点
@@ -431,6 +383,21 @@ function drawIncenter(params, vertices, ctx) {
   ctx.arc(params.incenter.x, params.incenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.INCENTER;
   ctx.fill();
+
+  // use dash line
+  ctx.setLineDash([2, 2]);
+
+  // Guide line from Vertices to Incenter
+  vertices.forEach(vertex => {
+    ctx.beginPath();
+    ctx.moveTo(params.incenter.x, params.incenter.y);
+    ctx.lineTo(vertex.x, vertex.y);
+    ctx.strokeStyle = COLORS.INCENTER;
+    ctx.stroke();
+  });
+
+  // use solid line from this on
+  ctx.setLineDash([]);
 }
 
 /**
@@ -458,6 +425,15 @@ function drawCircumcenter(params, vertices, ctx) {
   ctx.arc(params.circumcenter.x, params.circumcenter.y, 2, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.CIRCUMCENTER;
   ctx.fill();
+
+  // vertical bisectors
+  ["a", "b", "c"].forEach(edgeKey => {
+    ctx.beginPath();
+    ctx.moveTo(params.circumcenter.x, params.circumcenter.y);
+    ctx.lineTo(params.midpoints[edgeKey].x, params.midpoints[edgeKey].y);
+    ctx.strokeStyle = COLORS.CIRCUMCENTER;
+    ctx.stroke();
+  });
 }
 
 /**
@@ -491,14 +467,20 @@ function drawOrthocenter(params, vertices, ctx) {
  * @param {Object} ctx
  */
 function drawCentroid(params, vertices, ctx) {
+  // use dash line
+  ctx.setLineDash([2, 2]);
+
   // bisector lines
-  vertices.forEach(vertex => {
+  ["a", "b", "c"].forEach((edgeKey, index) => {
     ctx.beginPath();
-    ctx.moveTo(vertex.x, vertex.y);
-    ctx.lineTo(params.centroid.x, params.centroid.y);
+    ctx.moveTo(vertices[index].x, vertices[index].y);
+    ctx.lineTo(params.midpoints[edgeKey].x, params.midpoints[edgeKey].y);
     ctx.strokeStyle = COLORS.CENTROID;
     ctx.stroke();
   });
+
+  // use dash line
+  ctx.setLineDash([]);
 
   // centroid
   ctx.beginPath();
