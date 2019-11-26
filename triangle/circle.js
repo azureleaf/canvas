@@ -61,8 +61,17 @@ function setStyle() {
     { id: "sampleOrthocenter", color: COLORS.ORTHOCENTER },
     { id: "sampleCentroid", color: COLORS.CENTROID }
   ].forEach(attr => {
-    var elem = document.getElementById(attr.id);
-    elem.style.fill = attr.color;
+    // svg領域のスタイル設定
+    var svgElem = document.getElementById(attr.id);
+    svgElem.setAttribute("width", "12");
+    svgElem.setAttribute("height", "12");
+
+    // 特定したsvgの直下にあるcircle要素のスタイル設定
+    var circleElem = svgElem.getElementsByTagName("circle")[0];
+    circleElem.style.fill = attr.color;
+    circleElem.setAttribute("cx", "6");
+    circleElem.setAttribute("cy", "6");
+    circleElem.setAttribute("r", "6");
   });
 }
 
@@ -298,8 +307,6 @@ function calcParams(vertices) {
     x1 + ((x2 - x1) * b * Math.cos(thetaA)) / c,
     y1 + ((y2 - y1) * b * Math.cos(thetaA)) / c
   );
-
-  console.log(altitudes);
 
   // 全ての計算結果をオブジェクトとして返却
   return {
