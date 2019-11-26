@@ -92,7 +92,7 @@ function draw(vertices, centerType = "all") {
   // 頂点の描画
   vertices.forEach(vertex => {
     ctx.beginPath();
-    ctx.arc(vertex.x, vertex.y, 2, 0, 2 * Math.PI);
+    ctx.arc(vertex.x, vertex.y, 3, 0, 2 * Math.PI);
     ctx.fillStyle = COLORS.TRIANGLE_EDGE;
     ctx.fill();
   });
@@ -395,7 +395,7 @@ function drawIncenter(params, vertices, ctx) {
 
   // Incenter
   ctx.beginPath();
-  ctx.arc(params.incenter.x, params.incenter.y, 2, 0, 2 * Math.PI);
+  ctx.arc(params.incenter.x, params.incenter.y, 3, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.INCENTER;
   ctx.fill();
 
@@ -437,7 +437,7 @@ function drawCircumcenter(params, vertices, ctx) {
 
   // Circumcenter
   ctx.beginPath();
-  ctx.arc(params.circumcenter.x, params.circumcenter.y, 2, 0, 2 * Math.PI);
+  ctx.arc(params.circumcenter.x, params.circumcenter.y, 3, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.CIRCUMCENTER;
   ctx.fill();
 
@@ -486,7 +486,7 @@ function drawOrthocenter(params, vertices, ctx) {
 
   // orthocenter
   ctx.beginPath();
-  ctx.arc(params.orthocenter.x, params.orthocenter.y, 2, 0, 2 * Math.PI);
+  ctx.arc(params.orthocenter.x, params.orthocenter.y, 3, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.ORTHOCENTER;
   ctx.fill();
 }
@@ -516,7 +516,7 @@ function drawCentroid(params, vertices, ctx) {
 
   // centroid
   ctx.beginPath();
-  ctx.arc(params.centroid.x, params.centroid.y, 2, 0, 2 * Math.PI);
+  ctx.arc(params.centroid.x, params.centroid.y, 3, 0, 2 * Math.PI);
   ctx.fillStyle = COLORS.CENTROID;
   ctx.fill();
 }
@@ -548,7 +548,7 @@ function drawExcenter(params, vertices, ctx) {
     ctx.arc(
       params.excenter[excenterKey].x,
       params.excenter[excenterKey].y,
-      2,
+      3,
       0,
       2 * Math.PI
     );
