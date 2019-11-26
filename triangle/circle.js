@@ -53,7 +53,7 @@ function setStyle() {
     .getElementById("canvas_wrapper")
     .setAttribute("style", "width:" + CANVAS_WIDTH + "px; ");
 
-  // HTMLの五心それぞれについての色見本部分のstyle属性を設定
+  // 色見本部分のスタイル設定
   [
     { id: "sampleIncenter", color: COLORS.INCENTER },
     { id: "sampleCircumcenter", color: COLORS.CIRCUMCENTER },
@@ -62,10 +62,7 @@ function setStyle() {
     { id: "sampleCentroid", color: COLORS.CENTROID }
   ].forEach(attr => {
     var elem = document.getElementById(attr.id);
-    elem.style.color = attr.color;
-    elem.style.backgroundColor = attr.color;
-    elem.style.borderRadius = "50%";
-    elem.style.marginRight = "5px";
+    elem.style.fill = attr.color;
   });
 }
 
@@ -460,9 +457,9 @@ function drawCircumcenter(params, vertices, ctx) {
 /**
  * 垂心関係の描画
  *
- * @param {*} params
- * @param {*} vertices
- * @param {*} ctx
+ * @param {Object} params 五心の座標、内接円外接円の半径など変数
+ * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object} ctx
  */
 function drawOrthocenter(params, vertices, ctx) {
   // 垂線の描画。垂心が三角形の内部の場合・外部の場合の双方がある
@@ -511,7 +508,7 @@ function drawCentroid(params, vertices, ctx) {
     ctx.stroke();
   });
 
-  // use dash line
+  // use solid line
   ctx.setLineDash([]);
 
   // centroid
