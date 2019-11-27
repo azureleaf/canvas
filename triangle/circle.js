@@ -612,6 +612,13 @@ function drawEulerLine(params, vertices, ctx) {
   ctx.setLineDash([]);
 }
 
+/**
+ * 三角形の三辺の延長線を表示する
+ *
+ * @param {Object} params 五心の座標、内接円外接円の半径など変数
+ * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Object} ctx
+ */
 function drawExtededSide(params, vertices, ctx) {
   // 破線にする
   ctx.setLineDash([2, 2]);
