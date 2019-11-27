@@ -133,6 +133,9 @@ function draw(vertices, centerType = "all") {
 
   // オイラー線は常に表示する
   drawEulerLine(params, vertices, ctx);
+
+  // 三角形の延長線は常に表示する
+  drawExtededSide(params, vertices, ctx);
 }
 
 /**
@@ -275,7 +278,7 @@ function calcParams(vertices) {
   // ３つの辺の各延長線とCanvasエッジとの交点座標（全部で６点）を格納する変数
   let edgePoints = {};
 
-  // 各辺がCanvas領域端と交わる点を計算
+  // 各辺の延長線がCanvas領域端と交わる点を計算
   // ただし三点が全て揃って渡されていない場合には計算しない
   if (
     typeof x1 !== "undefined" &&
@@ -585,35 +588,6 @@ function drawExcenter(params, vertices, ctx) {
     ctx.strokeStyle = COLORS.EXCENTER_LINE;
     ctx.stroke();
   });
-
-  // 傍心円の接線を描画
-  // 三角形が完成し、その各辺の延長線位置が判明しているときのみ描画
-  if (
-    typeof params.edgePoints.a !== "undefined" &&
-    typeof params.edgePoints.b !== "undefined" &&
-    typeof params.edgePoints.c !== "undefined"
-  ) {
-    // 破線にする
-    ctx.setLineDash([2, 2]);
-
-    // 3つの辺の延長線を描画
-    ["a", "b", "c"].forEach(edgeKey => {
-      ctx.beginPath();
-      ctx.moveTo(
-        params.edgePoints[edgeKey][0].x,
-        params.edgePoints[edgeKey][0].y
-      );
-      ctx.lineTo(
-        params.edgePoints[edgeKey][1].x,
-        params.edgePoints[edgeKey][1].y
-      );
-      ctx.strokeStyle = COLORS.EXCENTER_LINE;
-      ctx.stroke();
-    });
-
-    // これ以降の線のスタイルを実線に戻す
-    ctx.setLineDash([]);
-  }
 }
 
 /**
@@ -633,6 +607,38 @@ function drawEulerLine(params, vertices, ctx) {
   ctx.lineTo(params.circumcenter.x, params.circumcenter.y);
   ctx.strokeStyle = COLORS.EULER_LINE;
   ctx.stroke();
+
+  // これ以降の線のスタイルを実線に戻す
+  ctx.setLineDash([]);
+}
+
+function drawExtededSide(params, vertices, ctx) {
+  // 破線にする
+  ctx.setLineDash([2, 2]);
+
+  // 外心-垂心の結合線
+  // 傍心円の接線を描画
+  // 三角形が完成し、その各辺の延長線位置が判明しているときのみ描画
+  if (
+    typeof params.edgePoints.a !== "undefined" &&
+    typeof params.edgePoints.b !== "undefined" &&
+    typeof params.edgePoints.c !== "undefined"
+  ) {
+    // 3つの辺の延長線を描画
+    ["a", "b", "c"].forEach(edgeKey => {
+      ctx.beginPath();
+      ctx.moveTo(
+        params.edgePoints[edgeKey][0].x,
+        params.edgePoints[edgeKey][0].y
+      );
+      ctx.lineTo(
+        params.edgePoints[edgeKey][1].x,
+        params.edgePoints[edgeKey][1].y
+      );
+      ctx.strokeStyle = COLORS.TRIANGLE_EDGE;
+      ctx.stroke();
+    });
+  }
 
   // これ以降の線のスタイルを実線に戻す
   ctx.setLineDash([]);
