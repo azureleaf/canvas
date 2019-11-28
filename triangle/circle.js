@@ -43,12 +43,8 @@ function setStyle() {
        border-width: 4px; \
        border-color:#cccccc"
   );
-  canvasElem.setAttribute("height", CANVAS_HEIGHT);
-  canvasElem.setAttribute("width", CANVAS_WIDTH);
-
-  document
-    .getElementById("canvas_wrapper")
-    .setAttribute("style", "width:" + CANVAS_WIDTH + "px; ");
+  // canvasElem.setAttribute("height", CANVAS_HEIGHT);
+  // canvasElem.setAttribute("width", CANVAS_WIDTH);
 
   // 色見本部分のスタイル設定
   [
@@ -85,12 +81,20 @@ function draw(vertices, centerType = "all") {
   var ctx = canvas.getContext("2d");
 
   // Configure canvas size & resolution
-  const dpr = window.devicePixelRatio || 1; // This Web API is supported by most browser
+  // devicePixelRatioのWeb APIはほとんどのブラウザでサポートされている
+  // この設定をしないと、canvasを拡大縮小したときにレイアウトが崩れる
+  const dpr = window.devicePixelRatio || 1;
   canvas.width = CANVAS_WIDTH * dpr;
   canvas.height = CANVAS_HEIGHT * dpr;
+
+  // Set the width of canvas wrapper div
+  document
+    .getElementById("canvas_wrapper")
+    .setAttribute("width", CANVAS_WIDTH * dpr);
+
   ctx.scale(dpr, dpr);
-  // canvas.style.width = CANVAS_WIDTH + "px";
-  // canvas.style.height = CANVAS_HEIGHT + "px";
+  canvas.style.width = CANVAS_WIDTH + "px";
+  canvas.style.height = CANVAS_HEIGHT + "px";
 
   // 頂点の描画
   vertices.forEach(vertex => {
@@ -722,7 +726,7 @@ function setVertices(triangleType, event) {
         // prettier-ignore
         new Point(
           event.clientX - canvas.offsetLeft,
-          event.clientY - canvas.offsetTop)
+          event.clientY - canvas.offsetTop + window.scrollY)
       );
       // checkPoints配列をverticesにコピー
       // ただしclickPoints配列に３頂点分揃っていない時はundefinedで埋める
