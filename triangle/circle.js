@@ -11,9 +11,10 @@ class Point {
 // ユーザーがクリックした３点の位置（Point classで表現）を保持する配列
 let clickPoints = [];
 
-// Set canvas size
+// Set canvas size; maximize the canvas height to the window height
+const CANVAS_BORDER_WIDTH = 4;
 const CANVAS_WIDTH = 750;
-const CANVAS_HEIGHT = 750;
+const CANVAS_HEIGHT = window.innerHeight - CANVAS_BORDER_WIDTH * 2;
 
 // Colors for paths
 const COLORS = {
@@ -39,12 +40,8 @@ function setStyle() {
   var canvasElem = document.getElementsByTagName("canvas")[0];
   canvasElem.setAttribute(
     "style",
-    "border-style: solid; \
-       border-width: 4px; \
-       border-color:#cccccc"
+    "border-width:" + CANVAS_BORDER_WIDTH + "px;"
   );
-  // canvasElem.setAttribute("height", CANVAS_HEIGHT);
-  // canvasElem.setAttribute("width", CANVAS_WIDTH);
 
   // 色見本部分のスタイル設定
   [
