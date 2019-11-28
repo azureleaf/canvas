@@ -1,3 +1,15 @@
-h2 {
-  margin: 20px !important;
+#container,
+#canvas_wrapper {
+  float: left;
+}
+
+#container
+{
+  margin-left: 20px;
+}
+
+#wrapper {
+  content: "";
+  display: table;
+  clear: both;
 }

@@ -28,6 +28,7 @@ const COLORS = {
   EULER_LINE: "black"
 };
 
+// Change styles in the HTML DOM
 setStyle();
 
 /**
@@ -35,19 +36,15 @@ setStyle();
  */
 function setStyle() {
   // Set attributes of <canvas> in the DOM
-  document
-    .getElementsByTagName("canvas")[0]
-    .setAttribute(
-      "style",
-      "width:" +
-        CANVAS_WIDTH +
-        "px; height:" +
-        CANVAS_HEIGHT +
-        "px;" +
-        "border-style: solid; \
+  var canvasElem = document.getElementsByTagName("canvas")[0];
+  canvasElem.setAttribute(
+    "style",
+    "border-style: solid; \
        border-width: 4px; \
        border-color:#cccccc"
-    );
+  );
+  canvasElem.setAttribute("height", CANVAS_HEIGHT);
+  canvasElem.setAttribute("width", CANVAS_WIDTH);
 
   document
     .getElementById("canvas_wrapper")
@@ -92,8 +89,8 @@ function draw(vertices, centerType = "all") {
   canvas.width = CANVAS_WIDTH * dpr;
   canvas.height = CANVAS_HEIGHT * dpr;
   ctx.scale(dpr, dpr);
-  canvas.style.width = CANVAS_WIDTH + "px";
-  canvas.style.height = CANVAS_HEIGHT + "px";
+  // canvas.style.width = CANVAS_WIDTH + "px";
+  // canvas.style.height = CANVAS_HEIGHT + "px";
 
   // 頂点の描画
   vertices.forEach(vertex => {

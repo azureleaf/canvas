@@ -4,87 +4,69 @@
     <meta charset="utf-8" />
     <title>Triangle 5 Centers</title>
     <link rel="stylesheet" href="./style.css" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
   </head>
   <body onload="setVertices('random')">
-    <div id="wrapper" class="row">
-      <div id="canvas_wrapper" class="m-4 col-md-auto">
+    <div id="wrapper">
+      <div id="canvas_wrapper">
         <canvas>
           Canvas not supported.
         </canvas>
       </div>
 
-      <div id="container" class="m-4 col-md-auto">
+      <div id="container">
         <p>
           canvas内の任意の三点をクリックしてください。三角形の五心が表示されます。
         </p>
         <form>
           <h2>表示設定</h2>
-          <div class="form-group row">
-            <label for="x1" class="col-xs-2 col-form-label">P1:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x1"
-                placeholder="x1"
-                size="4"
-                class="form-control"
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y1"
-                placeholder="y1"
-                size="4"
-                class="form-control"
-              />
-            </div>
+          <div>
+            <label for="x1">P1:</label>
+            <input
+              type="text"
+              id="x1"
+              placeholder="x1"
+              size="4"
+              class="form-control"
+            />
+            <input
+              type="text"
+              id="y1"
+              placeholder="y1"
+              size="4"
+              class="form-control"
+            />
 
-            <label for="x2" class="col-xs-2 col-form-label">P2:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x2"
-                placeholder="x2"
-                size="4"
-                class="form-control"
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y2"
-                placeholder="y2"
-                size="4"
-                class="form-control"
-              />
-            </div>
+            <label for="x2">P2:</label>
+            <input
+              type="text"
+              id="x2"
+              placeholder="x2"
+              size="4"
+              class="form-control"
+            />
+            <input
+              type="text"
+              id="y2"
+              placeholder="y2"
+              size="4"
+              class="form-control"
+            />
 
-            <label for="x3" class="col-xs-2 col-form-label">P3:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x3"
-                placeholder="x3"
-                size="4"
-                class="form-control"
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y3"
-                placeholder="y3"
-                size="4"
-                class="form-control"
-              />
-            </div>
+            <label for="x3">P3:</label>
+            <input
+              type="text"
+              id="x3"
+              placeholder="x3"
+              size="4"
+              class="form-control"
+            />
+            <input
+              type="text"
+              id="y3"
+              placeholder="y3"
+              size="4"
+              class="form-control"
+            />
           </div>
 
           <input
@@ -145,321 +127,273 @@
 
           <h2>計算結果</h2>
           <div class="row">
-            <label for="a" class="col-xs-2 col-form-label">辺の長さ a:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="a"
-                placeholder="a"
-                size="4"
-                class="form-control"
-                readonly
-                disabled
-              />
-            </div>
+            <label for="a">辺の長さ a:</label>
+            <input
+              type="text"
+              id="a"
+              placeholder="a"
+              size="4"
+              class="form-control"
+              readonly
+              disabled
+            />
 
-            <label for="b" class="col-xs-2 col-form-label">b:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="b"
-                placeholder="b"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <label for="b">b:</label>
+            <input
+              type="text"
+              id="b"
+              placeholder="b"
+              size="4"
+              class="form-control"
+              disabled
+            />
 
-            <label for="c" class="col-xs-2 col-form-label">c:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="c"
-                placeholder="c"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <label for="c">c:</label>
+            <input
+              type="text"
+              id="c"
+              placeholder="c"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
 
           <div class="row">
-            <label for="s" class="col-xs-2 col-form-label">s = (a+b+c)/2</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="s"
-                placeholder="s"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <label for="S" class="col-xs-2 col-form-label">面積 S:</label>
+            <label for="s">s = (a+b+c)/2</label>
+            <input
+              type="text"
+              id="s"
+              placeholder="s"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <label for="S">面積 S:</label>
 
-            <div>
-              <input
-                type="text"
-                id="S"
-                placeholder="S"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="S"
+              placeholder="S"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
           <div class="row">
-            <label for="r" class="col-xs-2 col-form-label">内接円半径r:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="r"
-                placeholder="r"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <label for="r">内接円半径r:</label>
+            <input
+              type="text"
+              id="r"
+              placeholder="r"
+              size="4"
+              class="form-control"
+              disabled
+            />
 
-            <label for="R" class="col-xs-2 col-form-label">外接円半径R:</label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="R"
-                placeholder="R"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <label for="R">外接円半径R:</label>
+            <input
+              type="text"
+              id="R"
+              placeholder="R"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
 
           <div class="row">
-            <label for="x0i" class="col-xs-2 col-form-label">
+            <label for="x0i">
               <svg id="sampleIncenter">
                 <circle />
               </svg>
               内心I:
             </label>
 
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x0i"
-                placeholder="x0i"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y0i"
-                placeholder="y0i"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="x0i"
+              placeholder="x0i"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <input
+              type="text"
+              id="y0i"
+              placeholder="y0i"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
           <div class="row">
-            <label for="x0O" class="col-xs-2 col-form-label">
+            <label for="x0O">
               <svg id="sampleCircumcenter">
                 <circle />
               </svg>
               外心O:
             </label>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x0O"
-                placeholder="x0O"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y0O"
-                placeholder="y0O"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="x0O"
+              placeholder="x0O"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <input
+              type="text"
+              id="y0O"
+              placeholder="y0O"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
 
           <div class="row">
-            <label for="x0g" class="col-xs-2 col-form-label">
+            <label for="x0g">
               <svg id="sampleCentroid">
                 <circle />
               </svg>
               重心G:</label
             >
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x0g"
-                placeholder="x0g"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y0g"
-                placeholder="y0g"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="x0g"
+              placeholder="x0g"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <input
+              type="text"
+              id="y0g"
+              placeholder="y0g"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
 
           <div class="row">
-            <label for="x0h" class="col-xs-2 col-form-label">
+            <label for="x0h">
               <svg id="sampleOrthocenter">
                 <circle />
               </svg>
               垂心H:</label
             >
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x0h"
-                placeholder="x0h"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y0h"
-                placeholder="y0h"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="x0h"
+              placeholder="x0h"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <input
+              type="text"
+              id="y0h"
+              placeholder="y0h"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
 
           <div class="row">
-            <label for="x0ia" class="col-xs-2 col-form-label">
+            <label for="x0ia">
               <svg id="sampleExcenter">
                 <circle />
               </svg>
               傍心ia:</label
             >
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x0ia"
-                placeholder="x0ia"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y0ia"
-                placeholder="y0ia"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="x0ia"
+              placeholder="x0ia"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <input
+              type="text"
+              id="y0ia"
+              placeholder="y0ia"
+              size="4"
+              class="form-control"
+              disabled
+            />
 
-            <label for="x0ib" class="col-xs-2 col-form-label">ib:</label>
+            <label for="x0ib">ib:</label>
 
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x0ib"
-                placeholder="x0ib"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y0ib"
-                placeholder="y0ib"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <label for="x0ic" class="col-xs-2 col-form-label">ic:</label>
+            <input
+              type="text"
+              id="x0ib"
+              placeholder="x0ib"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <input
+              type="text"
+              id="y0ib"
+              placeholder="y0ib"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <label for="x0ic">ic:</label>
 
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="x0ic"
-                placeholder="x0ic"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="y0ic"
-                placeholder="y0ic"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="x0ic"
+              placeholder="x0ic"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <input
+              type="text"
+              id="y0ic"
+              placeholder="y0ic"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
           <div class="row">
-            <label for="ra" class="col-xs-2 col-form-label">傍心半径ra:</label>
+            <label for="ra">傍心半径ra:</label>
 
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="ra"
-                placeholder="ra"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <label for="rb" class="col-xs-2 col-form-label">rb:</label>
+            <input
+              type="text"
+              id="ra"
+              placeholder="ra"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <label for="rb">rb:</label>
 
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="rb"
-                placeholder="rb"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <label for="rc" class="col-xs-2 col-form-label">rc:</label>
+            <input
+              type="text"
+              id="rb"
+              placeholder="rb"
+              size="4"
+              class="form-control"
+              disabled
+            />
+            <label for="rc">rc:</label>
 
-            <div class="col-xs-2">
-              <input
-                type="text"
-                id="rc"
-                placeholder="rc"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
+            <input
+              type="text"
+              id="rc"
+              placeholder="rc"
+              size="4"
+              class="form-control"
+              disabled
+            />
           </div>
         </form>
         <div id="hints">
