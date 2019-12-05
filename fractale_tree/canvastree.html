@@ -4,55 +4,12 @@
     <title>javascriptで描くフラクタル</title>
     <style>
       canvas {
-        background-color: black;
+        background-color: #333333;
       }
     </style>
   </head>
   <body>
     <p><canvas id="drawingCanvas" width="800" height="600"></canvas></p>
-    <script>
-      let drawingCanvas = document.getElementById("drawingCanvas");
-      let ctx = drawingCanvas.getContext("2d");
-
-      drawTree(ctx, 12, 400, 700, 200, 90);
-
-      function drawTree(
-        ctx, // canvas context
-        n, // 再帰回数、つまり末端までの枝分かれ回数
-        x0, // 枝の始点位置のx座標
-        y0, // 枝の始点位置のy座標
-        l, // 枝の長さ
-        theta // 枝の回転の大きさ
-      ) {
-        // 再帰の終了条件
-        if (n < 0) return;
-
-        // 根幹部と末端部の色指定
-        let lineColor = "orange";
-        if (n < 3) lineColor = "green";
-
-        // 線分の終点座標
-        let x1 = Math.round(x0 + Math.cos((theta * Math.PI) / 180) * l);
-        let y1 = Math.round(y0 - Math.sin((theta * Math.PI) / 180) * l);
-
-        // 枝分かれ１回あたりの角度変化量
-        // 枝分かれの角度を変化させていくことで、だんだん広がっていくような形状にする
-        let deltaTheta = 15;
-
-        ctx.beginPath();
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = n / 3; // 末端ほど枝を細くする
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x1, y1);
-        ctx.closePath();
-        ctx.stroke();
-
-        // 枝左側
-        drawTree(ctx, n - 1, x1, y1, l * 0.7, theta - deltaTheta);
-
-        // 枝右側
-        drawTree(ctx, n - 1, x1, y1, l * 0.7, theta + deltaTheta);
-      }
-    </script>
+    <script src="./fractal.js"></script>
   </body>
 </html>

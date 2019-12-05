@@ -17,6 +17,7 @@
   },
   "homepage": "https://gitlab.com/manabydevelop/canvas#readme",
   "devDependencies": {
-    "eslint": "^6.7.1"
-  }
+    "eslint": "^6.7.2"
+  },
+  "dependencies": {}
 }
