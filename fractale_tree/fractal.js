@@ -2,7 +2,7 @@ let drawingCanvas = document.getElementById("drawingCanvas");
 let ctx = drawingCanvas.getContext("2d");
 const branchDepth = 12; // 枝分かれの深さ
 
-// 色情報をRGBで保持するだけのクラス
+// 色情報をRGBで管理するクラス
 class Color {
   constructor(r, g, b) {
     this.r = r;
@@ -62,9 +62,10 @@ function drawTree(ctx, n, x0, y0, l, theta) {
 /**
  * ２色の間の色のRGB値を計算する関数
  *
- * @param {number} currStep
- *  二色を段階ごとに分けたとき、今その何段目の色を表示するのか
- * @param {number} totalStep 二色を全部で何段階に分けるのか
+ * @param {number} currStep 
+ *  二色の間を複数段階に分けたとき、今その何段目の色を表示するのか指定
+ *  0が開始色、totalStep + 1が終了色になる
+ * @param {number} totalStep 二色の間を全部で何段階に分けるのか指定
  * @param {Color} colorStart グラデーション開始の色
  * @param {Color} colorEnd グラデーション終了の色
  * @return {Color} 計算された中間色
