@@ -68,7 +68,7 @@ function setStyle() {
 /**
  * 三角形の三点の座標を受け取り、描画する。
  *
- * @param {Object[]} vertices ３つの頂点の座標のオブジェクト（Point Class）
+ * @param {Point[]} vertices ３つの頂点の座標のオブジェクト（Point Class）
  * @param {string} centerType "incenter", "excenter", "all"など描画する円の指定
  */
 function draw(vertices, centerType = "all") {
@@ -139,7 +139,7 @@ function draw(vertices, centerType = "all") {
 /**
  * 三角形の三点座標を基に、五心に関する全変数を計算
  *
- * @param {Object[]} vertices 3つの頂点座標（Point object）の配列
+ * @param {Point[]} vertices 3つの頂点座標（Point object）の配列
  * @return {Object} 五心の中心座標、円の半径などの変数
  */
 function calcParams(vertices) {
@@ -330,9 +330,9 @@ function calcParams(vertices) {
 
 /**
  * 三角形各辺の延長線がCanvasエッジと交わる点の座標を計算
- * @param {Object} vertex1 頂点のPoint object
- * @param {Object} vertex2 頂点のPoint object
- * @return {Object[]} ２つの交点のPoint Object
+ * @param {Point} vertex1 頂点座標
+ * @param {Point} vertex2 頂点座標
+ * @return {Point[]} 直線と枠線の交点となる２つの点
  */
 function getEdgePoints(vertex1, vertex2) {
   // 長方形のCanvas領域を横切る直線は必ず２つの交点を持つので
@@ -388,7 +388,7 @@ function getEdgePoints(vertex1, vertex2) {
  * 内心関係の描画
  *
  * @param {Object} params 五心の座標、内接円外接円の半径など変数
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Point[]} vertices 3つの頂点の座標
  * @param {Object} ctx
  */
 function drawIncenter(params, vertices, ctx) {
@@ -424,7 +424,7 @@ function drawIncenter(params, vertices, ctx) {
  * 外心関係の描画
  *
  * @param {Object} params 五心の座標、内接円外接円の半径など変数
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Point[]} vertices 3つの頂点（Point object）の座標
  * @param {Object} ctx
  */
 function drawCircumcenter(params, vertices, ctx) {
@@ -466,7 +466,7 @@ function drawCircumcenter(params, vertices, ctx) {
  * 垂心関係の描画
  *
  * @param {Object} params 五心の座標、内接円外接円の半径など変数
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Point[]} vertices 3つの頂点の座標
  * @param {Object} ctx
  */
 function drawOrthocenter(params, vertices, ctx) {
@@ -500,7 +500,7 @@ function drawOrthocenter(params, vertices, ctx) {
  * 重心関係の描画
  *
  * @param {Object} params 五心の座標、内接円外接円の半径など変数
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Point[]} vertices 3つの頂点（Point object）の座標
  * @param {Object} ctx
  */
 function drawCentroid(params, vertices, ctx) {
@@ -530,7 +530,7 @@ function drawCentroid(params, vertices, ctx) {
  * 傍心関係の描画
  *
  * @param {Object} params 五心の座標、内接円外接円の半径など変数
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Point[]} vertices 3つの頂点の座標
  * @param {Object} ctx
  */
 function drawExcenter(params, vertices, ctx) {
@@ -592,7 +592,7 @@ function drawExcenter(params, vertices, ctx) {
  * 五心の変数を受け取り、それに則ってオイラー線を描写
  *
  * @param {Object} params 五心の座標、内接円外接円の半径など変数
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Point[]} vertices 3つの頂点（Point object）の座標
  * @param {Object} ctx
  * */
 function drawEulerLine(params, vertices, ctx) {
@@ -614,7 +614,7 @@ function drawEulerLine(params, vertices, ctx) {
  * 三角形の三辺の延長線を表示する
  *
  * @param {Object} params 五心の座標、内接円外接円の半径など変数
- * @param {Object[]} vertices 3つの頂点（Point object）の座標
+ * @param {Point[]} vertices 3つの頂点の座標
  * @param {Object} ctx
  */
 function drawExtededSide(params, vertices, ctx) {
