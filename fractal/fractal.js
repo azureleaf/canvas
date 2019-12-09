@@ -18,8 +18,9 @@ class Color {
 drawTree(ctx, branchDepth, 400, 700, 150, 90);
 
 /**
- * 再帰的に樹形を描画する関数
- * 
+ * 枝を１区間分描画する関数
+ * 再帰的に呼び出すことで、樹形を作り出す
+ *
  * @param {Object} ctx Canvas Context
  * @param {number} n 再帰の残り回数。つまり末端までの枝分かれ回数。再帰ごとに減らす
  * @param {number} x0 枝の始点位置のx座標
@@ -53,16 +54,20 @@ function drawTree(ctx, n, x0, y0, l, theta) {
   ctx.stroke();
 
   // 枝左側の再帰描画
-  drawTree(ctx, n - 1, x1, y1, l * 0.8, theta - deltaTheta);
+  setTimeout(() => {
+    drawTree(ctx, n - 1, x1, y1, l * 0.8, theta - deltaTheta);
+  }, 1000);
 
   // 枝右側の再帰描画
-  drawTree(ctx, n - 1, x1, y1, l * 0.8, theta + deltaTheta);
+  setTimeout(() => {
+    drawTree(ctx, n - 1, x1, y1, l * 0.8, theta + deltaTheta);
+  }, 1000);
 }
 
 /**
  * ２色の間の色のRGB値を計算する関数
  *
- * @param {number} currStep 
+ * @param {number} currStep
  *  二色の間を複数段階に分けたとき、今その何段目の色を表示するのか指定
  *  0が開始色、totalStep + 1が終了色になる
  * @param {number} totalStep 二色の間を全部で何段階に分けるのか指定
