@@ -1,6 +1,6 @@
 let drawingCanvas = document.getElementById("drawingCanvas");
 let ctx = drawingCanvas.getContext("2d");
-const branchDepth = 12; // 枝分かれの深さ
+const BRANCH_DEPTH = 12; // 枝分かれの深さ
 
 // 色情報をRGBで管理するクラス
 class Color {
@@ -15,7 +15,7 @@ class Color {
   }
 }
 
-drawTree(ctx, branchDepth, 400, 700, 150, 90);
+drawTree(ctx, BRANCH_DEPTH, 400, 700, 150, 90);
 
 /**
  * 枝を１区間分描画する関数
@@ -33,9 +33,14 @@ function drawTree(ctx, n, x0, y0, l, theta) {
   if (n < 0) return;
 
   // 根幹部と末端部の色指定
-  var color1 = new Color(21, 171, 0); // グラデーションの開始色
-  var color2 = new Color(255, 43, 0); // グラデーションの終了色
-  var lineColor = getGradationColor(n, branchDepth, color1, color2).stringify();
+  var color1 = new Color(0, 153, 0); // グラデーションの終了色
+  var color2 = new Color(255, 51, 51); // グラデーションの開始色
+  var lineColor = getGradationColor(
+    n,
+    BRANCH_DEPTH,
+    color1,
+    color2
+  ).stringify();
 
   // 線分の終点座標（sin, cosの定義から計算）
   let x1 = Math.round(x0 + Math.cos((theta * Math.PI) / 180) * l);
@@ -53,15 +58,13 @@ function drawTree(ctx, n, x0, y0, l, theta) {
   ctx.closePath();
   ctx.stroke();
 
-  // 枝左側の再帰描画
   setTimeout(() => {
+    // 枝左側の再帰描画
     drawTree(ctx, n - 1, x1, y1, l * 0.8, theta - deltaTheta);
-  }, 1000);
 
-  // 枝右側の再帰描画
-  setTimeout(() => {
+    // 枝右側の再帰描画
     drawTree(ctx, n - 1, x1, y1, l * 0.8, theta + deltaTheta);
-  }, 1000);
+  }, 300);
 }
 
 /**
