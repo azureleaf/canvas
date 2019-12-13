@@ -1,6 +1,6 @@
 let drawingCanvas = document.getElementById("drawingCanvas");
 let ctx = drawingCanvas.getContext("2d");
-const BRANCH_DEPTH = 13; // 枝分かれの深さ
+const BRANCH_DEPTH = 12; // 枝分かれの深さ
 
 // 色情報をRGBで管理するクラス
 class Color {
@@ -15,7 +15,7 @@ class Color {
   }
 }
 
-drawTree(ctx, BRANCH_DEPTH, 400, 700, 150, 90);
+drawTree(ctx, BRANCH_DEPTH, 400, 700, 130, 90);
 
 /**
  * 枝を１区間分描画する関数
@@ -48,7 +48,7 @@ function drawTree(ctx, n, x0, y0, l, theta) {
 
   // 枝分かれ１回あたりの角度変化量
   // 枝分かれの角度を変えていくことで、だんだん広がっていくような形状にする
-  let deltaTheta = 15 + Math.random() * 20;
+  let deltaTheta = 15 + Math.random() * 15;
 
   ctx.beginPath();
   ctx.strokeStyle = lineColor;
@@ -65,7 +65,7 @@ function drawTree(ctx, n, x0, y0, l, theta) {
       n - 1,
       x1,
       y1,
-      l * (0.7 + Math.random() * 0.1),
+      l * (0.75 + Math.random() * 0.1),
       theta - deltaTheta
     );
 
@@ -75,7 +75,7 @@ function drawTree(ctx, n, x0, y0, l, theta) {
       n - 1,
       x1,
       y1,
-      l * (0.7 + Math.random() * 0.2),
+      l * (0.75 + Math.random() * 0.1),
       theta + deltaTheta
     );
   }, 300);
