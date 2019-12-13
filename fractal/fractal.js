@@ -1,6 +1,6 @@
 let drawingCanvas = document.getElementById("drawingCanvas");
 let ctx = drawingCanvas.getContext("2d");
-const BRANCH_DEPTH = 12; // 枝分かれの深さ
+const BRANCH_DEPTH = 13; // 枝分かれの深さ
 
 // 色情報をRGBで管理するクラス
 class Color {
@@ -33,8 +33,8 @@ function drawTree(ctx, n, x0, y0, l, theta) {
   if (n < 0) return;
 
   // 根幹部と末端部の色指定
-  var color1 = new Color(0, 153, 0); // グラデーションの終了色
-  var color2 = new Color(255, 51, 51); // グラデーションの開始色
+  var color1 = new Color(0, 180, 0); // グラデーションの終了色
+  var color2 = new Color(255, 255, 255); // グラデーションの開始色
   var lineColor = getGradationColor(
     n,
     BRANCH_DEPTH,
@@ -48,7 +48,7 @@ function drawTree(ctx, n, x0, y0, l, theta) {
 
   // 枝分かれ１回あたりの角度変化量
   // 枝分かれの角度を変えていくことで、だんだん広がっていくような形状にする
-  let deltaTheta = 15;
+  let deltaTheta = 15 + Math.random() * 20;
 
   ctx.beginPath();
   ctx.strokeStyle = lineColor;
@@ -60,10 +60,24 @@ function drawTree(ctx, n, x0, y0, l, theta) {
 
   setTimeout(() => {
     // 枝左側の再帰描画
-    drawTree(ctx, n - 1, x1, y1, l * 0.8, theta - deltaTheta);
+    drawTree(
+      ctx,
+      n - 1,
+      x1,
+      y1,
+      l * (0.7 + Math.random() * 0.1),
+      theta - deltaTheta
+    );
 
     // 枝右側の再帰描画
-    drawTree(ctx, n - 1, x1, y1, l * 0.8, theta + deltaTheta);
+    drawTree(
+      ctx,
+      n - 1,
+      x1,
+      y1,
+      l * (0.7 + Math.random() * 0.2),
+      theta + deltaTheta
+    );
   }, 300);
 }
 
