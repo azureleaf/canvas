@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>クロマキー合成</title>
+<script>
+var canvas,context,canvasTemp,contexTemp;//キャンバス
+var video,cameraStream;//カメラ映像
+var back,backType=null;//背景要素、背景の種類
+var mediaRecorder,mime="video/webm;codecs=vp8";//レコーダー、MIMEタイプ
+
+function init(){
+//キャンバスの取得
+canvas=document.getElementById("chromakey");//合成画像表示エリアのID(181行)
+context=canvas.getContext("2d");
+canvasTemp=document.getElementById("temp");//画像一時表示エリアのID(180行)
+contextTemp=canvasTemp.getContext("2d");
+//カメラ用ビデオの取得
+video=document.getElementById("camera");//動画表示エリアのID(170行)
+//切断ボタンの無効化
+document.getElementById("disconnect").disabled=true;//「カメラ切断」ボタンのID(165行)
+//24FPSでキャンバスを更新
+setInterval(update,1000/24);//1000/24=約41.7ミリ秒ごとにupdate()関数を実行
+}
+
+function connect(){
+  //カメラの接続
+  var media=navigator.mediaDevices.getUserMedia({//1280*720のビデオの使用許可を要求する
+    //映像のみ(1280*720)
+    audio:false,
+    video:{
+      width:{ideal:1280},
+      height:{ideal:720}
+    }
+  }).then(function(stream) {//カメラからの入力
+    //カメラからの映像をビデオにセット
+    video.srcObject=stream;
+    cameraStream=stream;
+    document.getElementById("message").innerText="接続";
+    //接続ボタンの無効化、切断ボタンの有効化
+    document.getElementById("connect").disabled=true;
+    document.getElementById("disconnect").disabled=false
+  }).catch(function(error){
+    //エラー
+    document.getElementById("message").innerText=error;
+  });
+}
+
+function disconnect(){
+  //カメラの切断
+  cameraStream.getVideoTracks()[0].stop();//カメラの入力を停止
+  document.getElementById("message").innerText="切断";
+  //接続ボタンの有効化、切断ボタンの無効化
+  document.getElementById("connect").disabled=false;
+  document.getElementById("disconnect").disabled=true;
+}
+
+function loadBackData(e){
+  //背景動画/画像の読み込み＋背景要素の作成
+  document.getElementById("back").innerHTML="";//背景動画・画像表示エリアのID(171行)
+  backType=e.files[0].type.split("/")[0];
+  if(backType=="video"){//読み込んだファイルが「video」なら
+    //動画
+    back=document.createElement("video");//video」要素を作成
+    back.loop=true;
+    back.muted=true;
+    back.controls=true;
+  } else if (backType=="image"){
+  //画像
+  back=document.createElement("img");
+}
+back.src=URL.createObjectURL(e.files[0]);//
+back.className="small";
+document.getElementById("back").appendChild(back);
+}
+
+function update(){
+  //カメラからの映像を取得
+  contextTemp.drawImage(video,0,0,canvas.width,canvas.height);
+  var imageData=contextTemp.getImageData(0,0,canvas.width,canvas.height);
+  //クロマキー合成
+  var color = document.getElementById("color").value;
+  var distandce = document.getElementById("distance").value;
+  var r = parseInt(color.substring(1,3),16);
+  var g = parseInt(color.substring(3,5),16);
+  var b = parseInt(color.substring(5,7),16);
+  for (var i=0; i<imageData.data.length; i+=4){
+    var dr=imageData.data[i]-r;
+    var dg=imageData.data[i+1]-g;
+    var db=imageData.data[i+2]-b;
+    //投下処理
+    var d = Math.sqrt(Math.pow(dr,2)+Math.pow(dg,2)+Math.pow(db,2));
+    if (d < distance) imageData.data[i+3]=0;
+  }
+  contextTemp.putImageData(imageData,0,0);
+  var image = new Image();
+  image.src = canvasTemp.toDataURL();
+  image.onload = function() {
+//背景動画/画像を描画
+    if (backType != null) {
+      context.drawImage(back,0,0,canvas.width,canvas.height);
+    }
+    //加工画像を描画
+    context.drawImage(image,0,0,canvas.width,canvas.height);
+  }
+}
+
+function record() {
+  //録画開始
+  document.getElementById("messageRec").innerText="録画中";
+  var stream=canvas.captureStream();
+  mediaRecorder=new MediaRecorder(stream,{mimeType:mime});
+  mediaRecorder.ondataavailable=function(e){
+    //名前を付けて保存（ダウンロード）
+    var blob=new Blob([e.data],{type:mime});
+    var filename=window.prompt("ファイル名を入力してください","video.webm");
+    if(filename !=null){
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download=filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
+  mediaRecorder.start();
+  //録画ボタンの無効化、停止ボタンの有効化
+  document.getElementById("rec").disabled=true;
+  document.getElementById("stop").disabled=false;
+}
+
+function stopRecord(){
+  //停止
+  document.getElementById("messageRec").innerText="";
+  mediaRecorder.stop();
+  //録画ボタンの有効化、停止ボタンの無効化
+  document.getElementById("rec").disabled=false;
+  document.getElementById("stop").disabled=true;
+}
+</script>
+<style>
+span{color:#CC0000;}
+video{border:thin solid #CCCCCC;}
+#back{
+  display:inline-block;
+  border:thin solid#CCCCCC;
+}
+.samall{
+  width: 320px;
+  height: 180px;
+}
+#main {position: relative;}
+#chromakey{
+  position:absolute;
+  top:0px;
+  left: 0px;
+}
+input[type="number"] {width:40px;}
+canvas{border:thin solid #CCCCCC;}
+</style>
+</head>
+<body onload="init()">
+<p>クロマキー合成</p>
+<input type="button" id="connect" value="カメラ接続" onclick="connect()">
+<input type="button" id="disconnect" value="カメラ切断" onclick="disconnect()">
+<input type="file" accept="image/*,video/mp4,video/webm,video/ogg" onChange="loadBackData(this)">
+<span id="message"></span>
+<hr>
+<video id="camera" width="320" height="180" autoplay></video>
+<div id="back" class="small"></div>
+<hr>
+透過色：<input type="color" id="color" value="#008000">
+色差：<input type="number" id="distance" value="100" step="10">
+<input type="button" id="rec" value="録画" onclick="record()">
+<input type="button" id="stop" value="停止" onclick="stopRecord()">
+<span id="messageRec"></span>
+<br/>
+<div id="main">
+<canvas id="temp" width="640" height="360"></canvas>
+<canvas id="chromakey" width="640" height="360"></canvas>
+</div>
+</body>
+</html>
