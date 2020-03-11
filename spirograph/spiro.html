@@ -1,0 +1,120 @@
+<DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>spirograph</title>
+<script>
+    //変数
+    var canvas,context;
+    var timer;
+    var linecolor;
+    var ox,oy;
+    var rc,x0,y0;
+    var rm,laps;
+    var rd;
+    var i;
+
+    //定数
+    var rad=Math.PI/180;
+    var step =10;
+
+    function initCanvas(){
+        //キャンバスの取得
+        canvas=document.getElementById("spirograph");
+        context=canvas.getContext("2d");
+
+        //キャンバスのサイズを設定(補正したブラウザのサイズセット)
+        canvas.width=window.innerWidth-20;
+        canvas.height=window.innerHeight-120;
+    }
+
+    function spiro(){
+        //定円の歯車数、動円の歯車数、描画点の半径をセット
+        rc=Number(document.getElementById("rc").value);
+        rm=Number(document.getElementById("rm").value);
+        rd=Number(document.getElementById("rd").value);
+        
+        //周回数(動円の歯車÷定円と動円の歯車の最大公約数)
+        laps=rm/gcd(rc,rm);
+
+        //定円の中心座標(キャンバスの外にはみ出さない乱数)
+        x0=Math.floor(Math.random()*(canvas.width-2*rc))+rc;
+        y0=Math.floor(Math.random()*(canvas.height-2*rc))+rc;
+        
+        //描画開始座標
+        ox=x0+rc-rm+rd;
+        oy=y0;
+
+        //描画色(R,G,Bを0~255の乱数でセット)
+        var r=Math.floor(Math.random()*256);
+        var g=Math.floor(Math.random()*256);
+        var b=Math.floor(Math.random()*256);
+        linecolor="rgb("+r+","+g+","+b+")";
+
+        //描画開始(0.005秒ごとに描画)
+        i=0;
+        timer=setInterval(draw,5);
+        document.getElementById("status").innerHTML="drawing...";
+
+        //Drawボタンを無効化
+        document.getElementById("draw").disabled=true;
+    }
+
+    function draw(){
+        //回転角をラジアンに変換
+        var angle=i*rad;
+
+        //座標を求める(内トロコイド)
+        var x=x0+(rc-rm)*Math.cos(angle)+rd*Math.cos(((rc-rm)/rm*angle));
+        var y=y0+(rc-rm)*Math.sin(angle)-rd*Math.sin(((rc-rm)/rm*angle));
+        
+        //描画(ox,oy)-(x,y)まで線を引く
+        context.beginPath();
+        context.strokeStyle=linecolor;
+        context.moveTo(ox,oy);
+        context.lineTo(x,y);
+        context.stroke();
+
+        //開始座標を変更
+        ox=x;
+        oy=y;
+
+        //回転角を加算
+        i=i+step;
+        //回転角が動円の周回数*360を超えると描画終了
+        if(i>laps*360){
+            //描画終了
+            clearInterval(timer);
+            document.getElementById("status").innerHTML="complete";
+            //Drawボタンを有効化
+            document.getElementById("draw").disable=false;
+        } else {
+            //現在の周回数を表示
+            document.getElementById("status").innerHTML
+            ="drawing..."+Math.floor(i/360)+"/"+laps;
+            }
+    }
+
+    //最大公約数
+    function gcd(a,b){
+        if (b==0){
+            return a;
+        } else {
+            return gcd(b,a % b);
+        }
+    }
+</script>
+</head>
+<body onload="initCanvas()">
+<p>Spirograph</p>
+<form id="form">
+    定円の半径:<input type="number" id="rc" size="2" value="120" min="50" max="200">
+    動円の半径:<input type="number" id="rm" size="2" value="65" min="50" max="100">
+    描画点の半径:<input type="number" id="rd" size="2" value="30" min="10" max="100">
+    <input type="button" value="Draw" id="draw" onclick="spiro()">
+    <span id="status"></span>
+</form>
+<hr>
+<canvas id="spirograph" style="background-color:#000000;"></canvas>
+</body>
+</html>
