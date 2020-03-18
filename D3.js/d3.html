@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>d3.js</title>
+</head>
+<body>
+    <canvas id="my_chart">
+        canvas not supported...
+    </canvas>
+    <svg  width="600" height="240">
+      <circle/>
+      <circle/>
+      <circle/>
+      
+    </svg>
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+    (function(){
+        'use strict';
+        var WIDTH=600;
+        var HEIGHT=240;
+        var data=[15,20,5];
+        var circles=d3.select('svg').selectAll('circle').data(data);
+        // circles
+        //   // .attr('cx',0)
+        //   .attr('cx',function(d,i){
+        //     return i*50+50;
+        //   })
+        //   // .attr('cy',120)
+        //   .attr('cy',HEIGHT+100)
+        //   // .attr('r',10)
+        //   .attr('r',function(d){
+        //     return d;
+        //   })
+        //   .attr('fill','pink')
+        //   .attr('cursor','pointer')
+        //   .on('click',function(d,i){
+        //     d3.select(this)
+        //     .transition()
+        //     .duration(500)
+        //     .attr('cy',-100)
+        //     .on('end',function(){
+        //       alert('Ball '+ i +' is gone!');
+        //     });
+        //   })
+        //   .transition()
+        //     .duration(800)
+        //     // .delay(1000)
+        //     .delay(function(d,i){
+        //       return i*200;
+        //     })
+        //     // .ease(d3.easeBounce)
+        //     .ease(d3.easeElastic)
+        //     .attr('cy',HEIGHT/2)
+        //   // .transition()
+        //   //   .attr('cy',-100)
+
+
+          circles
+            .attr('cx',function(d,i){
+              return i*50+50;
+            })
+            .attr('cy',HEIGHT/2)
+            .attr('r',function(d){
+              return d;
+            })
+            .attr('fill','pink')
+
+    })();
+</script>
+</body>
+</html>
