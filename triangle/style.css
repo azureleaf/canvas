@@ -8,12 +8,14 @@ canvas {
   border-color: #bbbbbb;
 }
 
-body, #wrapper {
+body,
+#wrapper {
   margin: 0;
   padding: 0;
 }
 
 #container {
+  margin-top: 20px;
   margin-left: 20px;
 }
 
