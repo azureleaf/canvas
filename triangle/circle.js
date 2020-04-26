@@ -26,7 +26,7 @@ const COLORS = {
   INCENTER: "green",
   CENTROID: "dodgerblue",
   CIRCUMCENTER: "orangered",
-  EULER_LINE: "black"
+  EULER_LINE: "black",
 };
 
 // Change styles in the HTML DOM
@@ -49,8 +49,8 @@ function setStyle() {
     { id: "sampleCircumcenter", color: COLORS.CIRCUMCENTER },
     { id: "sampleExcenter", color: COLORS.EXCENTER_LINE },
     { id: "sampleOrthocenter", color: COLORS.ORTHOCENTER },
-    { id: "sampleCentroid", color: COLORS.CENTROID }
-  ].forEach(attr => {
+    { id: "sampleCentroid", color: COLORS.CENTROID },
+  ].forEach((attr) => {
     // svg領域のスタイル設定
     var svgElem = document.getElementById(attr.id);
     svgElem.setAttribute("width", "12");
@@ -94,7 +94,7 @@ function draw(vertices, centerType = "all") {
   canvas.style.height = CANVAS_HEIGHT + "px";
 
   // 頂点の描画
-  vertices.forEach(vertex => {
+  vertices.forEach((vertex) => {
     ctx.beginPath();
     ctx.arc(vertex.x, vertex.y, 3, 0, 2 * Math.PI);
     ctx.fillStyle = COLORS.TRIANGLE_EDGE;
@@ -155,24 +155,24 @@ function calcParams(vertices) {
   let c = Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 1 / 2);
   let a = Math.pow(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2), 1 / 2);
   let b = Math.pow(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2), 1 / 2);
-  document.getElementById("a").value = a;
-  document.getElementById("b").value = b;
-  document.getElementById("c").value = c;
+  document.getElementById("a").value = Math.round(a);
+  document.getElementById("b").value = Math.round(b);
+  document.getElementById("c").value = Math.round(c);
 
   // 三角形の面積を算出 (Heron's formula)
   let s = (a + b + c) / 2;
   let S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
 
-  document.getElementById("s").value = s;
-  document.getElementById("S").value = S;
+  document.getElementById("s").value = Math.round(s);
+  document.getElementById("S").value = Math.round(S);
 
   // 内接円の半径を計算
   let r = (2 * S) / (a + b + c);
-  document.getElementById("r").value = r;
+  document.getElementById("r").value = Math.round(r);
 
   // 外接円の半径を計算
   let R = (a * b * c) / (4 * r * s);
-  document.getElementById("R").value = R;
+  document.getElementById("R").value = Math.round(R);
 
   /**
    * 内心 Incenter の位置計算
@@ -183,8 +183,8 @@ function calcParams(vertices) {
     (a * y1 + b * y2 + c * y3) / (a + b + c)
   );
 
-  document.getElementById("x0i").value = incenter.x;
-  document.getElementById("y0i").value = incenter.y;
+  document.getElementById("x0i").value = Math.round(incenter.x);
+  document.getElementById("y0i").value = Math.round(incenter.y);
 
   /**
    * 外心 Circumcenter の位置計算
@@ -200,16 +200,16 @@ function calcParams(vertices) {
       (16 * S * S)
   );
 
-  document.getElementById("x0O").value = circumcenter.x;
-  document.getElementById("y0O").value = circumcenter.y;
+  document.getElementById("x0O").value = Math.round(circumcenter.x);
+  document.getElementById("y0O").value = Math.round(circumcenter.y);
 
   /**
    * 重心 Centroid の位置計算
    */
   let centroid = new Point((x1 + x2 + x3) / 3, (y1 + y2 + y3) / 3);
 
-  document.getElementById("x0g").value = centroid.x;
-  document.getElementById("y0g").value = centroid.y;
+  document.getElementById("x0g").value = Math.round(centroid.x);
+  document.getElementById("y0g").value = Math.round(centroid.y);
 
   /**
    * 垂心 Orthocenter の位置計算
@@ -233,8 +233,8 @@ function calcParams(vertices) {
       (Math.tan(thetaA) + Math.tan(thetaB) + Math.tan(thetaC))
   );
 
-  document.getElementById("x0h").value = orthocenter.x;
-  document.getElementById("y0h").value = orthocenter.y;
+  document.getElementById("x0h").value = Math.round(orthocenter.x);
+  document.getElementById("y0h").value = Math.round(orthocenter.y);
 
   /**
    * 傍心 Excenter の位置計算
@@ -249,9 +249,6 @@ function calcParams(vertices) {
     (b * y2 + c * y3 - a * y1) / (b + c - a)
   );
   excenter.a.radius = S / (s - a);
-  document.getElementById("x0ia").value = excenter.a.x;
-  document.getElementById("y0ia").value = excenter.a.y;
-  document.getElementById("ra").value = excenter.a.radius;
 
   // Excenter 2
   excenter.b = new Point(
@@ -259,9 +256,6 @@ function calcParams(vertices) {
     (-b * y2 + c * y3 + a * y1) / (-b + c + a)
   );
   excenter.b.radius = S / (s - b);
-  document.getElementById("x0ib").value = excenter.b.x;
-  document.getElementById("y0ib").value = excenter.b.y;
-  document.getElementById("rb").value = excenter.b.radius;
 
   // Excenter 3
   excenter.c = new Point(
@@ -269,9 +263,15 @@ function calcParams(vertices) {
     (b * y2 - c * y3 + a * y1) / (b - c + a)
   );
   excenter.c.radius = S / (s - c);
-  document.getElementById("x0ic").value = excenter.c.x;
-  document.getElementById("y0ic").value = excenter.c.y;
-  document.getElementById("rc").value = excenter.c.radius;
+
+  // 傍心の数値データを表示
+  ["a", "b", "c"].map((edge) => {
+    document.getElementById("x0i" + edge).value = Math.round(excenter[edge].x);
+    document.getElementById("y0i" + edge).value = Math.round(excenter[edge].y);
+    document.getElementById("r" + edge).value = Math.round(
+      excenter[edge].radius
+    );
+  });
 
   // ３つの辺の各延長線とCanvasエッジとの交点座標（全部で６点）を格納する変数
   let edgePoints = {};
@@ -324,7 +324,7 @@ function calcParams(vertices) {
     c: c,
     edgePoints: edgePoints,
     midpoints: midpoints,
-    altitudes: altitudes
+    altitudes: altitudes,
   };
 }
 
@@ -408,7 +408,7 @@ function drawIncenter(params, vertices, ctx) {
   ctx.setLineDash([2, 2]);
 
   // Guide line from Vertices to Incenter
-  vertices.forEach(vertex => {
+  vertices.forEach((vertex) => {
     ctx.beginPath();
     ctx.moveTo(params.incenter.x, params.incenter.y);
     ctx.lineTo(vertex.x, vertex.y);
@@ -450,7 +450,7 @@ function drawCircumcenter(params, vertices, ctx) {
   ctx.setLineDash([2, 2]);
 
   // vertical bisectors
-  ["a", "b", "c"].forEach(edgeKey => {
+  ["a", "b", "c"].forEach((edgeKey) => {
     ctx.beginPath();
     ctx.moveTo(params.circumcenter.x, params.circumcenter.y);
     ctx.lineTo(params.midpoints[edgeKey].x, params.midpoints[edgeKey].y);
@@ -471,8 +471,8 @@ function drawCircumcenter(params, vertices, ctx) {
  */
 function drawOrthocenter(params, vertices, ctx) {
   // 垂線の描画。垂心が三角形の内部の場合・外部の場合の双方がある
-  // このため、垂心-頂点の線分と垂線の足-頂点の線分のどちらが長くなるか一定でないため
-  // 両者を描画する
+  // このため、「垂心-頂点の線分」と「垂線の足-頂点の線分」のどちらが長くなるか
+  // は一定でないため両者を描画する
   ["a", "b", "c"].forEach((edgeKey, index) => {
     // line from vertex to orthocenter
     ctx.beginPath();
@@ -572,8 +572,8 @@ function drawExcenter(params, vertices, ctx) {
   [
     { from: "a", to: "b" },
     { from: "b", to: "c" },
-    { from: "c", to: "a" }
-  ].forEach(direction => {
+    { from: "c", to: "a" },
+  ].forEach((direction) => {
     ctx.beginPath();
     ctx.moveTo(
       params.excenter[direction.from].x,
@@ -630,7 +630,7 @@ function drawExtededSide(params, vertices, ctx) {
     typeof params.edgePoints.c !== "undefined"
   ) {
     // 3つの辺の延長線を描画
-    ["a", "b", "c"].forEach(edgeKey => {
+    ["a", "b", "c"].forEach((edgeKey) => {
       ctx.beginPath();
       ctx.moveTo(
         params.edgePoints[edgeKey][0].x,
@@ -667,17 +667,19 @@ function setVertices(triangleType, event) {
       // prettier-ignore
       vertices.push(
         new Point(
-          CANVAS_WIDTH / 4,
-          CANVAS_HEIGHT / 3));
+          Math.round(CANVAS_WIDTH / 4),
+          Math.round(CANVAS_HEIGHT / 3)
+      ));
       // prettier-ignore
       vertices.push(
         new Point(
-          CANVAS_WIDTH / 2,
-          CANVAS_HEIGHT / 3));
+          Math.round(CANVAS_WIDTH / 2),
+          Math.round(CANVAS_HEIGHT / 3)
+      ));
       vertices.push(
         new Point(
-          CANVAS_WIDTH / 4,
-          CANVAS_HEIGHT / 3 + (Math.random() * CANVAS_HEIGHT) / 2
+          Math.round(CANVAS_WIDTH / 4),
+          Math.round(CANVAS_HEIGHT / 3 + (Math.random() * CANVAS_HEIGHT) / 2)
         )
       );
       break;
@@ -687,18 +689,18 @@ function setVertices(triangleType, event) {
       // prettier-ignore
       vertices.push(
         new Point(
-          CANVAS_WIDTH / 2,
-          CANVAS_HEIGHT / 4));
+          Math.round(CANVAS_WIDTH / 2),
+          Math.round(CANVAS_HEIGHT / 4)));
       vertices.push(
         new Point(
-          CANVAS_WIDTH / 2 + 50,
-          CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2)
+          Math.round(CANVAS_WIDTH / 2 + 50),
+          Math.round(CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2))
         )
       );
       vertices.push(
         new Point(
-          CANVAS_WIDTH / 2 - 50,
-          CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2)
+          Math.round(CANVAS_WIDTH / 2 - 50),
+          Math.round(CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2))
         )
       );
       break;
@@ -710,8 +712,8 @@ function setVertices(triangleType, event) {
         vertices.push(
           new Point(
             // 頂点の位置がカンバスの端に行きすぎない範囲とする
-            CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2,
-            CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2
+            Math.round(CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2),
+            Math.round(CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2)
           )
         );
       }
@@ -801,4 +803,8 @@ function redraw(centerType) {
  * .addEventListener("click", (event) => myFunc(arg, event), false)
  *    イベントハンドラに引数が必要で、なおかつイベントが第一引数では困るのでその引数の順序を変える場合
  */
-canvas.addEventListener("click", event => setVertices("clicks", event), false);
+canvas.addEventListener(
+  "click",
+  (event) => setVertices("clicks", event),
+  false
+);
