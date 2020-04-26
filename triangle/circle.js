@@ -130,6 +130,8 @@ function draw(
   // Get parameters based on the 3 vertices (various centers, radius, etc.)
   let params = calcParams(vertices);
 
+  console.log("targets:", targets);
+
   // Conditional rendering
   // "centerType"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
   // prettier-ignore
@@ -805,7 +807,7 @@ function redraw(centerTypes) {
   draw(vertices, centerTypes);
 }
 
-// どの円を表示するかのチェックボックスの状況を取得して返却
+// どの円を表示するかのチェックボックスの状況を取得して再描画
 function updateDisplay() {
   let circlesToDraw = [];
   CENTER_TYPES.forEach((centerType) => {
@@ -822,6 +824,13 @@ CENTER_TYPES.forEach((centerType) => {
   document
     .getElementById(`show${centerType}`)
     .addEventListener("change", updateDisplay);
+});
+
+// Add event listeners to the vertices input
+["x1", "x2", "x3", "y1", "y2", "y3"].forEach((coord) => {
+  document.getElementById(coord).addEventListener("change", function () {
+    redraw();
+  });
 });
 
 /**

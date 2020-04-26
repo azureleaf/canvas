@@ -25,3 +25,12 @@ h2 {
   font-size: 150% !important;
   font-weight: bold !important;
 }
+
+label {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+svg {
+  margin-right: 2px;
+}

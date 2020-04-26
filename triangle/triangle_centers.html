@@ -32,7 +32,7 @@
             <h2>三角形のかたちをきめる</h2>
 
             <form>
-              <p>
+              <p class="pl-4">
                 左のキャンバスの中で三点をクリックするか、下のボタンから生成してください。
               </p>
               <div class="form-group row pl-5">
@@ -52,12 +52,6 @@
                   type="button"
                   value="正三角形を生成"
                   onclick="setVertices('equilateral');"
-                  class="btn btn-primary mx-1"
-                />
-                <input
-                  type="button"
-                  value="以下の頂点座標から生成"
-                  onclick="redraw()"
                   class="btn btn-primary mx-1"
                 />
               </div>
@@ -341,7 +335,7 @@
                   <svg id="sampleExcenterA">
                     <circle />
                   </svg>
-                  傍心ia:</label
+                  傍心a:</label
                 >
                 <div class="col-xs-2">
                   <input
@@ -380,7 +374,7 @@
                   <svg id="sampleExcenterB">
                     <circle />
                   </svg>
-                  傍心ib:</label
+                  傍心b:</label
                 >
                 <div class="col-xs-2">
                   <input
@@ -419,7 +413,7 @@
                   <svg id="sampleExcenterC">
                     <circle />
                   </svg>
-                  傍心ic:</label
+                  傍心c:</label
                 >
                 <div class="col-xs-2">
                   <input
@@ -491,7 +485,7 @@
                   />
                 </div>
 
-                <label for="S">三角形の面積 S:</label>
+                <label for="S">面積 S:</label>
                 <div class="col-xs-2">
                   <input
                     type="text"
