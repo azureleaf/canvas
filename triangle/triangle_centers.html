@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <title>Triangle 5 Centers</title>
     <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body onload="setVertices('random')">
     <div id="wrapper">
@@ -12,13 +16,12 @@
           Canvas not supported.
         </canvas>
       </div>
-
-      <div id="container">
-        <b style="font-size: 110%;">
-          canvas内の任意の三点をクリックしてください！三角形の五心が表示されます。
-        </b>
+      <div id="container" style="font-family: 'Kosugi Maru', sans-serif;">
+        <p style="font-size: 120%;">
+          左のキャンバスの中で三点をクリックしてください！三角形の五心が描画されます。
+        </p>
         <form>
-          <h2>表示設定</h2>
+          <h2>三角形のかたち</h2>
           <div>
             <label for="x1">P1:</label>
             <input
@@ -124,8 +127,14 @@
             onclick="redraw('excenter');"
             class="btn btn-dark m-1"
           />
+          <input
+          type="button"
+          value="五心を全て表示"
+          onclick="redraw('all')"
+          class="btn btn-dark m-1"
+        />
 
-          <h2>計算結果</h2>
+          <h2>この三角形から以下を計算できます</h2>
           <div class="row">
             <label for="a">辺の長さ a:</label>
             <input
@@ -397,27 +406,27 @@
           </div>
         </form>
         <div id="hints">
-          <h2>定義</h2>
+          <h2>五心は次のように定義されます</h2>
           <ul>
-            <li>重心は、各辺の中線（頂点と辺の中点を結ぶ線）の交点である。</li>
-            <li>外心は、各辺の垂直二等分線の交点である。</li>
-            <li>垂心は、各頂点から各辺に下ろした垂線の交点である。</li>
-            <li>内心は、各角の二等分線の交点である。</li>
+            <li>重心は、３つの辺の<b>中線（頂点と辺の中点を結ぶ線）</b>の交点です。</li>
+            <li>外心は、３つの辺の<b>垂直二等分線</b>の交点です。</li>
+            <li>垂心は、３つの<b>頂点から各辺に下ろした垂線</b>の交点です。</li>
+            <li>内心は、３つの<b>角の二等分線</b>の交点です。</li>
             <li>
-              傍心は、あるの角の二等分線と残り2つの角の外角の二等分線の交点である。
+              傍心は、<b>「ある角の二等分線」と「残り2つの角の外角の二等分線」</b>の交点です。
             </li>
           </ul>
-          <h2>性質</h2>
+          <h2>描画を観察すると次のことがわかります</h2>
           <ul>
-            <li>重心は、中線を２：１に分離する。</li>
-            <li>直角三角形の外心は、常に一番長い辺の上に存在する。</li>
-            <li>重心は常に三角形の内部に存在する。</li>
-            <li>外心・垂心・重心は常に一直線上に存在する。（オイラー線）</li>
-            <li>傍心同士を結合すると、必ず頂点上を通る。</li>
-            <li>鈍角三角形の場合、垂心と外心は三角形外部になる。</li>
+            <li>重心は、<b>中線を２：１に分離</b>します。</li>
+            <li>外心・垂心・重心は常に一直線（<b>オイラー線</b>といいます）の上に存在します。</li>
+            <li>直角三角形の外心は、常に一番長い辺の上に存在します。</li>
+            <li>重心は常に三角形の内部に存在します。</li>
+            <li>鈍角三角形では、垂心と外心は三角形外部にあります。</li>
             <li>
-              傍心と向き合う頂点を結んだ三直線は一点で交わり、それは内心と一致する。
+              傍心と向き合う頂点を結んだ三直線は一点で交わり、それは内心と一致します。
             </li>
+            <li>傍心同士を結ぶ直線は、必ず頂点を通ります。</li>
           </ul>
         </div>
       </div>

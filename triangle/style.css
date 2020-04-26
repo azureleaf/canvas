@@ -24,3 +24,11 @@ body,
   display: table;
   clear: both;
 }
+
+li {
+  line-height: 180%;
+}
+
+b {
+  color: blue;
+}
