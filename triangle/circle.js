@@ -163,8 +163,8 @@ function calcParams(vertices) {
   let s = (a + b + c) / 2;
   let S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
 
-  document.getElementById("s").value = Math.round(s);
-  document.getElementById("S").value = Math.round(S);
+  // document.getElementById("s").value = Math.round(s);
+  // document.getElementById("S").value = Math.round(S);
 
   // 内接円の半径を計算
   let r = (2 * S) / (a + b + c);

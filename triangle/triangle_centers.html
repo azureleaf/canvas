@@ -8,6 +8,12 @@
       href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
   </head>
   <body onload="setVertices('random')">
     <div id="wrapper">
@@ -17,159 +23,148 @@
         </canvas>
       </div>
       <div id="container" style="font-family: 'Kosugi Maru', sans-serif;">
-        <p style="font-size: 120%;">
-          左のキャンバスの中で三点をクリックしてください！三角形の五心が描画されます。
-        </p>
-        <form>
-          <h2>三角形のかたち</h2>
-          <div>
-            <label for="x1">P1:</label>
+        
+        <div>
+          <form>
+            <h2>三角形のかたちを決める</h2>
+            <p style="font-size: 120%;">
+              左のキャンバスの中で三点をクリックするか、下のボタンから三角形を自動生成してください。
+            </p>
+            <div class="form-group row">
+              <span>自動生成</span>
+              <input
+                type="button"
+                value="ランダム三角形"
+                onclick="setVertices('random');"
+                class="btn btn-primary mx-1"
+              />
+              <input
+                type="button"
+                value="直角三角形"
+                onclick="setVertices('right');"
+                class="btn btn-primary mx-1"
+              />
+              <input
+                type="button"
+                value="正三角形"
+                onclick="setVertices('equilateral');"
+                class="btn btn-primary mx-1"
+              />
+              <input
+                type="button"
+                value="次の座標数値の三角形"
+                onclick="redraw('all')"
+                class="btn btn-primary mx-1"
+              />
+            </div>
+            <div class="form-group row">
+              <div class="col-xs-2">
+                <label for="x1">頂点A:</label>
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x1"
+                  placeholder="x1"
+                  size="4"
+                  class="form-control"
+                />
+              </div>
+              
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y1"
+                  placeholder="y1"
+                  size="4"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-xs-2">
+                <label for="x2">頂点B:</label>
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x2"
+                  placeholder="x2"
+                  size="4"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y2"
+                  placeholder="y2"
+                  size="4"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-xs-2">
+                <label for="x3">頂点C:</label>
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x3"
+                  placeholder="x3"
+                  size="4"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y3"
+                  placeholder="y3"
+                  size="4"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
             <input
-              type="text"
-              id="x1"
-              placeholder="x1"
-              size="4"
-              class="form-control"
+              type="button"
+              value="内心のみ表示"
+              onclick="redraw('incenter');"
+              class="btn btn-dark m-1"
             />
             <input
-              type="text"
-              id="y1"
-              placeholder="y1"
-              size="4"
-              class="form-control"
+              type="button"
+              value="外心のみ表示"
+              onclick="redraw('circumcenter');"
+              class="btn btn-dark m-1"
+            />
+            <input
+              type="button"
+              value="重心のみ表示"
+              onclick="redraw('centroid');"
+              class="btn btn-dark m-1"
+            />
+            <input
+              type="button"
+              value="垂心のみ表示"
+              class="btn btn-dark m-1"
+              onclick="redraw('orthocenter');"
+            />
+            <input
+              type="button"
+              value="傍心のみ表示"
+              onclick="redraw('excenter');"
+              class="btn btn-dark m-1"
+            />
+            <input
+              type="button"
+              value="五心を全て表示"
+              onclick="redraw('all')"
+              class="btn btn-dark m-1"
             />
 
-            <label for="x2">P2:</label>
-            <input
-              type="text"
-              id="x2"
-              placeholder="x2"
-              size="4"
-              class="form-control"
-            />
-            <input
-              type="text"
-              id="y2"
-              placeholder="y2"
-              size="4"
-              class="form-control"
-            />
+            <h2>この三角形から以下を計算できます</h2>
 
-            <label for="x3">P3:</label>
-            <input
-              type="text"
-              id="x3"
-              placeholder="x3"
-              size="4"
-              class="form-control"
-            />
-            <input
-              type="text"
-              id="y3"
-              placeholder="y3"
-              size="4"
-              class="form-control"
-            />
-          </div>
-
-          <input
-            type="button"
-            value="ランダム三角形"
-            onclick="setVertices('random');"
-            class="btn btn-dark m-1"
-          />
-          <input
-            type="button"
-            value="直角三角形"
-            onclick="setVertices('right');"
-            class="btn btn-dark m-1"
-          />
-          <input
-            type="button"
-            value="正三角形"
-            onclick="setVertices('equilateral');"
-            class="btn btn-dark m-1"
-          />
-          <input
-            type="button"
-            value="上記座標の三角形"
-            onclick="redraw('all')"
-            class="btn btn-dark m-1"
-          />
-          <br />
-          <input
-            type="button"
-            value="内心のみ表示"
-            onclick="redraw('incenter');"
-            class="btn btn-dark m-1"
-          />
-          <input
-            type="button"
-            value="外心のみ表示"
-            onclick="redraw('circumcenter');"
-            class="btn btn-dark m-1"
-          />
-          <input
-            type="button"
-            value="重心のみ表示"
-            onclick="redraw('centroid');"
-            class="btn btn-dark m-1"
-          />
-          <input
-            type="button"
-            value="垂心のみ表示"
-            class="btn btn-dark m-1"
-            onclick="redraw('orthocenter');"
-          />
-          <input
-            type="button"
-            value="傍心のみ表示"
-            onclick="redraw('excenter');"
-            class="btn btn-dark m-1"
-          />
-          <input
-          type="button"
-          value="五心を全て表示"
-          onclick="redraw('all')"
-          class="btn btn-dark m-1"
-        />
-
-          <h2>この三角形から以下を計算できます</h2>
-          <div class="row">
-            <label for="a">辺の長さ a:</label>
-            <input
-              type="text"
-              id="a"
-              placeholder="a"
-              size="4"
-              class="form-control"
-              readonly
-              disabled
-            />
-
-            <label for="b">b:</label>
-            <input
-              type="text"
-              id="b"
-              placeholder="b"
-              size="4"
-              class="form-control"
-              disabled
-            />
-
-            <label for="c">c:</label>
-            <input
-              type="text"
-              id="c"
-              placeholder="c"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
-
-          <div class="row">
-            <label for="s">s = (a+b+c)/2</label>
+            <!-- <div class="row">
+            <label for="s">s=(a+b+c)/2</label>
             <input
               type="text"
               id="s"
@@ -188,249 +183,306 @@
               class="form-control"
               disabled
             />
-          </div>
-          <div class="row">
-            <label for="r">内接円半径r:</label>
-            <input
-              type="text"
-              id="r"
-              placeholder="r"
-              size="4"
-              class="form-control"
-              disabled
-            />
+          </div> -->
 
-            <label for="R">外接円半径R:</label>
-            <input
-              type="text"
-              id="R"
-              placeholder="R"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
+            <div class="row">
+              <label for="x0i">
+                <svg id="sampleIncenter">
+                  <circle />
+                </svg>
+                内心I:
+              </label>
 
-          <div class="row">
-            <label for="x0i">
-              <svg id="sampleIncenter">
-                <circle />
-              </svg>
-              内心I:
-            </label>
+              <input
+                type="text"
+                id="x0i"
+                placeholder="x0i"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <input
+                type="text"
+                id="y0i"
+                placeholder="y0i"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
+            <div class="row">
+              <label for="x0O">
+                <svg id="sampleCircumcenter">
+                  <circle />
+                </svg>
+                外心O:
+              </label>
+              <input
+                type="text"
+                id="x0O"
+                placeholder="x0O"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <input
+                type="text"
+                id="y0O"
+                placeholder="y0O"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
 
-            <input
-              type="text"
-              id="x0i"
-              placeholder="x0i"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <input
-              type="text"
-              id="y0i"
-              placeholder="y0i"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
-          <div class="row">
-            <label for="x0O">
-              <svg id="sampleCircumcenter">
-                <circle />
-              </svg>
-              外心O:
-            </label>
-            <input
-              type="text"
-              id="x0O"
-              placeholder="x0O"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <input
-              type="text"
-              id="y0O"
-              placeholder="y0O"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
+            <div class="row">
+              <label for="x0g">
+                <svg id="sampleCentroid">
+                  <circle />
+                </svg>
+                重心G:</label
+              >
+              <input
+                type="text"
+                id="x0g"
+                placeholder="x0g"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <input
+                type="text"
+                id="y0g"
+                placeholder="y0g"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
 
-          <div class="row">
-            <label for="x0g">
-              <svg id="sampleCentroid">
-                <circle />
-              </svg>
-              重心G:</label
-            >
-            <input
-              type="text"
-              id="x0g"
-              placeholder="x0g"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <input
-              type="text"
-              id="y0g"
-              placeholder="y0g"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
+            <div class="row">
+              <label for="x0h">
+                <svg id="sampleOrthocenter">
+                  <circle />
+                </svg>
+                垂心H:</label
+              >
+              <input
+                type="text"
+                id="x0h"
+                placeholder="x0h"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <input
+                type="text"
+                id="y0h"
+                placeholder="y0h"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
 
-          <div class="row">
-            <label for="x0h">
-              <svg id="sampleOrthocenter">
-                <circle />
-              </svg>
-              垂心H:</label
-            >
-            <input
-              type="text"
-              id="x0h"
-              placeholder="x0h"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <input
-              type="text"
-              id="y0h"
-              placeholder="y0h"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
+            <div class="row">
+              <label for="x0ia">
+                <svg id="sampleExcenter">
+                  <circle />
+                </svg>
+                傍心ia:</label
+              >
+              <input
+                type="text"
+                id="x0ia"
+                placeholder="x0ia"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <input
+                type="text"
+                id="y0ia"
+                placeholder="y0ia"
+                size="4"
+                class="form-control"
+                disabled
+              />
 
-          <div class="row">
-            <label for="x0ia">
-              <svg id="sampleExcenter">
-                <circle />
-              </svg>
-              傍心ia:</label
-            >
-            <input
-              type="text"
-              id="x0ia"
-              placeholder="x0ia"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <input
-              type="text"
-              id="y0ia"
-              placeholder="y0ia"
-              size="4"
-              class="form-control"
-              disabled
-            />
+              <label for="x0ib">ib:</label>
 
-            <label for="x0ib">ib:</label>
+              <input
+                type="text"
+                id="x0ib"
+                placeholder="x0ib"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <input
+                type="text"
+                id="y0ib"
+                placeholder="y0ib"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <label for="x0ic">ic:</label>
 
-            <input
-              type="text"
-              id="x0ib"
-              placeholder="x0ib"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <input
-              type="text"
-              id="y0ib"
-              placeholder="y0ib"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <label for="x0ic">ic:</label>
+              <input
+                type="text"
+                id="x0ic"
+                placeholder="x0ic"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <input
+                type="text"
+                id="y0ic"
+                placeholder="y0ic"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
 
-            <input
-              type="text"
-              id="x0ic"
-              placeholder="x0ic"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <input
-              type="text"
-              id="y0ic"
-              placeholder="y0ic"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
-          <div class="row">
-            <label for="ra">傍心半径ra:</label>
+            <div class="row">
+              <label for="a">辺の長さ a:</label>
+              <input
+                type="text"
+                id="a"
+                placeholder="a"
+                size="4"
+                class="form-control"
+                readonly
+                disabled
+              />
 
-            <input
-              type="text"
-              id="ra"
-              placeholder="ra"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <label for="rb">rb:</label>
+              <label for="b">b:</label>
+              <input
+                type="text"
+                id="b"
+                placeholder="b"
+                size="4"
+                class="form-control"
+                disabled
+              />
 
-            <input
-              type="text"
-              id="rb"
-              placeholder="rb"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <label for="rc">rc:</label>
+              <label for="c">c:</label>
+              <input
+                type="text"
+                id="c"
+                placeholder="c"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
 
-            <input
-              type="text"
-              id="rc"
-              placeholder="rc"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div>
-        </form>
+            <div class="row">
+              <label for="r">内接円の半径　r:</label>
+              <input
+                type="text"
+                id="r"
+                placeholder="r"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
+            <div>
+              <label for="R">外接円の半径　R:</label>
+              <input
+                type="text"
+                id="R"
+                placeholder="R"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
+
+            <div class="row">
+              <label for="ra">傍心円の半径　ra:</label>
+
+              <input
+                type="text"
+                id="ra"
+                placeholder="ra"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <label for="rb">rb:</label>
+
+              <input
+                type="text"
+                id="rb"
+                placeholder="rb"
+                size="4"
+                class="form-control"
+                disabled
+              />
+              <label for="rc">rc:</label>
+
+              <input
+                type="text"
+                id="rc"
+                placeholder="rc"
+                size="4"
+                class="form-control"
+                disabled
+              />
+            </div>
+          </form>
+        </div>
         <div id="hints">
           <h2>五心は次のように定義されます</h2>
           <ul>
-            <li>重心は、３つの辺の<b>中線（頂点と辺の中点を結ぶ線）</b>の交点です。</li>
+            <li>
+              重心は、３つの辺の<b>中線（頂点と辺の中点を結ぶ線）</b>の交点です。
+            </li>
             <li>外心は、３つの辺の<b>垂直二等分線</b>の交点です。</li>
             <li>垂心は、３つの<b>頂点から各辺に下ろした垂線</b>の交点です。</li>
             <li>内心は、３つの<b>角の二等分線</b>の交点です。</li>
             <li>
-              傍心は、<b>「ある角の二等分線」と「残り2つの角の外角の二等分線」</b>の交点です。
+              傍心は、<b>「ある角の二等分線」と「残り２つの角の外角の二等分線」</b>の交点です。
             </li>
           </ul>
           <h2>描画を観察すると次のことがわかります</h2>
           <ul>
             <li>重心は、<b>中線を２：１に分離</b>します。</li>
-            <li>外心・垂心・重心は常に一直線（<b>オイラー線</b>といいます）の上に存在します。</li>
+            <li>
+              外心・垂心・重心は常に一直線（<b>オイラー線</b>といいます）の上に存在します。
+            </li>
             <li>直角三角形の外心は、常に一番長い辺の上に存在します。</li>
-            <li>重心は常に三角形の内部に存在します。</li>
+            <li>
+              重心と内心は常に三角形の内部に、傍心は常に三角形の外部に存在します。
+            </li>
             <li>鈍角三角形では、垂心と外心は三角形外部にあります。</li>
             <li>
-              傍心と向き合う頂点を結んだ三直線は一点で交わり、それは内心と一致します。
+              傍心、傍心と向き合う頂点、内心の３つは一直線上にあります。
             </li>
             <li>傍心同士を結ぶ直線は、必ず頂点を通ります。</li>
           </ul>
         </div>
       </div>
-
+      <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"
+      ></script>
+      <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"
+      ></script>
+      <script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"
+      ></script>
       <script src="./circle.js"></script>
     </div>
   </body>
