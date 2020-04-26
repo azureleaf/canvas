@@ -71,9 +71,12 @@ function setStyle() {
  * 三角形の三点の座標を受け取り、描画する。
  *
  * @param {Point[]} vertices ３つの頂点の座標のオブジェクト（Point Class）
- * @param {string} centerType "incenter", "excenter", "all"など描画する円の指定
+ * @param {string[]} targets "incenter", "excenter"など描画すべき円の種別
  */
-function draw(vertices, centerType = "all") {
+function draw(
+  vertices,
+  targets = ["incenter", "excenter", "centroid", "circumcenter", "orthocenter"]
+) {
   if (typeof canvas.getContext === "undefined") {
     return;
   }
@@ -120,16 +123,11 @@ function draw(vertices, centerType = "all") {
   // Conditional rendering
   // "centerType"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
   // prettier-ignore
-  if (centerType == "incenter" || centerType == "all")
-    drawIncenter(params, vertices, ctx);
-  if (centerType == "circumcenter" || centerType == "all")
-    drawCircumcenter(params, vertices, ctx);
-  if (centerType == "centroid" || centerType == "all")
-    drawCentroid(params, vertices, ctx);
-  if (centerType == "excenter" || centerType == "all")
-    drawExcenter(params, vertices, ctx);
-  if (centerType == "orthocenter" || centerType == "all")
-    drawOrthocenter(params, vertices, ctx);
+  if (targets.includes("incenter")) drawIncenter(params, vertices, ctx);
+  if (targets.includes("circumcenter")) drawCircumcenter(params, vertices, ctx);
+  if (targets.includes("centroid")) drawCentroid(params, vertices, ctx);
+  if (targets.includes("excenter")) drawExcenter(params, vertices, ctx);
+  if (targets.includes("orthocenter")) drawOrthocenter(params, vertices, ctx);
 
   // オイラー線は常に表示する
   drawEulerLine(params, vertices, ctx);
@@ -761,7 +759,7 @@ function setVertices(triangleType, event) {
  * 現在の三角形座標情報を維持したまま、五心のうち指定されたものだけを再描画する
  * HTML DOMのボタンから呼び出される
  *
- * @param {string} centerType "incenter", "excenter"のような、描画したい五心の指定（省略可）
+ * @param {string} centerType "incenter", "excenter"のような、描画したい五心の指定（省略時は五心すべて描写）
  */
 // eslint-disable-next-line no-unused-vars
 function redraw(centerType) {
@@ -787,7 +785,13 @@ function redraw(centerType) {
     )
   );
 
-  draw(vertices, centerType);
+  if (centerType == undefined) {
+    draw(vertices); // 五心すべて
+    return;
+  }
+  let targets = [];
+  targets.push(centerType);
+  draw(vertices, targets);
 }
 
 /**

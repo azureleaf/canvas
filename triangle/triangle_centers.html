@@ -32,26 +32,26 @@
             <div class="form-group row">
               <input
                 type="button"
-                value="ランダム三角形"
+                value="ランダムに生成"
                 onclick="setVertices('random');"
                 class="btn btn-primary mx-1"
               />
               <input
                 type="button"
-                value="直角三角形"
+                value="直角三角形を生成"
                 onclick="setVertices('right');"
                 class="btn btn-primary mx-1"
               />
               <input
                 type="button"
-                value="正三角形"
+                value="正三角形を生成"
                 onclick="setVertices('equilateral');"
                 class="btn btn-primary mx-1"
               />
               <input
                 type="button"
-                value="次の頂点座標の三角形"
-                onclick="redraw('all')"
+                value="下の頂点座標で生成"
+                onclick="redraw()"
                 class="btn btn-primary mx-1"
               />
             </div>
@@ -155,7 +155,7 @@
             <input
               type="button"
               value="五心を全て表示"
-              onclick="redraw('all')"
+              onclick="redraw()"
               class="btn btn-dark m-1"
             />
 
