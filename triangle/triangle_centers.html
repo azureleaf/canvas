@@ -50,7 +50,7 @@
               />
               <input
                 type="button"
-                value="下の頂点座標で生成"
+                value="以下の頂点座標から生成"
                 onclick="redraw()"
                 class="btn btn-primary mx-1"
               />
@@ -123,41 +123,45 @@
             </div>
 
             <input
-              type="button"
-              value="内心のみ表示"
-              onclick="redraw('incenter');"
-              class="btn btn-dark m-1"
+              type="checkbox"
+              id="showIncenter"
+              name="showIncenter"
+              checked
             />
+            <label for="showIncenter">内心を表示</label>
+
             <input
-              type="button"
-              value="外心のみ表示"
-              onclick="redraw('circumcenter');"
-              class="btn btn-dark m-1"
+              type="checkbox"
+              id="showCircumcenter"
+              name="showCircumcenter"
+              checked
             />
+            <label for="showCircumcenter">外心を表示</label>
+
             <input
-              type="button"
-              value="重心のみ表示"
-              onclick="redraw('centroid');"
-              class="btn btn-dark m-1"
+              type="checkbox"
+              id="showCentroid"
+              name="showCentroid"
+              checked
             />
+            <label for="showCentroid">重心を表示</label>
+
             <input
-              type="button"
-              value="垂心のみ表示"
-              class="btn btn-dark m-1"
-              onclick="redraw('orthocenter');"
+              type="checkbox"
+              id="showOrthocenter"
+              name="showOrthocenter"
+              checked
             />
+            <label for="showOrthocenter">垂心を表示</label>
+
             <input
-              type="button"
-              value="傍心のみ表示"
-              onclick="redraw('excenter');"
-              class="btn btn-dark m-1"
+              type="checkbox"
+              id="showExcenter"
+              name="showExcenter"
+              checked
             />
-            <input
-              type="button"
-              value="五心を全て表示"
-              onclick="redraw()"
-              class="btn btn-dark m-1"
-            />
+            <label for="showExcenter">傍心を表示</label>
+
 
             <h2>この三角形の性質は次のように計算されます</h2>
 

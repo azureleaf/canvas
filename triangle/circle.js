@@ -13,7 +13,7 @@ let clickPoints = [];
 
 // Set canvas size; maximize the canvas height to the window height
 const CANVAS_BORDER_WIDTH = 4;
-const CANVAS_WIDTH = 750;
+const CANVAS_WIDTH = window.innerWidth * 0.5;
 const CANVAS_HEIGHT = window.innerHeight - CANVAS_BORDER_WIDTH * 2;
 
 // Colors for paths
@@ -28,6 +28,14 @@ const COLORS = {
   CIRCUMCENTER: "orangered",
   EULER_LINE: "black",
 };
+
+const CENTER_TYPES = [
+  "Incenter",
+  "Circumcenter",
+  "Centroid",
+  "Orthocenter",
+  "Excenter",
+];
 
 // Change styles in the HTML DOM
 setStyle();
@@ -762,7 +770,7 @@ function setVertices(triangleType, event) {
  * @param {string} centerType "incenter", "excenter"のような、描画したい五心の指定（省略時は五心すべて描写）
  */
 // eslint-disable-next-line no-unused-vars
-function redraw(centerType) {
+function redraw(centerTypes) {
   let vertices = [];
 
   // HTMLの入力欄から三角形頂点の座標を取得
@@ -785,14 +793,31 @@ function redraw(centerType) {
     )
   );
 
-  if (centerType == undefined) {
+  if (centerTypes == undefined) {
     draw(vertices); // 五心すべて
     return;
   }
-  let targets = [];
-  targets.push(centerType);
-  draw(vertices, targets);
+  draw(vertices, centerTypes);
 }
+
+// どの円を表示するかのチェックボックスの状況を取得して返却
+function updateDisplay() {
+  let circlesToDraw = [];
+  CENTER_TYPES.forEach((centerType) => {
+    if (document.getElementById(`show${centerType}`).checked) {
+      circlesToDraw.push(centerType.toLocaleLowerCase());
+    }
+  });
+  console.log(circlesToDraw);
+  redraw(circlesToDraw);
+}
+
+// Add event listeners to the check boxes of circle display
+CENTER_TYPES.forEach((centerType) => {
+  document
+    .getElementById(`show${centerType}`)
+    .addEventListener("change", updateDisplay);
+});
 
 /**
  * 技術メモ：Canvasへのクリックイベントに対するリスナーの書き方３通り
