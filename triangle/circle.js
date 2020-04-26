@@ -108,14 +108,6 @@ function draw(
   canvas.style.width = CANVAS_WIDTH + "px";
   canvas.style.height = CANVAS_HEIGHT + "px";
 
-  // 頂点の描画
-  vertices.forEach((vertex) => {
-    ctx.beginPath();
-    ctx.arc(vertex.x, vertex.y, 3, 0, 2 * Math.PI);
-    ctx.fillStyle = COLORS.TRIANGLE_EDGE;
-    ctx.fill();
-  });
-
   // 三角形の描画
   ctx.beginPath();
   ctx.moveTo(vertices[0].x, vertices[0].y);
@@ -126,6 +118,20 @@ function draw(
   ctx.stroke();
   ctx.fillStyle = COLORS.TRIANGLE_FILL;
   ctx.fill();
+
+  // 頂点の描画
+  vertices.forEach((vertex, index) => {
+    ctx.beginPath();
+    ctx.arc(vertex.x, vertex.y, 3, 0, 2 * Math.PI);
+    ctx.fillStyle = COLORS.TRIANGLE_EDGE;
+    ctx.fill();
+
+    // 頂点ラベル
+    ctx.font = "bold 20px serif";
+    ctx.fillStyle = COLORS.TRIANGLE_EDGE;
+    ctx.textAlign = "center";
+    ctx.fillText(["A", "B", "C"][index], vertex.x, vertex.y - 10);
+  });
 
   // Get parameters based on the 3 vertices (various centers, radius, etc.)
   let params = calcParams(vertices);
