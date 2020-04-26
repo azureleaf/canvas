@@ -17,6 +17,7 @@ body,
 #container {
   margin-top: 20px;
   margin-left: 20px;
+  font-family: "Kosugi Maru", sans-serif;
 }
 
 #wrapper {
@@ -30,5 +31,15 @@ li {
 }
 
 b {
-  color: blue;
+  color: red;
+}
+
+h1 {
+  font-size: 200% !important;
+  font-weight: bold !important;
+}
+
+h2 {
+  font-size: 170% !important;
+  font-weight: bold !important;
 }

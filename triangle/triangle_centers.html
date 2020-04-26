@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>Triangle 5 Centers</title>
+    <title>三角形の五心をみてみよう</title>
     <link rel="stylesheet" href="./style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap"
@@ -22,16 +22,14 @@
           Canvas not supported.
         </canvas>
       </div>
-      <div id="container" style="font-family: 'Kosugi Maru', sans-serif;">
-        
+      <div id="container">
         <div>
           <form>
-            <h2>三角形のかたちを決める</h2>
-            <p style="font-size: 120%;">
-              左のキャンバスの中で三点をクリックするか、下のボタンから三角形を自動生成してください。
+            <h2>三角形のかたちを決めてください</h2>
+            <p>
+              左のキャンバスの中で三点をクリックするか、下のボタンから生成してください。
             </p>
             <div class="form-group row">
-              <span>自動生成</span>
               <input
                 type="button"
                 value="ランダム三角形"
@@ -52,7 +50,7 @@
               />
               <input
                 type="button"
-                value="次の座標数値の三角形"
+                value="次の頂点座標の三角形"
                 onclick="redraw('all')"
                 class="btn btn-primary mx-1"
               />
@@ -70,7 +68,7 @@
                   class="form-control"
                 />
               </div>
-              
+
               <div class="col-xs-2">
                 <input
                   type="text"
@@ -161,78 +159,89 @@
               class="btn btn-dark m-1"
             />
 
-            <h2>この三角形から以下を計算できます</h2>
-
-            <!-- <div class="row">
-            <label for="s">s=(a+b+c)/2</label>
-            <input
-              type="text"
-              id="s"
-              placeholder="s"
-              size="4"
-              class="form-control"
-              disabled
-            />
-            <label for="S">面積 S:</label>
-
-            <input
-              type="text"
-              id="S"
-              placeholder="S"
-              size="4"
-              class="form-control"
-              disabled
-            />
-          </div> -->
+            <h2>この三角形の性質は次のように計算されます</h2>
 
             <div class="row">
-              <label for="x0i">
-                <svg id="sampleIncenter">
-                  <circle />
-                </svg>
-                内心I:
-              </label>
-
-              <input
-                type="text"
-                id="x0i"
-                placeholder="x0i"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <input
-                type="text"
-                id="y0i"
-                placeholder="y0i"
-                size="4"
-                class="form-control"
-                disabled
-              />
+              <div class="col-xs-2">
+                <label for="x0i">
+                  <svg id="sampleIncenter">
+                    <circle />
+                  </svg>
+                  内心I:
+                </label>
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x0i"
+                  placeholder="x0i"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y0i"
+                  placeholder="y0i"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <label for="r">内接円の半径　r:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="r"
+                  placeholder="r"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
             </div>
             <div class="row">
-              <label for="x0O">
-                <svg id="sampleCircumcenter">
-                  <circle />
-                </svg>
-                外心O:
-              </label>
-              <input
-                type="text"
-                id="x0O"
-                placeholder="x0O"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <input
-                type="text"
-                id="y0O"
-                placeholder="y0O"
-                size="4"
-                class="form-control"
-                disabled
-              />
+              <div class="col-xs-2">
+                <label for="x0O">
+                  <svg id="sampleCircumcenter">
+                    <circle />
+                  </svg>
+                  外心O:
+                </label>
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x0O"
+                  placeholder="x0O"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y0O"
+                  placeholder="y0O"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <label for="R">外接円の半径　R:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="R"
+                  placeholder="R"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
             </div>
 
             <div class="row">
@@ -242,22 +251,26 @@
                 </svg>
                 重心G:</label
               >
-              <input
-                type="text"
-                id="x0g"
-                placeholder="x0g"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <input
-                type="text"
-                id="y0g"
-                placeholder="y0g"
-                size="4"
-                class="form-control"
-                disabled
-              />
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x0g"
+                  placeholder="x0g"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y0g"
+                  placeholder="y0g"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
             </div>
 
             <div class="row">
@@ -267,178 +280,198 @@
                 </svg>
                 垂心H:</label
               >
-              <input
-                type="text"
-                id="x0h"
-                placeholder="x0h"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <input
-                type="text"
-                id="y0h"
-                placeholder="y0h"
-                size="4"
-                class="form-control"
-                disabled
-              />
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x0h"
+                  placeholder="x0h"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y0h"
+                  placeholder="y0h"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
             </div>
 
             <div class="row">
               <label for="x0ia">
-                <svg id="sampleExcenter">
+                <svg id="sampleExcenterA">
                   <circle />
                 </svg>
                 傍心ia:</label
               >
-              <input
-                type="text"
-                id="x0ia"
-                placeholder="x0ia"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <input
-                type="text"
-                id="y0ia"
-                placeholder="y0ia"
-                size="4"
-                class="form-control"
-                disabled
-              />
-
-              <label for="x0ib">ib:</label>
-
-              <input
-                type="text"
-                id="x0ib"
-                placeholder="x0ib"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <input
-                type="text"
-                id="y0ib"
-                placeholder="y0ib"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <label for="x0ic">ic:</label>
-
-              <input
-                type="text"
-                id="x0ic"
-                placeholder="x0ic"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <input
-                type="text"
-                id="y0ic"
-                placeholder="y0ic"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-
-            <div class="row">
-              <label for="a">辺の長さ a:</label>
-              <input
-                type="text"
-                id="a"
-                placeholder="a"
-                size="4"
-                class="form-control"
-                readonly
-                disabled
-              />
-
-              <label for="b">b:</label>
-              <input
-                type="text"
-                id="b"
-                placeholder="b"
-                size="4"
-                class="form-control"
-                disabled
-              />
-
-              <label for="c">c:</label>
-              <input
-                type="text"
-                id="c"
-                placeholder="c"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-
-            <div class="row">
-              <label for="r">内接円の半径　r:</label>
-              <input
-                type="text"
-                id="r"
-                placeholder="r"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-            <div>
-              <label for="R">外接円の半径　R:</label>
-              <input
-                type="text"
-                id="R"
-                placeholder="R"
-                size="4"
-                class="form-control"
-                disabled
-              />
-            </div>
-
-            <div class="row">
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x0ia"
+                  placeholder="x0ia"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y0ia"
+                  placeholder="y0ia"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
               <label for="ra">傍心円の半径　ra:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="ra"
+                  placeholder="ra"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="row">
+              <label for="x0ib">
+                <svg id="sampleExcenterB">
+                  <circle />
+                </svg>
+                傍心ib:</label
+              >
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x0ib"
+                  placeholder="x0ib"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y0ib"
+                  placeholder="y0ib"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <label for="rb">傍心円の半径　rb:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="rb"
+                  placeholder="rb"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="row">
+              <label for="x0ic">
+                <svg id="sampleExcenterC">
+                  <circle />
+                </svg>
+                傍心ic:</label
+              >
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="x0ic"
+                  placeholder="x0ic"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="y0ic"
+                  placeholder="y0ic"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <label for="rc">傍心円の半径　rc:</label>
 
-              <input
-                type="text"
-                id="ra"
-                placeholder="ra"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <label for="rb">rb:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="rc"
+                  placeholder="rc"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+            </div>
 
-              <input
-                type="text"
-                id="rb"
-                placeholder="rb"
-                size="4"
-                class="form-control"
-                disabled
-              />
-              <label for="rc">rc:</label>
-
-              <input
-                type="text"
-                id="rc"
-                placeholder="rc"
-                size="4"
-                class="form-control"
-                disabled
-              />
+            <div class="row">
+              <label for="a">辺BCの長さ:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="a"
+                  placeholder="a"
+                  size="4"
+                  class="form-control"
+                  readonly
+                  disabled
+                />
+              </div>
+              <label for="b">辺CAの長さ:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="b"
+                  placeholder="b"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <label for="c">辺ABの長さ:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="c"
+                  placeholder="c"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <label for="S">三角形の面積 S:</label>
+              <div class="col-xs-2">
+                <input
+                  type="text"
+                  id="S"
+                  placeholder="S"
+                  size="4"
+                  class="form-control"
+                  disabled
+                />
+              </div>
             </div>
           </form>
         </div>
         <div id="hints">
-          <h2>五心は次のように定義されます</h2>
+          <h2>五心の定義は次のとおりです</h2>
           <ul>
             <li>
               重心は、３つの辺の<b>中線（頂点と辺の中点を結ぶ線）</b>の交点です。
@@ -454,9 +487,9 @@
           <ul>
             <li>重心は、<b>中線を２：１に分離</b>します。</li>
             <li>
-              外心・垂心・重心は常に一直線（<b>オイラー線</b>といいます）の上に存在します。
+              外心・垂心・重心は常に一直線（<b>オイラー線</b>といいます）上にあります。
             </li>
-            <li>直角三角形の外心は、常に一番長い辺の上に存在します。</li>
+            <li>直角三角形の外心は、常に斜辺の上になります。</li>
             <li>
               重心と内心は常に三角形の内部に、傍心は常に三角形の外部に存在します。
             </li>

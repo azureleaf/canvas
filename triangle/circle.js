@@ -47,7 +47,9 @@ function setStyle() {
   [
     { id: "sampleIncenter", color: COLORS.INCENTER },
     { id: "sampleCircumcenter", color: COLORS.CIRCUMCENTER },
-    { id: "sampleExcenter", color: COLORS.EXCENTER_LINE },
+    { id: "sampleExcenterA", color: COLORS.EXCENTER_LINE },
+    { id: "sampleExcenterB", color: COLORS.EXCENTER_LINE },
+    { id: "sampleExcenterC", color: COLORS.EXCENTER_LINE },
     { id: "sampleOrthocenter", color: COLORS.ORTHOCENTER },
     { id: "sampleCentroid", color: COLORS.CENTROID },
   ].forEach((attr) => {
@@ -163,8 +165,7 @@ function calcParams(vertices) {
   let s = (a + b + c) / 2;
   let S = Math.pow(s * (s - a) * (s - b) * (s - c), 1 / 2);
 
-  // document.getElementById("s").value = Math.round(s);
-  // document.getElementById("S").value = Math.round(S);
+  document.getElementById("S").value = Math.round(S);
 
   // 内接円の半径を計算
   let r = (2 * S) / (a + b + c);
