@@ -1,29 +1,10 @@
-#container,
-#canvas_wrapper {
-  float: left;
-}
-
 canvas {
   border-style: solid;
   border-color: #bbbbbb;
 }
 
-body,
 #wrapper {
-  margin: 0;
-  padding: 0;
-}
-
-#container {
-  margin-top: 20px;
-  margin-left: 20px;
   font-family: "Kosugi Maru", sans-serif;
-}
-
-#wrapper {
-  content: "";
-  display: table;
-  clear: both;
 }
 
 li {
@@ -40,6 +21,7 @@ h1 {
 }
 
 h2 {
-  font-size: 170% !important;
+  margin-top: 15px !important;
+  font-size: 150% !important;
   font-weight: bold !important;
 }

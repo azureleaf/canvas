@@ -14,7 +14,7 @@ let clickPoints = [];
 // Set canvas size; maximize the canvas height to the window height
 const CANVAS_BORDER_WIDTH = 4;
 const CANVAS_WIDTH = window.innerWidth * 0.5;
-const CANVAS_HEIGHT = window.innerHeight - CANVAS_BORDER_WIDTH * 2;
+const CANVAS_HEIGHT = window.innerHeight;
 
 // Colors for paths
 const COLORS = {
@@ -45,11 +45,13 @@ setStyle();
  */
 function setStyle() {
   // Set attributes of <canvas> in the DOM
-  var canvasElem = document.getElementsByTagName("canvas")[0];
+  var canvasElem = document.getElementById("canvasArea");
   canvasElem.setAttribute(
     "style",
     "border-width:" + CANVAS_BORDER_WIDTH + "px;"
   );
+  console.log(canvasElem.offsetLeft);
+  console.log(canvasElem.offsetTop);
 
   // 色見本部分のスタイル設定
   [
@@ -728,6 +730,9 @@ function setVertices(triangleType, event) {
 
     // ユーザーからの自由三点クリックによる三角形
     case "clicks":
+      // console.debug("click pos x:", event.clientX, ", offset:", canvas.offsetLeft);
+      // console.debug("click pos y:", event.clientY, "offset:", canvas.offsetTop);
+
       clickPoints.push(
         // prettier-ignore
         new Point(
