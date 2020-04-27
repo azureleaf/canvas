@@ -1,5 +1,26 @@
 <html>
   <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>javascriptで描くフラクタル</title>
     <style>
@@ -9,7 +30,105 @@
     </style>
   </head>
   <body>
-    <p><canvas id="drawingCanvas" width="800" height="600"></canvas></p>
+    <div id="app">
+      <v-app>
+        <v-container>
+          <div class="row">
+            <div class="col">
+              <p>
+                <canvas id="drawingCanvas" width="800" height="600"></canvas>
+              </p>
+            </div>
+            <div class="col">
+              <v-card outlined class="ma-2">
+                <v-card-title>設定</v-card-title>
+                <v-card-text>
+                  <v-subheader class="pl-0">開始色</v-subheader>
+                  <v-color-picker
+                    v-model="color1"
+                    @change="updateColor1()"
+                  ></v-color-picker>
+                  <v-subheader class="pl-0">終了色</v-subheader>
+                  <v-color-picker
+                    v-model="color2"
+                    @change="updateColor2()"
+                  ></v-color-picker>
+                  <v-subheader class="pl-0">繰り返し数</v-subheader>
+                  <v-slider v-model="iteration" min="1" max="20" thumb-label>
+                    <template v-slot:append>
+                      <v-text-field
+                        v-model="iteration"
+                        class="mt-0 pt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                        style="width: 60px;"
+                      ></v-text-field>
+                    </template>
+                  </v-slider>
+
+                  <v-subheader class="pl-0">角度変化量</v-subheader>
+                  <v-slider v-model="angleDiff" min="0" max="90" thumb-label>
+                    <template v-slot:append>
+                      <v-text-field
+                        v-model="angleDiff"
+                        class="mt-0 pt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                        style="width: 60px;"
+                      ></v-text-field>
+                    </template>
+                  </v-slider>
+                  <v-subheader class="pl-0">長さの短縮</v-subheader>
+                  <v-slider v-model="lengthDiff" min="0" max="100" thumb-label>
+                    <template v-slot:append>
+                      <v-text-field
+                        v-model="lengthDiff"
+                        class="mt-0 pt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                        style="width: 60px;"
+                      ></v-text-field>
+                    </template>
+                  </v-slider>
+                </v-card-text>
+              </v-card>
+            </div>
+          </div>
+        </v-container>
+      </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="./fractal.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data: function () {
+          return {
+            color1: "",
+            color2: "",
+            iteration: "",
+            angleDiff: "",
+            lengthDiff: "",
+          };
+        },
+        method: {
+          updateColor1: function () {
+            console.log(this.color1);
+          },
+          updateColor2: function () {
+            console.log(this.color2);
+          },
+        },
+        mounted: function () {
+          console.log("mounted!");
+          draw();
+        },
+      });
+    </script>
   </body>
 </html>
