@@ -1,22 +1,36 @@
-const draw = function () {
+/* eslint-disable-next-line no-unused-vars */
+const draw = function (
+  color1str = "#FFFFFFFF",
+  color2str = "#FFFFFFFF",
+  iteration = 10,
+  lengthDiff = 80,
+  angleDiff = 15,
+  lengthInit = 100
+) {
   let drawingCanvas = document.getElementById("drawingCanvas");
   let ctx = drawingCanvas.getContext("2d");
-  const BRANCH_DEPTH = 12; // 枝分かれの深さ
+  ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
 
   // 色情報をRGBで管理するクラス
   class Color {
-    constructor(r, g, b) {
+    constructor(r, g, b, a = 1.0) {
       this.r = r;
       this.g = g;
       this.b = b;
+      this.a = a;
     }
     // 格納しているRGB値をJS仕様の文字列表現として返す
     stringify() {
-      return "rgb(" + this.r + "," + this.g + "," + this.b + ")";
+      return `rgba(${this.r},${this.g},${this.b},${this.a})`;
     }
   }
 
-  drawTree(ctx, BRANCH_DEPTH, 400, 700, 130, 90);
+  // 根幹部と末端部の色指定
+  const color1 = parseRGBAStr(color1str);
+  const color2 = parseRGBAStr(color2str);
+
+  // 枝の初期値
+  drawTree(ctx, iteration, 400, 600, lengthInit, 90);
 
   /**
    * 枝を１区間分描画する関数
@@ -33,23 +47,13 @@ const draw = function () {
     // 再帰の終了条件
     if (n < 0) return;
 
-    // 根幹部と末端部の色指定
-    var color1 = new Color(0, 180, 0); // グラデーションの終了色
-    var color2 = new Color(255, 255, 255); // グラデーションの開始色
-    var lineColor = getGradationColor(
-      n,
-      BRANCH_DEPTH,
-      color1,
-      color2
-    ).stringify();
+    var lineColor = getGradationColor(n, iteration, color1, color2).stringify();
+
+    console.log(lineColor);
 
     // 線分の終点座標（sin, cosの定義から計算）
     let x1 = Math.round(x0 + Math.cos((theta * Math.PI) / 180) * l);
     let y1 = Math.round(y0 - Math.sin((theta * Math.PI) / 180) * l);
-
-    // 枝分かれ１回あたりの角度変化量
-    // 枝分かれの角度を変えていくことで、だんだん広がっていくような形状にする
-    let deltaTheta = 15 + Math.random() * 15;
 
     ctx.beginPath();
     ctx.strokeStyle = lineColor;
@@ -61,25 +65,25 @@ const draw = function () {
 
     setTimeout(() => {
       // 枝左側の再帰描画
-      drawTree(
-        ctx,
-        n - 1,
-        x1,
-        y1,
-        l * (0.75 + Math.random() * 0.1),
-        theta - deltaTheta
-      );
+      drawTree(ctx, n - 1, x1, y1, (l * lengthDiff) / 100, theta - angleDiff);
 
       // 枝右側の再帰描画
-      drawTree(
-        ctx,
-        n - 1,
-        x1,
-        y1,
-        l * (0.75 + Math.random() * 0.1),
-        theta + deltaTheta
-      );
+      drawTree(ctx, n - 1, x1, y1, (l * lengthDiff) / 100, theta + angleDiff);
     }, 300);
+  }
+
+  /**
+   * 入力された文字列での色表現を、内部向けのオブジェクト表現に変換
+   * @param {string} str 16進数のRGBA色情報。「#FF55D5C6」の表記
+   * @returns {Color}
+   */
+  function parseRGBAStr(str) {
+    return new Color(
+      parseInt("0x" + str.substr(1, 2)),
+      parseInt("0x" + str.substr(3, 2)),
+      parseInt("0x" + str.substr(5, 2)),
+      parseInt("0x" + str.substr(7, 2)) / 255
+    );
   }
 
   /**
@@ -103,7 +107,8 @@ const draw = function () {
       ),
       Math.round(
         colorStart.b - (currStep * (colorStart.b - colorEnd.b)) / totalStep
-      )
+      ),
+      colorStart.a - (currStep * (colorStart.a - colorEnd.a)) / totalStep
     );
   }
 };

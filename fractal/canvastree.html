@@ -22,77 +22,127 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
     />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>javascriptで描くフラクタル</title>
+    <title>フラクタル</title>
     <style>
       canvas {
-        background-color: #333333;
+        background-color: black;
       }
     </style>
   </head>
   <body>
     <div id="app">
       <v-app>
-        <v-container>
+        <v-container fluid>
           <div class="row">
             <div class="col">
               <p>
-                <canvas id="drawingCanvas" width="800" height="600"></canvas>
+                <canvas id="drawingCanvas" width="800" height="700"></canvas>
               </p>
             </div>
             <div class="col">
               <v-card outlined class="ma-2">
-                <v-card-title>設定</v-card-title>
                 <v-card-text>
-                  <v-subheader class="pl-0">開始色</v-subheader>
-                  <v-color-picker
-                    v-model="color1"
-                    @change="updateColor1()"
-                  ></v-color-picker>
-                  <v-subheader class="pl-0">終了色</v-subheader>
-                  <v-color-picker
-                    v-model="color2"
-                    @change="updateColor2()"
-                  ></v-color-picker>
-                  <v-subheader class="pl-0">繰り返し数</v-subheader>
-                  <v-slider v-model="iteration" min="1" max="20" thumb-label>
-                    <template v-slot:append>
-                      <v-text-field
+                  <v-btn @click="redraw" color="primary"
+                    >以下の条件で描画</v-btn
+                  >
+                  <div class="row">
+                    <div class="col">
+                      <v-subheader class="pl-0">開始色</v-subheader>
+                      <v-color-picker
+                        v-model="color2"
+                        hide-inputs
+                      ></v-color-picker>
+                    </div>
+                    <div class="col">
+                      <v-subheader class="pl-0">終了色</v-subheader>
+                      <v-color-picker
+                        v-model="color1"
+                        hide-inputs
+                      ></v-color-picker>
+                    </div>
+                  </div>
+                  <v-card>
+                    <v-card-text>
+                      <v-subheader class="pl-0">繰り返し数</v-subheader>
+                      <v-slider
                         v-model="iteration"
-                        class="mt-0 pt-0"
-                        hide-details
-                        single-line
-                        type="number"
-                        style="width: 60px;"
-                      ></v-text-field>
-                    </template>
-                  </v-slider>
+                        min="1"
+                        max="15"
+                        thumb-label
+                      >
+                        <template v-slot:append>
+                          <v-text-field
+                            v-model="iteration"
+                            class="mt-0 pt-0"
+                            hide-details
+                            single-line
+                            type="number"
+                            style="width: 60px;"
+                          ></v-text-field>
+                        </template>
+                      </v-slider>
 
-                  <v-subheader class="pl-0">角度変化量</v-subheader>
-                  <v-slider v-model="angleDiff" min="0" max="90" thumb-label>
-                    <template v-slot:append>
-                      <v-text-field
+                      <v-subheader class="pl-0">角度変化量</v-subheader>
+                      <v-slider
                         v-model="angleDiff"
-                        class="mt-0 pt-0"
-                        hide-details
-                        single-line
-                        type="number"
-                        style="width: 60px;"
-                      ></v-text-field>
-                    </template>
-                  </v-slider>
-                  <v-subheader class="pl-0">長さの短縮</v-subheader>
-                  <v-slider v-model="lengthDiff" min="0" max="100" thumb-label>
-                    <template v-slot:append>
-                      <v-text-field
+                        min="0"
+                        max="90"
+                        step="5"
+                        thumb-label
+                      >
+                        <template v-slot:append>
+                          <v-text-field
+                            v-model="angleDiff"
+                            class="mt-0 pt-0"
+                            hide-details
+                            single-line
+                            type="number"
+                            style="width: 60px;"
+                          ></v-text-field>
+                        </template>
+                      </v-slider>
+                      <v-subheader class="pl-0"
+                        >繰り返し後の長さ（％）</v-subheader
+                      >
+                      <v-slider
                         v-model="lengthDiff"
-                        class="mt-0 pt-0"
-                        hide-details
-                        single-line
-                        type="number"
-                        style="width: 60px;"
-                      ></v-text-field>
-                    </template>
-                  </v-slider>
+                        min="50"
+                        max="150"
+                        step="5"
+                        thumb-label
+                      >
+                        <template v-slot:append>
+                          <v-text-field
+                            v-model="lengthDiff"
+                            class="mt-0 pt-0"
+                            hide-details
+                            single-line
+                            type="number"
+                            style="width: 60px;"
+                          ></v-text-field>
+                        </template>
+                      </v-slider>
+                      <v-subheader class="pl-0">初期の長さ（px）</v-subheader>
+                      <v-slider
+                        v-model="lengthInit"
+                        min="0"
+                        max="200"
+                        step="5"
+                        thumb-label
+                      >
+                        <template v-slot:append>
+                          <v-text-field
+                            v-model="lengthInit"
+                            class="mt-0 pt-0"
+                            hide-details
+                            single-line
+                            type="number"
+                            style="width: 60px;"
+                          ></v-text-field>
+                        </template>
+                      </v-slider>
+                    </v-card-text>
+                  </v-card>
                 </v-card-text>
               </v-card>
             </div>
@@ -109,24 +159,29 @@
         vuetify: new Vuetify(),
         data: function () {
           return {
-            color1: "",
-            color2: "",
-            iteration: "",
-            angleDiff: "",
-            lengthDiff: "",
+            color1: "#00FF00FF",
+            color2: "#FF0000FF",
+            iteration: 10,
+            angleDiff: 20,
+            lengthDiff: 80,
+            lengthInit: 100,
           };
         },
-        method: {
-          updateColor1: function () {
-            console.log(this.color1);
-          },
-          updateColor2: function () {
-            console.log(this.color2);
+        methods: {
+          redraw: function () {
+            console.log("color1:", this.color1)
+            draw(
+              (color1str = this.color1),
+              (color2str = this.color2),
+              (iteration = this.iteration),
+              (lengthDiff = this.lengthDiff),
+              (angleDiff = this.angleDiff),
+              (lengthInit = this.lengthInit)
+            );
           },
         },
         mounted: function () {
-          console.log("mounted!");
-          draw();
+          this.redraw();
         },
       });
     </script>
