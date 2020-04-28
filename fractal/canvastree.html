@@ -41,9 +41,11 @@
             </div>
             <div class="col">
               <v-card outlined class="ma-2">
+                <v-card-title>canvasでフラクタルを描こう！　（<a href="https://github.com/azureleaf/canvas/">azureleaf@GitHub</a>）</v-card-title>
                 <v-card-text>
-                  <v-btn @click="redraw" color="primary"
-                    >以下の条件で描画</v-btn
+                  <p>「枝の先端を伸ばして、途中で左右ふた手にわかれる」という作業をを多数繰り返すことで自己相似形ができます。</p>
+                  <v-btn @click="redraw" color="primary" large
+                    >下の条件で描画する</v-btn
                   >
                   <div class="row">
                     <div class="col">
@@ -82,7 +84,7 @@
                         </template>
                       </v-slider>
 
-                      <v-subheader class="pl-0">角度変化量</v-subheader>
+                      <v-subheader class="pl-0">角度変化量（度）</v-subheader>
                       <v-slider
                         v-model="angleDiff"
                         min="0"
@@ -102,7 +104,7 @@
                         </template>
                       </v-slider>
                       <v-subheader class="pl-0"
-                        >繰り返し後の長さ（％）</v-subheader
+                        >繰り返しごとの長さの変化量（％）</v-subheader
                       >
                       <v-slider
                         v-model="lengthDiff"
