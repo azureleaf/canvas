@@ -49,8 +49,6 @@ const draw = function (
 
     var lineColor = getGradationColor(n, iteration, color1, color2).stringify();
 
-    console.log(lineColor);
-
     // 線分の終点座標（sin, cosの定義から計算）
     let x1 = Math.round(x0 + Math.cos((theta * Math.PI) / 180) * l);
     let y1 = Math.round(y0 - Math.sin((theta * Math.PI) / 180) * l);
