@@ -50,8 +50,6 @@ function setStyle() {
     "style",
     "border-width:" + CANVAS_BORDER_WIDTH + "px;"
   );
-  console.log(canvasElem.offsetLeft);
-  console.log(canvasElem.offsetTop);
 
   // 色見本部分のスタイル設定
   [
@@ -136,9 +134,15 @@ function draw(
   // Get parameters based on the 3 vertices (various centers, radius, etc.)
   let params = calcParams(vertices);
 
+  targets = [];
+  CENTER_TYPES.forEach((centerType) => {
+    if (document.getElementById(`show${centerType}`).checked) {
+      targets.push(centerType.toLocaleLowerCase());
+    }
+  });
   console.log("targets:", targets);
 
-  // Conditional rendering
+  // 円の描画
   // "centerType"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
   // prettier-ignore
   if (targets.includes("incenter")) drawIncenter(params, vertices, ctx);
@@ -813,23 +817,11 @@ function redraw(centerTypes) {
   draw(vertices, centerTypes);
 }
 
-// どの円を表示するかのチェックボックスの状況を取得して再描画
-function updateDisplay() {
-  let circlesToDraw = [];
-  CENTER_TYPES.forEach((centerType) => {
-    if (document.getElementById(`show${centerType}`).checked) {
-      circlesToDraw.push(centerType.toLocaleLowerCase());
-    }
-  });
-  console.log(circlesToDraw);
-  redraw(circlesToDraw);
-}
-
 // Add event listeners to the check boxes of circle display
 CENTER_TYPES.forEach((centerType) => {
   document
     .getElementById(`show${centerType}`)
-    .addEventListener("change", updateDisplay);
+    .addEventListener("change", redraw);
 });
 
 // Add event listeners to the vertices input
