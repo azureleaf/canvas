@@ -3,12 +3,12 @@ canvas {
   border-color: #bbbbbb;
 }
 
-#wrapper {
-  font-family: "Kosugi Maru", sans-serif;
+body {
+  background-color: grey;
 }
 
-li {
-  line-height: 180%;
+#wrapper {
+  font-family: "Kosugi Maru", sans-serif;
 }
 
 b {

@@ -37,13 +37,13 @@ const CENTER_TYPES = [
   "Excenter",
 ];
 
-// Change styles in the HTML DOM
-setStyle();
+// Init DOMs
+initDOM();
 
 /**
- * HTML DOMのstyle属性を設定する
+ * HTML DOMを設定する
  */
-function setStyle() {
+function initDOM() {
   // Set attributes of <canvas> in the DOM
   var canvasElem = document.getElementById("canvasArea");
   canvasElem.setAttribute(
@@ -51,27 +51,109 @@ function setStyle() {
     "border-width:" + CANVAS_BORDER_WIDTH + "px;"
   );
 
-  // 色見本部分のスタイル設定
-  [
-    { id: "sampleIncenter", color: COLORS.INCENTER },
-    { id: "sampleCircumcenter", color: COLORS.CIRCUMCENTER },
-    { id: "sampleExcenterA", color: COLORS.EXCENTER_LINE },
-    { id: "sampleExcenterB", color: COLORS.EXCENTER_LINE },
-    { id: "sampleExcenterC", color: COLORS.EXCENTER_LINE },
-    { id: "sampleOrthocenter", color: COLORS.ORTHOCENTER },
-    { id: "sampleCentroid", color: COLORS.CENTROID },
-  ].forEach((attr) => {
-    // svg領域のスタイル設定
-    var svgElem = document.getElementById(attr.id);
-    svgElem.setAttribute("width", "12");
-    svgElem.setAttribute("height", "12");
+  const circles = [
+    {
+      centerLabel: "内心Ｉ",
+      color: COLORS.INCENTER,
+      items: [
+        { label: "", id: "x0i" },
+        { label: "", id: "y0i" },
+        { label: "内接円の半径 r：", id: "r" },
+      ],
+    },
+    {
+      centerLabel: "外心Ｏ",
+      color: COLORS.CIRCUMCENTER,
+      items: [
+        { label: "", id: "x0O" },
+        { label: "", id: "y0O" },
+        { label: "外接円の半径 R：", id: "R" },
+      ],
+    },
+    {
+      centerLabel: "重心Ｇ",
+      color: COLORS.CENTROID,
+      items: [
+        { label: "", id: "x0g" },
+        { label: "", id: "y0g" },
+      ],
+    },
+    {
+      centerLabel: "垂心Ｈ",
+      color: COLORS.ORTHOCENTER,
+      items: [
+        { label: "", id: "x0h" },
+        { label: "", id: "y0h" },
+      ],
+    },
+    {
+      centerLabel: "傍心ａ",
+      color: COLORS.EXCENTER,
+      items: [
+        { label: "", id: "x0ia" },
+        { label: "", id: "y0ia" },
+        { label: "傍心円Aの半径 ra：", id: "ra" },
+      ],
+    },
+    {
+      centerLabel: "傍心ｂ",
+      color: COLORS.EXCENTER,
+      items: [
+        { label: "", id: "x0ib" },
+        { label: "", id: "y0ib" },
+        { label: "傍心円Bの半径 rb：", id: "rb" },
+      ],
+    },
+    {
+      centerLabel: "傍心ｃ",
+      color: COLORS.EXCENTER,
+      items: [
+        { label: "", id: "x0ic" },
+        { label: "", id: "y0ic" },
+        { label: "傍心円Cの半径 rc：", id: "rc" },
+      ],
+    },
+  ];
 
-    // 特定したsvgの直下にあるcircle要素のスタイル設定
-    var circleElem = svgElem.getElementsByTagName("circle")[0];
-    circleElem.style.fill = attr.color;
-    circleElem.setAttribute("cx", "6");
-    circleElem.setAttribute("cy", "6");
-    circleElem.setAttribute("r", "6");
+  circles.forEach((circle) => {
+    let row = document.createElement("div");
+    row.setAttribute("class", "form-inline");
+
+    // Column for color sample
+    let sampleCol = document.createElement("div");
+    sampleCol.innerText = "●";
+    sampleCol.style.color = circle.color;
+    row.appendChild(sampleCol);
+
+    // Column for the label of the triangle center
+    let centerLabelCol = document.createElement("div");
+    let centerLabel = document.createElement("label");
+    centerLabel.innerText = circle.centerLabel;
+    centerLabelCol.appendChild(centerLabel);
+    row.appendChild(centerLabelCol);
+
+    // Columns for the x, y, r
+    circle.items.forEach((item) => {
+      let itemLabel = document.createElement("label");
+      itemLabel.innerText = item.label;
+      itemLabel.setAttribute("for", item.id);
+      row.appendChild(itemLabel);
+
+      let input = document.createElement("input");
+      [
+        ["type", "text"],
+        ["id", item.id],
+        ["placeholder", item.id],
+        ["size", "4"],
+        ["class", "form-control"],
+        ["disabled", "true"],
+      ].forEach((attr) => {
+        input.setAttribute(attr[0], attr[1]);
+      });
+      row.appendChild(input);
+    });
+
+    document.getElementById("props").appendChild(row);
   });
 }
 
@@ -79,12 +161,8 @@ function setStyle() {
  * 三角形の三点の座標を受け取り、描画する。
  *
  * @param {Point[]} vertices ３つの頂点の座標のオブジェクト（Point Class）
- * @param {string[]} targets "incenter", "excenter"など描画すべき円の種別
  */
-function draw(
-  vertices,
-  targets = ["incenter", "excenter", "centroid", "circumcenter", "orthocenter"]
-) {
+function draw(vertices) {
   if (typeof canvas.getContext === "undefined") {
     return;
   }
@@ -134,13 +212,13 @@ function draw(
   // Get parameters based on the 3 vertices (various centers, radius, etc.)
   let params = calcParams(vertices);
 
-  targets = [];
+  // 五心のうちどれを描画すべきか、チェックボックスの状態を取得
+  let targets = [];
   CENTER_TYPES.forEach((centerType) => {
     if (document.getElementById(`show${centerType}`).checked) {
       targets.push(centerType.toLocaleLowerCase());
     }
   });
-  console.log("targets:", targets);
 
   // 円の描画
   // "centerType"のキーワードによって、指定された円だけを描写するのか、あるいは全てを表示するかを切り替える
@@ -781,53 +859,40 @@ function setVertices(triangleType, event) {
 }
 
 /**
- * 現在の三角形座標情報を維持したまま、五心のうち指定されたものだけを再描画する
- * HTML DOMのボタンから呼び出される
- *
- * @param {string} centerType "incenter", "excenter"のような、描画したい五心の指定（省略時は五心すべて描写）
+ * 現在の三角形の座標表示欄の値を元に描画
  */
 // eslint-disable-next-line no-unused-vars
-function redraw(centerTypes) {
-  let vertices = [];
-
+function drawByFormValues() {
   // HTMLの入力欄から三角形頂点の座標を取得
-  vertices.push(
-    new Point(
-      Number(document.getElementById("x1").value),
-      Number(document.getElementById("y1").value)
-    )
-  );
-  vertices.push(
-    new Point(
-      Number(document.getElementById("x2").value),
-      Number(document.getElementById("y2").value)
-    )
-  );
-  vertices.push(
-    new Point(
-      Number(document.getElementById("x3").value),
-      Number(document.getElementById("y3").value)
-    )
-  );
 
-  if (centerTypes == undefined) {
-    draw(vertices); // 五心すべて
-    return;
-  }
-  draw(vertices, centerTypes);
+  let vertices = [];
+  [
+    { x: "x1", y: "y1" },
+    { x: "x2", y: "y2" },
+    { x: "x3", y: "y3" },
+  ].forEach((point) => {
+    vertices.push(
+      new Point(
+        Number(document.getElementById(point.x).value),
+        Number(document.getElementById(point.y).value)
+      )
+    );
+  });
+
+  draw(vertices);
 }
 
 // Add event listeners to the check boxes of circle display
 CENTER_TYPES.forEach((centerType) => {
   document
     .getElementById(`show${centerType}`)
-    .addEventListener("change", redraw);
+    .addEventListener("change", drawByFormValues);
 });
 
 // Add event listeners to the vertices input
 ["x1", "x2", "x3", "y1", "y2", "y3"].forEach((coord) => {
   document.getElementById(coord).addEventListener("change", function () {
-    redraw();
+    drawByFormValues();
   });
 });
 
