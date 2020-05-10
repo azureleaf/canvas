@@ -12,7 +12,7 @@ class Point {
 let clickPoints = [];
 
 // Set canvas size; maximize the canvas height to the window height
-const CANVAS_BORDER_WIDTH = 2;
+const CANVAS_BORDER_WIDTH = 3;
 const CANVAS_ML = 14;
 const CANVAS_MT = 14;
 const CANVAS_WIDTH =
@@ -192,6 +192,7 @@ function draw(vertices) {
   canvas.style.height = CANVAS_HEIGHT + "px";
   canvas.style.marginTop = CANVAS_MT + "px";
   canvas.style.marginLeft = CANVAS_ML + "px";
+  canvas.style.borderWidth = CANVAS_BORDER_WIDTH + "px";
 
   // 三角形の描画
   ctx.beginPath();
@@ -829,13 +830,13 @@ function setVertices(triangleType, event) {
 
     // ユーザーからの自由三点クリックによる三角形
     case "clicks":
-      console.debug(
-        "click pos x:",
-        event.clientX,
-        ", offset:",
-        canvas.offsetLeft
-      );
-      console.debug("click pos y:", event.clientY, "offset:", canvas.offsetTop);
+      // console.debug(
+      //   "click pos x:",
+      //   event.clientX,
+      //   ", offset:",
+      //   canvas.offsetLeft
+      // );
+      // console.debug("click pos y:", event.clientY, "offset:", canvas.offsetTop);
 
       clickPoints.push(
         // prettier-ignore
@@ -878,7 +879,6 @@ function setVertices(triangleType, event) {
 // eslint-disable-next-line no-unused-vars
 function drawByFormValues() {
   // HTMLの入力欄から三角形頂点の座標を取得
-
   let vertices = [];
   [
     { x: "x1", y: "y1" },
