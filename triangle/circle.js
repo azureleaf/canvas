@@ -11,14 +11,25 @@ class Point {
 // ユーザーがクリックした３点の位置（Point classで表現）を保持する配列
 let clickPoints = [];
 
-// Set canvas size; maximize the canvas height to the window height
-const CANVAS_BORDER_WIDTH = 3;
-const CANVAS_ML = 14;
-const CANVAS_MT = 14;
-const CANVAS_WIDTH =
-  window.innerWidth * 0.5 - CANVAS_ML - CANVAS_BORDER_WIDTH * 2;
-const CANVAS_HEIGHT =
-  window.innerHeight - CANVAS_MT * 2 - CANVAS_BORDER_WIDTH * 2;
+class CanvasSize {
+  constructor() {
+    this.borderWidth = 3;
+    this.marginLeft = 14;
+    this.marginTop = 14;
+  }
+  get width() {
+    return window.innerWidth * 0.5 - this.marginLeft - this.borderWidth * 2;
+  }
+  get height() {
+    return window.innerHeight - this.marginTop * 2 - this.borderWidth * 2;
+  }
+}
+
+let canvasSize = new CanvasSize();
+// eslint-disable-next-line no-unused-vars
+const  updateCanvasSize = () => {
+  canvasSize = new CanvasSize();
+}
 
 // Colors for paths
 const COLORS = {
@@ -184,15 +195,15 @@ function draw(vertices) {
   // devicePixelRatioのWeb APIはほとんどのブラウザでサポートされている
   // この設定をしないと、canvasを拡大縮小したときにレイアウトが崩れる
   const dpr = window.devicePixelRatio || 1;
-  canvas.width = CANVAS_WIDTH * dpr;
-  canvas.height = CANVAS_HEIGHT * dpr;
+  canvas.width = canvasSize.width * dpr;
+  canvas.height = canvasSize.height * dpr;
 
   ctx.scale(dpr, dpr);
-  canvas.style.width = CANVAS_WIDTH + "px";
-  canvas.style.height = CANVAS_HEIGHT + "px";
-  canvas.style.marginTop = CANVAS_MT + "px";
-  canvas.style.marginLeft = CANVAS_ML + "px";
-  canvas.style.borderWidth = CANVAS_BORDER_WIDTH + "px";
+  canvas.style.width = canvasSize.width + "px";
+  canvas.style.height = canvasSize.height + "px";
+  canvas.style.marginTop = canvasSize.marginTop + "px";
+  canvas.style.marginLeft = canvasSize.marginLeft + "px";
+  canvas.style.borderWidth = canvasSize.borderWidth + "px";
 
   // 三角形の描画
   ctx.beginPath();
@@ -461,7 +472,7 @@ function getEdgePoints(vertex1, vertex2) {
   // 直線がcanvas右端（の延長線上）に達した時のy座標
   let y2 =
     ((vertex1.y - vertex2.y) / (vertex1.x - vertex2.x)) *
-      (CANVAS_WIDTH - vertex1.x) +
+      (canvasSize.width - vertex1.x) +
     vertex1.y;
 
   // y=0の時のx座標
@@ -471,24 +482,24 @@ function getEdgePoints(vertex1, vertex2) {
 
   // 直線がcanvas下端（の延長線上）に達した時のy座標
   let x2 =
-    ((vertex1.x - vertex2.x) * (CANVAS_HEIGHT - vertex1.y)) /
+    ((vertex1.x - vertex2.x) * (canvasSize.height - vertex1.y)) /
       (vertex1.y - vertex2.y) +
     vertex1.x;
 
   // 交点が各エッジ上にあるときはedgePoints配列に追加する
   // エッジの線分ではなくその延長線上にあるときは追加しないので、２つpushされるはず
   // prettier-ignore
-  if (y1 >= 0 && y1 <= CANVAS_HEIGHT)
+  if (y1 >= 0 && y1 <= canvasSize.height)
       edgePoints.push(new Point(0, y1)); // Canvas左端との交点
   // prettier-ignore
-  if (y2 >= 0 && y2 <= CANVAS_HEIGHT)
-      edgePoints.push(new Point(CANVAS_WIDTH, y2)); // Canvas右端との交点
+  if (y2 >= 0 && y2 <= canvasSize.height)
+      edgePoints.push(new Point(canvasSize.width, y2)); // Canvas右端との交点
   // prettier-ignore
-  if (x1 >= 0 && x1 <= CANVAS_WIDTH) 
+  if (x1 >= 0 && x1 <= canvasSize.width) 
       edgePoints.push(new Point(x1, 0)); // Canvas上端との交点
   // prettier-ignore
-  if (x2 >= 0 && x2 <= CANVAS_WIDTH)
-      edgePoints.push(new Point(x2, CANVAS_HEIGHT)); // Canvas下端との交点
+  if (x2 >= 0 && x2 <= canvasSize.width)
+      edgePoints.push(new Point(x2, canvasSize.height)); // Canvas下端との交点
 
   return edgePoints;
 }
@@ -776,19 +787,19 @@ function setVertices(triangleType, event) {
       // prettier-ignore
       vertices.push(
         new Point(
-          Math.round(CANVAS_WIDTH / 4),
-          Math.round(CANVAS_HEIGHT / 3)
+          Math.round(canvasSize.width / 4),
+          Math.round(canvasSize.height / 3)
       ));
       // prettier-ignore
       vertices.push(
         new Point(
-          Math.round(CANVAS_WIDTH / 2),
-          Math.round(CANVAS_HEIGHT / 3)
+          Math.round(canvasSize.width / 2),
+          Math.round(canvasSize.height / 3)
       ));
       vertices.push(
         new Point(
-          Math.round(CANVAS_WIDTH / 4),
-          Math.round(CANVAS_HEIGHT / 3 + (Math.random() * CANVAS_HEIGHT) / 2)
+          Math.round(canvasSize.width / 4),
+          Math.round(canvasSize.height / 3 + (Math.random() * canvasSize.height) / 2)
         )
       );
       break;
@@ -798,18 +809,18 @@ function setVertices(triangleType, event) {
       // prettier-ignore
       vertices.push(
         new Point(
-          Math.round(CANVAS_WIDTH / 2),
-          Math.round(CANVAS_HEIGHT / 4)));
+          Math.round(canvasSize.width / 2),
+          Math.round(canvasSize.height / 4)));
       vertices.push(
         new Point(
-          Math.round(CANVAS_WIDTH / 2 + 50),
-          Math.round(CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2))
+          Math.round(canvasSize.width / 2 + 50),
+          Math.round(canvasSize.height / 4 + 50 * Math.pow(3, 1 / 2))
         )
       );
       vertices.push(
         new Point(
-          Math.round(CANVAS_WIDTH / 2 - 50),
-          Math.round(CANVAS_HEIGHT / 4 + 50 * Math.pow(3, 1 / 2))
+          Math.round(canvasSize.width / 2 - 50),
+          Math.round(canvasSize.height / 4 + 50 * Math.pow(3, 1 / 2))
         )
       );
       break;
@@ -821,8 +832,8 @@ function setVertices(triangleType, event) {
         vertices.push(
           new Point(
             // 頂点の位置がカンバスの端に行きすぎない範囲とする
-            Math.round(CANVAS_WIDTH / 4 + (Math.random() * CANVAS_WIDTH) / 2),
-            Math.round(CANVAS_HEIGHT / 4 + (Math.random() * CANVAS_HEIGHT) / 2)
+            Math.round(canvasSize.width / 4 + (Math.random() * canvasSize.width) / 2),
+            Math.round(canvasSize.height / 4 + (Math.random() * canvasSize.height) / 2)
           )
         );
       }
