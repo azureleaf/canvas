@@ -12,9 +12,13 @@ class Point {
 let clickPoints = [];
 
 // Set canvas size; maximize the canvas height to the window height
-const CANVAS_BORDER_WIDTH = 4;
-const CANVAS_WIDTH = window.innerWidth * 0.5;
-const CANVAS_HEIGHT = window.innerHeight;
+const CANVAS_BORDER_WIDTH = 2;
+const CANVAS_ML = 14;
+const CANVAS_MT = 14;
+const CANVAS_WIDTH =
+  window.innerWidth * 0.5 - CANVAS_ML - CANVAS_BORDER_WIDTH * 2;
+const CANVAS_HEIGHT =
+  window.innerHeight - CANVAS_MT * 2 - CANVAS_BORDER_WIDTH * 2;
 
 // Colors for paths
 const COLORS = {
@@ -44,20 +48,25 @@ initDOM();
  * HTML DOMを設定する
  */
 function initDOM() {
-  // Set attributes of <canvas> in the DOM
-  var canvasElem = document.getElementById("canvasArea");
-  canvasElem.setAttribute(
-    "style",
-    "border-width:" + CANVAS_BORDER_WIDTH + "px;"
-  );
+  // Create DOM elements for checkboxes
 
+  // Create DOM elements for calculated params of the triangle
   const circles = [
+    {
+      centerLabel: "",
+      items: [
+        { label: "辺ABの長さ：", id: "c" },
+        { label: "辺BCの長さ：", id: "a" },
+        { label: "辺CAの長さ：", id: "b" },
+        { label: "面積：", id: "S" },
+      ],
+    },
     {
       centerLabel: "内心Ｉ",
       color: COLORS.INCENTER,
       items: [
-        { label: "", id: "x0i" },
-        { label: "", id: "y0i" },
+        { label: "ｘ：", id: "x0i" },
+        { label: "ｙ：", id: "y0i" },
         { label: "内接円の半径 r：", id: "r" },
       ],
     },
@@ -65,8 +74,8 @@ function initDOM() {
       centerLabel: "外心Ｏ",
       color: COLORS.CIRCUMCENTER,
       items: [
-        { label: "", id: "x0O" },
-        { label: "", id: "y0O" },
+        { label: "ｘ：", id: "x0O" },
+        { label: "ｙ：", id: "y0O" },
         { label: "外接円の半径 R：", id: "R" },
       ],
     },
@@ -74,43 +83,43 @@ function initDOM() {
       centerLabel: "重心Ｇ",
       color: COLORS.CENTROID,
       items: [
-        { label: "", id: "x0g" },
-        { label: "", id: "y0g" },
+        { label: "ｘ：", id: "x0g" },
+        { label: "ｙ：", id: "y0g" },
       ],
     },
     {
       centerLabel: "垂心Ｈ",
       color: COLORS.ORTHOCENTER,
       items: [
-        { label: "", id: "x0h" },
-        { label: "", id: "y0h" },
+        { label: "ｘ：", id: "x0h" },
+        { label: "ｙ：", id: "y0h" },
       ],
     },
     {
       centerLabel: "傍心ａ",
       color: COLORS.EXCENTER,
       items: [
-        { label: "", id: "x0ia" },
-        { label: "", id: "y0ia" },
-        { label: "傍心円Aの半径 ra：", id: "ra" },
+        { label: "ｘ：", id: "x0ia" },
+        { label: "ｙ：", id: "y0ia" },
+        { label: "傍心円Ａの半径 ra：", id: "ra" },
       ],
     },
     {
       centerLabel: "傍心ｂ",
       color: COLORS.EXCENTER,
       items: [
-        { label: "", id: "x0ib" },
-        { label: "", id: "y0ib" },
-        { label: "傍心円Bの半径 rb：", id: "rb" },
+        { label: "ｘ：", id: "x0ib" },
+        { label: "ｙ：", id: "y0ib" },
+        { label: "傍心円Ｂの半径 rb：", id: "rb" },
       ],
     },
     {
       centerLabel: "傍心ｃ",
       color: COLORS.EXCENTER,
       items: [
-        { label: "", id: "x0ic" },
-        { label: "", id: "y0ic" },
-        { label: "傍心円Cの半径 rc：", id: "rc" },
+        { label: "ｘ：", id: "x0ic" },
+        { label: "ｙ：", id: "y0ic" },
+        { label: "傍心円Ｃの半径 rc：", id: "rc" },
       ],
     },
   ];
@@ -120,10 +129,12 @@ function initDOM() {
     row.setAttribute("class", "form-inline");
 
     // Column for color sample
-    let sampleCol = document.createElement("div");
-    sampleCol.innerText = "●";
-    sampleCol.style.color = circle.color;
-    row.appendChild(sampleCol);
+    if ("color" in circle) {
+      let sampleCol = document.createElement("div");
+      sampleCol.innerText = "●";
+      sampleCol.style.color = circle.color;
+      row.appendChild(sampleCol);
+    }
 
     // Column for the label of the triangle center
     let centerLabelCol = document.createElement("div");
@@ -137,6 +148,7 @@ function initDOM() {
       let itemLabel = document.createElement("label");
       itemLabel.innerText = item.label;
       itemLabel.setAttribute("for", item.id);
+      itemLabel.setAttribute("class", "ml-2");
       row.appendChild(itemLabel);
 
       let input = document.createElement("input");
@@ -175,14 +187,11 @@ function draw(vertices) {
   canvas.width = CANVAS_WIDTH * dpr;
   canvas.height = CANVAS_HEIGHT * dpr;
 
-  // Set the width of canvas wrapper div
-  document
-    .getElementById("canvas_wrapper")
-    .setAttribute("width", CANVAS_WIDTH * dpr);
-
   ctx.scale(dpr, dpr);
   canvas.style.width = CANVAS_WIDTH + "px";
   canvas.style.height = CANVAS_HEIGHT + "px";
+  canvas.style.marginTop = CANVAS_MT + "px";
+  canvas.style.marginLeft = CANVAS_ML + "px";
 
   // 三角形の描画
   ctx.beginPath();
@@ -820,8 +829,13 @@ function setVertices(triangleType, event) {
 
     // ユーザーからの自由三点クリックによる三角形
     case "clicks":
-      // console.debug("click pos x:", event.clientX, ", offset:", canvas.offsetLeft);
-      // console.debug("click pos y:", event.clientY, "offset:", canvas.offsetTop);
+      console.debug(
+        "click pos x:",
+        event.clientX,
+        ", offset:",
+        canvas.offsetLeft
+      );
+      console.debug("click pos y:", event.clientY, "offset:", canvas.offsetTop);
 
       clickPoints.push(
         // prettier-ignore

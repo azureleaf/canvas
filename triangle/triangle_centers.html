@@ -20,14 +20,13 @@
       <div class="row">
         <div
           id="canvas_wrapper"
-          class="col-xl-6"
-          style="margin: 0; padding: 0;"
+          class="col-md-6 pl-0 pr-0"
         >
           <canvas id="canvasArea">
             Canvas not supported.
           </canvas>
         </div>
-        <div class="col-xl-6 px-5 py-3">
+        <div class="col-md-6 px-3 py-3">
           <div id="controls">
             <div class="card mb-3">
               <div class="card-body">
@@ -35,7 +34,8 @@
 
                 <form>
                   <p class="card-text">
-                    <b>左の枠の中で三点をクリック</b>するか、<b>下のボタンから生成</b>してください。
+                    <b>左の枠の中で三点をクリック</b
+                    >するか、<b>下のボタンから生成</b>してください。
                   </p>
                   <div class="pl-3">
                     <p class="form-group row">
@@ -43,19 +43,19 @@
                         type="button"
                         value="ランダムに生成"
                         onclick="setVertices('random');"
-                        class="btn btn-success mx-1"
+                        class="btn btn-primary mx-1"
                       />
                       <input
                         type="button"
                         value="直角三角形を生成"
                         onclick="setVertices('right');"
-                        class="btn btn-success mx-1"
+                        class="btn btn-primary mx-1"
                       />
                       <input
                         type="button"
                         value="正三角形を生成"
                         onclick="setVertices('equilateral');"
-                        class="btn btn-success mx-1"
+                        class="btn btn-primary mx-1"
                       />
                     </p>
                     <div class="form-inline row">
@@ -125,7 +125,7 @@
                       </div>
                     </div>
 
-                    <div>
+                    <div id="checkboxes">
                       <div class="form-check form-check-inline">
                         <input
                           type="checkbox"
@@ -196,66 +196,16 @@
             <div class="card mb-3">
               <div class="card-body">
                 <h4 class="card-title">
-                  この三角形の性質は次のように計算されます
+                  この三角形の性質を計算できます
                 </h4>
-
-                <form class="pl-3" id="props">
-                  <div class="form-inline row">
-                    <label for="c">辺ABの長さ:</label>
-                    <div class="col-xs-2">
-                      <input
-                        type="text"
-                        id="c"
-                        placeholder="c"
-                        size="4"
-                        class="form-control"
-                        disabled
-                      />
-                    </div>
-                    <label for="a">辺BCの長さ:</label>
-                    <div class="col-xs-2">
-                      <input
-                        type="text"
-                        id="a"
-                        placeholder="a"
-                        size="4"
-                        class="form-control"
-                        readonly
-                        disabled
-                      />
-                    </div>
-                    <label for="b">辺CAの長さ:</label>
-                    <div class="col-xs-2">
-                      <input
-                        type="text"
-                        id="b"
-                        placeholder="b"
-                        size="4"
-                        class="form-control"
-                        disabled
-                      />
-                    </div>
-
-                    <label for="S">面積 S:</label>
-                    <div class="col-xs-2">
-                      <input
-                        type="text"
-                        id="S"
-                        placeholder="S"
-                        size="4"
-                        class="form-control"
-                        disabled
-                      />
-                    </div>
-                  </div>
-                </form>
+                <form class="pl-3" id="props"></form>
               </div>
             </div>
           </div>
           <div id="hints">
             <div class="card mb-3">
               <div class="card-body">
-                <h4 class="card-title">五心の定義は次のとおりです</h4>
+                <h4 class="card-title">五心は次のように定義されます</h4>
                 <ul class="list-group">
                   <li class="list-group-item">
                     重心は、３つの辺の<b>中線（頂点と辺の中点を結ぶ線）</b>の交点です。
@@ -286,7 +236,7 @@
                     外心・垂心・重心は常に一直線（<b>オイラー線</b>といいます）上にあります。
                   </li>
                   <li class="list-group-item">
-                    直角三角形の外心は、常に斜辺の上にあります。
+                    直角三角形の外心は常に斜辺の上に、垂心は常に頂点の上にあります。
                   </li>
                   <li class="list-group-item">
                     重心と内心は常に三角形の内部に、傍心は常に三角形の外部にあります。
