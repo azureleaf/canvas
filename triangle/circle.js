@@ -15,10 +15,20 @@ class CanvasSize {
   constructor() {
     this.borderWidth = 3;
     this.marginLeft = 14;
+    this.marginRight = 8;
     this.marginTop = 14;
   }
   get width() {
-    return window.innerWidth * 0.5 - this.marginLeft - this.borderWidth * 2;
+    // When the window size is under Bootstrap "md" breakpoint width,
+    // set the canvas size to 100% of the inner width of the window
+    const numCols = window.innerWidth >= 768 ? 2 : 1;
+    return (
+      // Note that "innerWidth" includes scroll bar, therefore it's not used here
+      document.body.clientWidth / numCols -
+      this.marginLeft -
+      this.marginRight -
+      this.borderWidth * 2
+    );
   }
   get height() {
     return window.innerHeight - this.marginTop * 2 - this.borderWidth * 2;
@@ -27,9 +37,12 @@ class CanvasSize {
 
 let canvasSize = new CanvasSize();
 // eslint-disable-next-line no-unused-vars
-const  updateCanvasSize = () => {
+const updateCanvasSize = () => {
   canvasSize = new CanvasSize();
-}
+};
+
+console.log(window.innerWidth);
+console.log(document.body.clientWidth);
 
 // Colors for paths
 const COLORS = {
@@ -203,6 +216,7 @@ function draw(vertices) {
   canvas.style.height = canvasSize.height + "px";
   canvas.style.marginTop = canvasSize.marginTop + "px";
   canvas.style.marginLeft = canvasSize.marginLeft + "px";
+  canvas.style.marginRight = canvasSize.marginRight + "px";
   canvas.style.borderWidth = canvasSize.borderWidth + "px";
 
   // 三角形の描画
@@ -799,7 +813,9 @@ function setVertices(triangleType, event) {
       vertices.push(
         new Point(
           Math.round(canvasSize.width / 4),
-          Math.round(canvasSize.height / 3 + (Math.random() * canvasSize.height) / 2)
+          Math.round(
+            canvasSize.height / 3 + (Math.random() * canvasSize.height) / 2
+          )
         )
       );
       break;
@@ -832,8 +848,12 @@ function setVertices(triangleType, event) {
         vertices.push(
           new Point(
             // 頂点の位置がカンバスの端に行きすぎない範囲とする
-            Math.round(canvasSize.width / 4 + (Math.random() * canvasSize.width) / 2),
-            Math.round(canvasSize.height / 4 + (Math.random() * canvasSize.height) / 2)
+            Math.round(
+              canvasSize.width / 4 + (Math.random() * canvasSize.width) / 2
+            ),
+            Math.round(
+              canvasSize.height / 4 + (Math.random() * canvasSize.height) / 2
+            )
           )
         );
       }
